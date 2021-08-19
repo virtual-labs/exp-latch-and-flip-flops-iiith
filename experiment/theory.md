@@ -9,7 +9,7 @@ It can be constructed from a pair of cross-coupled NOR logic gates. The stored b
 
 **NAND Latch**
 
-<img src="images/NAND.png"">
+<img src="images/NAND.png">
 
 This is an alternate model of the simple SR latch built with NAND logic gates. Set and reset now become active low signals, denoted S and R respectively. Otherwise, operation is identical to that of the SR latch. Historically, SR-latches have been predominant despite the notational inconvenience of active-low inputs 
 
