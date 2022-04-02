@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Document</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/virtual-labs/virtual-style@0.0.7-b/css/style.min.css">
+	<link rel="stylesheet" href="css/main2.css">
+	<!-- <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script> -->
+</head>
+
+<body>
+	<div class="container" style="padding-top:3%">
+		<div class="columns is-centered">
+			<div class="column is-one-quarter v-instruction-title">
+				Tasks
+			</div>
+			<div class="column">
+				<div class="v-tabs">
+					<ul>
+						<li class="is-active" id="Task1" onclick="changeTabs(event)">
+							<a>
+								Task 1
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="columns is-centered">
+			<div class="column">
+				<div class="v-instruction-container">
+					<div class="v-instruction-title" id="TaskTitle">Half Adder</div>
+					<div class="v-instruction-text" id="TaskDescription">
+						Implement a 1-bit half adder
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="columns is-centered">
+		<div class="column is-one-quarter" style="margin:auto;text-align:center">
+		</div>
+		<div class="column"></div>
+		<div class="column is-one-third">
+			<a href="simulation.html"><button class="v-button">Restart simulation</button></a>
+		</div>
+	</div>
+	<div class="columns is-centered">
+		<div class="column is-2-desktop is-4-tablet is-12-mobile">
+			<div class="v-datalist-container components-list">
+				<div class="v-datalist-title">Components</div>
+				<div class="v-datalist-row">
+					<div class="columns is-centered" id="toolbar">
+						<div class="column is-one-half">
+							<div class="component-button AND" onclick="Add(event)">AND</div>
+						</div>
+						<div class="column is-one-half">
+							<div class="component-button XOR" onclick="Add(event)">XOR</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="column is-7-desktop is-12-tablet is-12-mobile">
+			<div id="circuit-board">
+				<div id="working-area">
+					<script src="js/anime.js"></script>
+					<div id="zero-zero">
+						<div id="path1">
+							<svg width="256" height="256" viewBox="0 0 256 256">
+							<path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,0 78.032901,0.75866 c 0,0 46.153515,-1.85739 43.310645,45.26492 v 7,0 l 52.37123,-0.48233"/></svg>
+							<div class="square blue">0</div>
+						</div>
+						<div class="square black xor">XOR
+						</div>
+						<div id="path2">
+							<svg width="256" height="256" viewBox="0 0 256 256">
+							<path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,0 48,0 48,110 78.032901,110.75866 c 0,0 46.153515,-1.85739 43.310645,45.26492 v 7,0 l 52.37123,-0.48233"/></svg>
+							<div class="square orange">0</div>
+						</div>
+						<div id="path3">
+							<svg width="256" height="256" viewBox="0 0 256 256">
+							<path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,100 38,100 38,210 78.032901,210.75866 c 0,0 46.153515,1.85739 43.310645,-45.26492"/></svg>
+							<div class="square red">0</div>
+						</div>
+						<div class="square black and">AND
+						</div>
+						<div id="path4">
+							<svg width="256" height="256" viewBox="0 0 256 256">
+							<path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,100 78.032901,100 c 0,0 46.153515,1.85739 43.310645,-45.26492"/></svg>
+							<div class="square green">0</div>
+						</div>
+						
+					</div>
+					<div id="zero-one">
+						<div id="path1">
+						   <svg width="256" height="256" viewBox="0 0 256 256">
+						   <path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,0 78.032901,0.75866 c 0,0 46.153515,-1.85739 43.310645,45.26492 v 7,0 l 52.37123,-0.48233"/></svg>
+						   <div class="square blue">1</div>
+					   </div>
+					   <div class="square black xor">XOR
+					   </div>
+					   <div id="path2">
+						   <svg width="256" height="256" viewBox="0 0 256 256">
+						   <path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,0 48,0 48,110 78.032901,110.75866 c 0,0 46.153515,-1.85739 43.310645,45.26492"/></svg>
+						   <div class="square orange">1</div>
+					   </div>
+					   <div id="path3">
+						   <svg width="256" height="256" viewBox="0 0 256 256">
+						   <path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,100 38,100 38,210 78.032901,210.75866 c 0,0 46.153515,1.85739 43.310645,-45.26492 v -4,0 l 52.37123,-0.48233"/></svg>
+						   <div class="square red">0</div>
+					   </div>
+					   <div class="square black and">AND
+					   </div>
+					   <div id="path4">
+						   <svg width="256" height="256" viewBox="0 0 256 256">
+						   <path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,100 78.032901,100 c 0,0 46.153515,1.85739 43.310645,-45.26492"/></svg>
+						   <div class="square green">0</div>
+					   </div>
+				   </div>
+				   <div id="one-one">
+					<div id="path1">
+					   <svg width="256" height="256" viewBox="0 0 256 256">
+					   <path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,0 78.032901,0.75866 c 0,0 46.153515,-1.85739 43.310645,45.26492 v 7,0 l 52.37123,-0.48233"/></svg>
+					   <div class="square blue">1</div>
+				   </div>
+				   <div class="square black xor">XOR
+				   </div>
+				   <div id="path2">
+					   <svg width="256" height="256" viewBox="0 0 256 256">
+					   <path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,0 48,0 48,110 78.032901,110.75866 c 0,0 46.153515,-1.85739 43.310645,45.26492 v 7,0 l 52.37123,-0.48233"/></svg>
+					   <div class="square orange">1</div>
+				   </div>
+				   <div id="path3">
+					   <svg width="256" height="256" viewBox="0 0 256 256">
+					   <path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,100 38,100 38,210 78.032901,210.75866 c 0,0 46.153515,1.85739 43.310645,-45.26492"/></svg>
+					   <div class="square red">1</div>
+				   </div>
+				   <div class="square black and">AND
+				   </div>
+				   <div id="path4">
+					   <svg width="256" height="256" viewBox="0 0 256 256">
+					   <path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,100 78.032901,100 c 0,0 46.153515,1.85739 43.310645,-45.26492"/></svg>
+					   <div class="square green">1</div>
+				   </div>
+			   </div>
+			   <div id="one-zero">
+				<div id="path1">
+				   <svg width="256" height="256" viewBox="0 0 256 256">
+				   <path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,0 78.032901,0.75866 c 0,0 46.153515,-1.85739 43.310645,45.26492 v 7,0 l 52.37123,-0.48233"/></svg>
+				   <div class="square blue">0</div>
+			   </div>
+			   <div class="square black xor">XOR
+			   </div>
+			   <div id="path2">
+				   <svg width="256" height="256" viewBox="0 0 256 256">
+				   <path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,0 48,0 48,110 78.032901,110.75866 c 0,0 46.153515,-1.85739 43.310645,45.26492 v 7,0 l 52.37123,-0.48233"/></svg>
+				   <div class="square orange">0</div>
+			   </div>
+				<div id="path3">
+					<svg width="256" height="256" viewBox="0 0 256 256">
+					<path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,100 38,100 38,210 78.032901,210.75866 c 0,0 46.153515,1.85739 43.310645,-45.26492"/></svg>
+					<div class="square red">1</div>
+				</div>
+				<div class="square black and">AND
+				</div>
+				<div id="path4">
+				   <svg width="256" height="256" viewBox="0 0 256 256">
+				   <path fill="none" stroke="currentColor" stroke-width="1" d="M 13.544914,100 78.032901,100 c 0,0 46.153515,1.85739 43.310645,-45.26492"/></svg>
+				   <div class="square green">1</div>
+			   </div>
+			   <!-- <div id="pp">
+				<button class="play">Play</button>
+				<button class="pause">Pause</button>
+			  </div> -->
+		   </div>
+				</div>
+			</div>
+		</div>
+		<div class="column is-3-desktop is-4-tablet is-12-mobile">
+			<div class="v-datalist-container components-list">
+				<div class="v-datalist-title">Observations</div>
+				<div class="v-datalist-row">
+					<div class="v-table-wrap">
+						<table class="table is-bordered is-fullwidth">
+							<thead id="table-head">
+								<tr>
+									<th colspan="2">Inputs</th>
+									<th colspan="2">Expected Values</th>
+								</tr>
+								<tr>
+									<th>A</th>
+									<th>B</th>
+									<th>Sum</th>
+									<th>Carry</th>
+								</tr>
+							</thead>
+							<tbody id="table-body">
+                                <tr>
+									<th>0</th>
+									<th>0</th>
+									<th>0</th>
+									<th>0</th>
+								</tr>
+                                <tr>
+									<th>1</th>
+									<th>0</th>
+									<th>1</th>
+									<th>0</th>
+								</tr>
+                                <tr>
+									<th>1</th>
+									<th>1</th>
+									<th>0</th>
+									<th>1</th>
+								</tr>
+                                <tr>
+									<th>0</th>
+									<th>1</th>
+									<th>1</th>
+									<th>0</th>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</body>
+<script src="js/jsplumb.bundle.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/main.js"></script>
+<script src="js/gate.js"></script>
+<script src="js/fa.js"></script>
+<script src="js/validator.js"></script>
+<script>
+	window.currentTab = "Task1";
+	console.log(anime);
+        var path =anime.path('#path1 path');
+        console.log(path);
+        var motionPath = anime({
+        targets: '.square.blue',
+        translateX: path('x'),
+        translateY: path('y'),
+        rotate: path('angle'),
+        easing: 'linear',
+        duration: 6100,
+        loop: false,
+        });
+        var path2 =anime.path('#path4 path');
+        var motionPath2 = anime({
+        targets: '.square.green',
+        translateX: path2('x'),
+        translateY: path2('y'),
+        rotate: path2('angle'),
+        easing: 'linear',
+        duration: 4100,
+        loop: false
+        });
+        var path3 =anime.path('#path2 path');
+        var motionPath3 = anime({
+        targets: '.square.orange',
+        translateX: path3('x'),
+        translateY: path3('y'),
+        rotate: path3('angle'),
+        easing: 'linear',
+        duration: 6000,
+        loop: false
+        });
+        var path4 =anime.path('#path3 path');
+        var motionPath4 = anime({
+        targets: '.square.red',
+        translateX: path4('x'),
+        translateY: path4('y'),
+        rotate: path4('angle'),
+        easing: 'linear',
+        duration: 5000,
+        loop: false
+        });
+</script>
+
+</html>
