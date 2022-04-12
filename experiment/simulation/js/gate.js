@@ -2,6 +2,7 @@ import { registerGate } from "./main.js";
 import { setPosition } from "./layout.js";
 import { halfAdder, fullAdderTest, rippleAdderTest } from "./validator.js";
 import { jsPlumbInstance } from "./main.js";
+import { flipFlops, simulateFFRS } from "./flipflop.js";
 
 export let gates = {}; // Array of gates
 window.numComponents = 0;
@@ -35,11 +36,20 @@ export class Gate {
     setId(id) {
         this.id = id;
     }
-    addInput(gate) {
-        this.inputs.push(gate);
+    addInput(gate, pos) {
+        this.inputs.push([gate, pos]);
     }
     removeInput(gate) {
-        let index = this.inputs.indexOf(gate);
+        let index = -1;
+        let i = 0;
+        for (let input in inputs) {
+            if (inputs[input][0] == gate) {
+                index = i;
+                break;
+            }
+            i++;
+        }
+
         if (index > -1) {
             this.inputs.splice(index, 1);
         }
@@ -97,6 +107,9 @@ export class Gate {
             component = '<div class="Output" id=' + this.id + '><a></a><p>' + this.name + '</p></div>'
             this.isOutput = true;
         }
+        else if (this.type == "ThreeIPNAND") {
+            component = '<div class="drag-drop ThreeIPNAND" id=' + this.id + '></div>'
+        }
         return component;
 
     }
@@ -144,28 +157,31 @@ export class Gate {
 
     generateOutput() {
         if (this.type == "AND") {
-            this.output = this.inputs[0].output && this.inputs[1].output;
+            this.output = getOutput(this.inputs[0]) && getOutput(this.inputs[1]);
         }
         else if (this.type == "OR") {
-            this.output = this.inputs[0].output || this.inputs[1].output;
+            this.output = getOutput(this.inputs[0]) || getOutput(this.inputs[1]);
         }
         else if (this.type == "NOT") {
-            this.output = !this.inputs[0].output;
+            this.output = !getOutput(this.inputs[0]);
         }
         else if (this.type == "XOR") {
-            this.output = (this.inputs[0].output && !this.inputs[1].output) || (!this.inputs[0].output && this.inputs[1].output);
+            this.output = (getOutput(this.inputs[0]) && !getOutput(this.inputs[1])) || (!getOutput(this.inputs[0]) && getOutput(this.inputs[1]));
         }
         else if (this.type == "XNOR") {
-            this.output = (!this.inputs[0].output || this.inputs[1].output) && (this.inputs[0].output || !this.inputs[1].output);
+            this.output = (!getOutput(this.inputs[0]) || getOutput(this.inputs[1])) && (getOutput(this.inputs[0]) || !getOutput(this.inputs[1]));
         }
         else if (this.type == "NAND") {
-            this.output = !(this.inputs[0].output && this.inputs[1].output);
+            this.output = !(getOutput(this.inputs[0]) && getOutput(this.inputs[1]));
         }
         else if (this.type == "NOR") {
-            this.output = !(this.inputs[0].output || this.inputs[1].output);
+            this.output = !(getOutput(this.inputs[0]) || getOutput(this.inputs[1]));
         }
         else if (this.type == "Output") {
-            this.output = this.inputs[0].output;
+            this.output = getOutput(this.inputs[0]);
+        }
+        else if (this.type = "ThreeIPNAND") {
+            this.output = !(getOutput(this.inputs[0]) && getOutput(this.inputs[1]) && getOutput(this.inputs[2]));
         }
     }
 
@@ -177,10 +193,26 @@ export class Gate {
     }
 }
 
+function getOutput(input) {
+    let gate = input[0];
+    let pos = input[1];
+
+    if (pos == "") {
+        return gate.output;
+    }
+    else if (pos == "Q") {
+        return gate.Q;
+    }
+    else if (pos == "Q'") {
+        return gate.Qbar;
+    }
+}
 
 
 function add_gate(event) {
-    const type = event.target.innerHTML;
+    let type = event.target.innerHTML;
+    if (type == "3-NAND")
+        type = "ThreeIPNAND";
     const gate = new Gate(type);
     const component = gate.generateComponent();
     const parent = document.getElementById("working-area");
@@ -195,7 +227,9 @@ export function getResult(gate) {
         return;
     }
     for (let i = 0; i < gate.inputs.length; i++) {
-        if (gate.inputs[i].output == null) {
+
+        // changes made to get result for all gates
+        if (getOutput(gate.inputs[i]) == null) {
             getResult(gate.inputs[i]);
         }
     }
@@ -267,11 +301,11 @@ export function simulate() {
 }
 
 function simulate2() {
-
+    // input bits
     for (let gateId in gates) {
         const gate = gates[gateId];
         for (let index in gate.inputs) {
-            let input = gate.inputs[index];
+            let input = gate.inputs[index][0];
             if (input.isInput) {
                 let val = input.output;
                 if (gate.type == "OR" && val == true) {
@@ -287,15 +321,19 @@ function simulate2() {
                 if (gate.type == "NAND" && val == false) {
                     gate.setOutput(true);
                 }
+                if (gate.type == "ThreeIPNAND" && val == false) {
+                    gate.setOutput(true);
+                }
             }
         }
     }
+    // logic gates and flip flop
     for (let iterations = 0; iterations < 5; iterations++) {
         for (let gateId in gates) {
             const gate = gates[gateId];
-            if (gate.isOutput == false && gate.isInput == false) {
-                const val1 = gate.inputs[0].output;
-                const val2 = gate.inputs[1].output;
+            if (gate.isOutput == false && gate.isInput == false && gate.type != "NOT" && gate.type != "ThreeIPNAND") {
+                const val1 = getOutput(gate.inputs[0]);
+                const val2 = getOutput(gate.inputs[1]);
                 if (val1 == null || val2 == null) {
                     let val = null;
                     if (val1 == null && val2 == null) {
@@ -326,16 +364,56 @@ function simulate2() {
                     gate.generateOutput();
                 }
             }
+            else if (gate.isOutput == false && gate.isInput == false && gate.type == "NOT") {
+                const val1 = getOutput(gate.inputs[0]);
+                if (val1 == null) {
+                    continue;
+                }
+                else {
+                    gate.generateOutput();
+                }
+            }
+            else if (gate.isOutput == false && gate.isInput == false && gate.type == "ThreeIPNAND") {
+                const val1 = getOutput(gate.inputs[0]);
+                const val2 = getOutput(gate.inputs[1]);
+                const val3 = getOutput(gate.inputs[2]);
+                const val = [];
+                if (val1 != null)
+                    val.push(val1);
+                if (val2 != null)
+                    val.push(val2);
+                if (val3 != null)
+                    val.push(val3);
+                if (val.length == 0) {
+                    continue;
+                }
+                else if (val.length == 3) {
+                    gate.generateOutput();
+                }
+                else {
+                    // console.log(val);
+                    for (let value in val) {
+                        if (val[value] == false) {
+                            gate.setOutput(true);
+                            break;
+                        }
+                    }
+                }
+            }
         }
-    }
 
+
+        simulateFFRS();
+
+    }
+    // output bits
     for (let gateId in gates) {
         const gate = gates[gateId];
         if (gate.isOutput == true) {
             let input = gate.inputs[0];
             // getResult(gate);
             let element = document.getElementById(gate.id)
-            if (input.output == true) {
+            if (getOutput(input) == true) {
                 element.className = "HIGH";
                 element.childNodes[0].innerHTML = "1";
             }
@@ -395,7 +473,15 @@ export function deleteElement(gateid) {
     // jsPlumbInstance.detach(gate.id); // <--
     jsPlumbInstance._removeElement(document.getElementById(gate.id));
     for (let elem in gates) {
-        if (gates[elem].inputs.includes(gate)) {
+
+        let found = 0;
+        for (let index in gates[elem].inputs) {
+            if (gates[elem].inputs[index][0].id == gate.id) {
+                found = 1;
+                break;
+            }
+        }
+        if (found == 1) {
             gates[elem].removeInput(gate);
         }
     }

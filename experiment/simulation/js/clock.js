@@ -30,6 +30,11 @@ export class Clock {
         this.name = name;
     }
 
+    updateComponent() {
+        this.component = '<div class="LOW" id=' + this.id + ' ><a>0</a><p>' + this.name + '</p></div>'
+    }
+
+
     registerComponent(workingArea, x = 0, y = 0) {
 
         // get width of working area
@@ -117,13 +122,24 @@ export class Clock {
         this.outputPoints.push(output);
     }
 
+    setConnected (val) {
+        this.isConnected = val;
+    }
+
 
 
 }
 
 
-function addClock(frequency, dutyCycle, workingArea, x, y) {
+export function addClock(frequency, dutyCycle, workingArea, x, y, name, Id) {
     let clock = new Clock(frequency, dutyCycle);
+    if(Id != null) {
+    clock.setId(Id);
+    }
+    if(name != null) {
+    clock.setName(name);
+    }
+    clock.updateComponent();
     const parent = document.getElementById(workingArea);
     parent.insertAdjacentHTML('beforeend', clock.component);
     clock.registerComponent(workingArea, x, y);
@@ -135,7 +151,7 @@ const clockAdd = document.getElementById("clockAdd");
 clockAdd.addEventListener('click', function () {
     const frequency = document.getElementById("frequency-input").value;
     const dutyCycle = document.getElementById("dutycycle-input").value;
-    addClock(frequency,dutyCycle,"working-area")
+    addClock(frequency,dutyCycle,"working-area",0,0,null,null)
     toggleModal();
 });
 

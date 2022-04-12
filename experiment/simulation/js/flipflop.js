@@ -15,7 +15,7 @@ function clearFlipFlops() {
 
 class RSFlipFlop {
     constructor() {
-        this.id = "FlipFlop-" + window.numComponents++;
+        this.id = "RSFlipFlop-" + window.numComponents++;
         this.R = [];  // Takes 2 items in a list : Gate, Output endpoint of gate
         this.S = [];
         this.Clk = [];
@@ -25,7 +25,7 @@ class RSFlipFlop {
         this.outputPoints = [];
         this.QIsConnected = false;
         this.QbarIsConnected = false;
-        this.component = '<div class="drag-drop FlipFlop" id=' + this.id + '></div>';
+        this.component = '<div class="drag-drop RSFlipFlop" id=' + this.id + '></div>';
     }
     registerComponent(workingArea, x = 0, y = 0) {
         const parent = document.getElementById(workingArea);
@@ -114,12 +114,13 @@ class RSFlipFlop {
     }
 }
 
+
 function addRSFlipFlop(x, y) {
     const ff = new RSFlipFlop();
     ff.registerComponent("working-area", x, y);
 }
 
-window.addRSFlipFlop = addRS;
+window.addRSFlipFlop = addRSFlipFlop;
 
 function getOutputRS(gate, pos) {
     if (pos == "Q") {
@@ -134,40 +135,25 @@ function getOutputRS(gate, pos) {
     }
 }
 
+// done checking
 function getResultRS(ff) {
-    // check if fa type is Gate object
+    // check if flipflop type is Gate object
     if (ff.constructor.name == "Gate") {
-        let gate = ff;
-        if (gate.output != null) {
-            return;
-        }
-        for (let i = 0; i < gate.inputs.length; i++) {
-            if (gate.inputs[i].output == null) {
-                getResult(gate.inputs[i]);
-            }
-        }
-        gate.generateOutput();
-    }
-
-    if (ff.Q != null && ff.Qbar != null) {
         return;
     }
 
-    if (getOutputRS(ff.R[0], ff.R[1]) == null) {
-        getResultRS(ff.R[0]);
-    }
-    if (getOutputRS(ff.S[0], ff.S[1]) == null) {
-        getResultRS(ff.S[0]);
-    }
-    if (getOutputRS(ff.Clk[0], ff.Clk[1]) == null) {
-        getResultRS(ff.Clk[0]);
-    }
+    // if (ff.Q != null && ff.Qbar != null) {
+    //     return;
+    // }
 
-    ff.generateOutput();
-
+    if (getOutputRS(ff.R[0], ff.R[1]) != null && getOutputRS(ff.S[0], ff.S[1]) != null && getOutputRS(ff.Clk[0], ff.Clk[1]) != null) {
+        ff.generateOutput();
+    }
     return;
 }
 
+
+// done checking
 function checkConnectionsRS() {
     let flag = 0;
     for (let ffID in flipFlops) {
@@ -220,7 +206,234 @@ function checkConnectionsRS() {
         }
     }
 
+    if (flag == 0) {
+        return true;
+    }
+    else {
+        alert("Connections are not correct");
+        return false;
+    }
+}
 
+export function simulateFFRS() {
+    for (let ffID in flipFlops) {
+        const gate = flipFlops[ffID];
+        getResultRS(gate);
+    }
+}
+
+
+
+class JKFlipFlop {
+    constructor() {
+        this.id = "JKFlipFlop-" + window.numComponents++;
+        this.K = [];  // Takes 2 items in a list : Gate, Output endpoint of gate
+        this.J = [];
+        this.Clk = [];
+        this.Q = null;
+        this.Qbar = null;
+        this.inputPoints = [];
+        this.outputPoints = [];
+        this.QIsConnected = false;
+        this.QbarIsConnected = false;
+        this.component = '<div class="drag-drop JKFlipFlop" id=' + this.id + '></div>';
+    }
+    registerComponent(workingArea, x = 0, y = 0) {
+        const parent = document.getElementById(workingArea);
+        parent.insertAdjacentHTML('beforeend', this.component);
+        document.getElementById(this.id).style.left = x + "px";
+        document.getElementById(this.id).style.top = y + "px";
+
+        const el = document.getElementById(this.id);
+        el.addEventListener('contextmenu', function (ev) {
+            ev.preventDefault();
+            let left = ev.pageX - document.getScroll()[0];
+            let top = ev.pageY - document.getScroll()[1];
+            const origin = {
+                left: left,
+                top: top
+            };
+            setPosition(origin);
+            window.selectedComponent = this.id;
+            window.componentType = "flipFlop";
+            // deleteElement(this.id);
+            return false;
+        }, false);
+
+        flipFlops[this.id] = this;
+        registerGate(this.id, this);
+    }
+
+    setK(K) {
+        this.K = K;
+    }
+    setJ(J) {
+        this.J = J;
+    }
+    setClk(Clk) {
+        this.Clk = Clk;
+    }
+    setQ(Q) {
+        this.Q = Q;
+    }
+    setQbar(Qbar) {
+        this.Qbar = Qbar;
+    }
+    addInputPoints(input) {
+        this.inputPoints.push(input);
+    }
+
+    addOutputPoints(output) {
+        this.outputPoints.push(output);
+    }
+
+    setConnected(val, pos) {
+        console.log(val, pos);
+        if (pos == "Q") {
+            this.QIsConnected = val;
+        }
+        else if (pos == "Q'") {
+            this.QbarIsConnected = val;
+        }
+    }
+
+    generateOutput() {
+        const K = getOutputJK(this.K[0], this.K[1]);
+        const J = getOutputJK(this.J[0], this.J[1]);
+        const Clk = getOutputRS(this.Clk[0], this.Clk[1]);
+
+        if (Clk == false) {
+            return;
+        }
+        else {
+            if (J == false && K == false) {
+                return;
+            }
+            else if (J == false && K == true) {
+                this.Q = false;
+                this.Qbar = true;
+            }
+            else if (J == true && K == false) {
+                this.Q = true;
+                this.Qbar = false;
+            }
+            else if (J == true && K == true) {
+                this.Q = true;
+                this.Qbar = true;
+            }
+        }
+    }
+}
+
+
+function addJKFlipFlop(x, y) {
+    const ff = new JKFlipFlop();
+    ff.registerComponent("working-area", x, y);
+}
+
+window.addJKFlipFlop = addJKFlipFlop;
+
+function getOutputJK(gate, pos) {
+    if (pos == "Q") {
+        return gate.Q;
+    }
+    else if (pos == "Q'") {
+        return gate.Qbar;
+    }
+    // But if the gate is not an FA, but an input bit, then return the value of the input
+    else {
+        return gate.output
+    }
+}
+
+// done checking
+function getResultJK(ff) {
+    // check if flipflop type is Gate object
+    if (ff.constructor.name == "Gate") {
+        let gate = ff;
+        if (gate.output != null) {
+            return;
+        }
+        for (let i = 0; i < gate.inputs.length; i++) {
+            if (gate.inputs[i].output == null) {
+                getResult(gate.inputs[i]);
+            }
+        }
+        gate.generateOutput();
+    }
+
+    if (ff.Q != null && ff.Qbar != null) {
+        return;
+    }
+
+    if (getOutputJK(ff.K[0], ff.K[1]) == null) {
+        getResultJK(ff.K[0]);
+    }
+    if (getOutputJK(ff.J[0], ff.J[1]) == null) {
+        getResultJK(ff.J[0]);
+    }
+    if (getOutputJK(ff.Clk[0], ff.Clk[1]) == null) {
+        getResultJK(ff.Clk[0]);
+    }
+
+    ff.generateOutput();
+
+    return;
+}
+
+
+// done checking
+function checkConnectionsJK() {
+    let flag = 0;
+    for (let ffID in flipFlops) {
+        const gate = flipFlops[ffID];
+        // For Full Adder objects
+        // Check if all the outputs are connected
+        if (gate.QIsConnected == false) {
+            flag = 1;
+            break;
+        }
+        if (gate.QbarIsConnected == false) {
+            flag = 1;
+            break;
+        }
+        // Check if all the inputs are connected
+        if (gate.K == null || gate.K.length == 0) {
+            flag = 1;
+            break;
+        }
+        if (gate.J == null || gate.J.length == 0) {
+            flag = 1;
+            break;
+        }
+        if (gate.Clk == null || gate.Clk.length == 0) {
+            flag = 1;
+            break;
+        }
+    }
+    for (let gateId in gates) {
+        const gate = gates[gateId];
+        if (gate.isInput == true) {
+            if (gate.isConnected == false) {
+                flag = 1;
+                break;
+            }
+        }
+        else if (gate.isOutput == true) {
+            if (gate.inputs.length == 0) {
+                flag = 1;
+                break;
+            }
+        }
+        else {
+            if (gate.inputPoints.length != gate.inputs.length) {
+                flag = 1;
+            }
+            else if (gate.isConnected == false && gate.isOutput == false) {
+                flag = 1;
+            }
+        }
+    }
 
     if (flag == 0) {
         return true;
@@ -231,3 +444,7 @@ function checkConnectionsRS() {
     }
 }
 
+
+
+
+export { checkConnectionsRS, getOutputRS, getResultRS, addRSFlipFlop, clearFlipFlops, flipFlops, RSFlipFlop };

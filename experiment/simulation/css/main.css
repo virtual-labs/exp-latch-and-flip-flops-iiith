@@ -16,6 +16,27 @@
   z-index: 1;
 }
 
+.RSFlipFlop {
+  background-color: #29e;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 200px;
+  width: 150px;
+  background-image: url("../images/SR_Latch_Sync.svg");
+  background-size: 130%;
+}
+
+.JKFlipFlop {
+  background-color: #29e;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 200px;
+  width: 150px;
+  background-image: url("../images/FF_JK.svg");
+  background-size: 130%;
+}
+
+
 .AND {
   background-color: #29e;
   background-image: url("../images/AND.svg");
@@ -56,6 +77,14 @@
   background-image: url("../images/NAND.svg");
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.ThreeIPNAND {
+  background-color: #29e;
+  background-image: url("../images/NAND3.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
 }
 
 .NOR {
@@ -171,6 +200,14 @@
   padding: 2% 5%;
   text-align: center;
   height: 100%;
+  overflow-y: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: start;
+  justify-content: center;
+  padding: 10px;
 }
 
 
@@ -242,7 +279,7 @@ svg.wire path {
   height: 80px;
   border-radius: 0.75em;
   border: 0.2rem solid rgb(98, 178, 235);
-  margin: 1rem 0;
+  margin: 1rem 0.5rem;
   font-weight: bold;
   font-size: 0.8rem;
   text-align: center;
@@ -315,4 +352,12 @@ svg.wire path {
   visibility: visible;
   transform: scale(1.0);
   transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+}
+
+
+@media screen and (max-width: 768px) {
+  .components-list{
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
 }
