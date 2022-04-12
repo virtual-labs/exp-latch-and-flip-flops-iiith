@@ -1,10 +1,9 @@
-import { simulateFA, deleteFA } from "./fa.js";
 import { simulate, deleteElement } from "./gate.js";
 import { bindEvent1, bindEvent2,bindEvent3, unbindEvent, initRSFlipFlop,initDFlipFlop, initJKFlipFlop, refreshWorkingArea,initTFlipFlop } from "./main.js";
-import {checkConnectionsRS,getOutputRS,getResultRS,addRSFlipFlop,clearFlipFlops} from "./flipflop.js";
+import {deleteFF} from "./flipflop.js";
 
 // Wires
-export const wireColours = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff", "#00ffff", "#ff8000", "#00ff80", "#80ff00", "#ff0080", "#8080ff", "#c0c0c0"];
+export const wireColours = ["#ff0000", "#00ff00", "#0000ff", "#bf6be3", "#ff00ff", "#00ffff", "#ff8000", "#00ff80", "#80ff00", "#ff0080", "#8080ff", "#c0c0c0"];
 
 // Contextmenu
 const menu = document.querySelector(".menu");
@@ -33,8 +32,8 @@ menuOption.addEventListener("click", e => {
     if (window.componentType == "gate") {
       deleteElement(window.selectedComponent);
     }
-    else if (window.componentType == "fullAdder") {
-      deleteFA(window.selectedComponent);
+    else if (window.componentType == "flipFlop") {
+      deleteFF(window.selectedComponent);
     }
   }
   window.selectedComponent = null;
@@ -82,7 +81,7 @@ function changeTabs(e) {
     bindEvent3();
     refreshWorkingArea();
     initTFlipFlop();
-    window.simulate = simulateFA;
+    window.simulate = simulate;
   }
   updateInstructions();
   updateToolbar();

@@ -1,5 +1,4 @@
 import {gates, testSimulation} from './gate.js';
-import { testSimulationFA } from './fa.js';
 
 
 export function halfAdder(Input0,Input1,CarryOut,SumOut)  // This function takes 4 ids of the respective Gates
@@ -195,7 +194,7 @@ export function rippleAdderTest(InputA0,InputB0,InputA1,InputB1,InputA2,InputB2,
         const carryCout = (inputA3.output && inputB3.output) || (aXorb4 && carryC3)
         
         // simulate the circuit
-        testSimulationFA(fA,gates_list)
+        // testSimulationFA(fA,gates_list)
         const sumSout0 = gates_list[OutputS0].output
         const sumSout1 = gates_list[OutputS1].output;
         const sumSout2 = gates_list[OutputS2].output;

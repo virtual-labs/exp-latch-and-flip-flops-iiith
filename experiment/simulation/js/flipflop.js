@@ -1,6 +1,6 @@
 import { registerGate } from "./main.js";
 import { setPosition } from "./layout.js";
-import { gates, getResult } from './gate.js';
+import { gates } from './gate.js';
 import { jsPlumbInstance } from "./main.js";
 
 let flipFlops = {};
@@ -224,6 +224,7 @@ export function simulateFFRS() {
 
 
 
+
 class JKFlipFlop {
     constructor() {
         this.id = "JKFlipFlop-" + window.numComponents++;
@@ -288,7 +289,6 @@ class JKFlipFlop {
     }
 
     setConnected(val, pos) {
-        console.log(val, pos);
         if (pos == "Q") {
             this.QIsConnected = val;
         }
@@ -340,7 +340,7 @@ function getOutputJK(gate, pos) {
     else if (pos == "Q'") {
         return gate.Qbar;
     }
-    // But if the gate is not an FA, but an input bit, then return the value of the input
+    // But if the gate is not a flipflop, but an input bit, then return the value of the input
     else {
         return gate.output
     }
@@ -350,33 +350,13 @@ function getOutputJK(gate, pos) {
 function getResultJK(ff) {
     // check if flipflop type is Gate object
     if (ff.constructor.name == "Gate") {
-        let gate = ff;
-        if (gate.output != null) {
-            return;
-        }
-        for (let i = 0; i < gate.inputs.length; i++) {
-            if (gate.inputs[i].output == null) {
-                getResult(gate.inputs[i]);
-            }
-        }
-        gate.generateOutput();
-    }
-
-    if (ff.Q != null && ff.Qbar != null) {
         return;
     }
 
-    if (getOutputJK(ff.K[0], ff.K[1]) == null) {
-        getResultJK(ff.K[0]);
-    }
-    if (getOutputJK(ff.J[0], ff.J[1]) == null) {
-        getResultJK(ff.J[0]);
-    }
-    if (getOutputJK(ff.Clk[0], ff.Clk[1]) == null) {
-        getResultJK(ff.Clk[0]);
-    }
 
-    ff.generateOutput();
+    if (getOutputJK(ff.K[0], ff.K[1]) != null && getOutputJK(ff.J[0], ff.J[1]) != null && getOutputJK(ff.Clk[0], ff.Clk[1]) != null) {
+        ff.generateOutput();
+    }
 
     return;
 }
@@ -444,7 +424,65 @@ function checkConnectionsJK() {
     }
 }
 
+export function simulateFFJK() {
+    for (let ffID in flipFlops) {
+        const gate = flipFlops[ffID];
+        getResultJK(gate);
+    }
+}
+
+
+function deleteFF(id) {
+    const ff = flipFlops[id];
+    jsPlumbInstance.removeAllEndpoints(document.getElementById(ff.id));
+    jsPlumbInstance._removeElement(document.getElementById(ff.id));
+    
+
+    for (let key in flipFlops) {
+        if(ff.constructor.name == "JKFlipFlop"){
+            if(flipFlops[key].J[0] == ff) {
+                flipFlops[key].J = null;
+            }
+            if(flipFlops[key].K[0] == ff) {
+                flipFlops[key].K = null;
+            }
+            if(flipFlops[key].Clk[0] == ff) {
+                flipFlops[key].Clk = null;
+            }
+        }
+        else if(ff.constructor.name == "RSFlipFlop"){
+            if(flipFlops[key].R[0] == ff){
+                flipFlops[key].R = null;
+            }
+            if(flipFlops[key].S[0] == ff){
+                flipFlops[key].S = null;
+            }
+            if(flipFlops[key].Clk[0] == ff){
+                flipFlops[key].Clk = null;
+            }
+        }
+    }
+
+    for (let elem in gates) {
+        let found = 0;
+        for (let index in gates[elem].inputs) {
+            if (gates[elem].inputs[index][0].id == ff.id) {
+                found = 1;
+                break;
+            }
+        }
+        if (found == 1) {
+            gates[elem].removeInput(ff);
+        }
+    }
 
 
 
-export { checkConnectionsRS, getOutputRS, getResultRS, addRSFlipFlop, clearFlipFlops, flipFlops, RSFlipFlop };
+
+    delete flipFlops[id];
+}
+
+
+
+
+export { checkConnectionsJK, checkConnectionsRS,deleteFF, getOutputRS, getResultRS, addRSFlipFlop, clearFlipFlops, flipFlops, RSFlipFlop };

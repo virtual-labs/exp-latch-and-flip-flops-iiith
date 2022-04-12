@@ -1,5 +1,4 @@
 import * as gatejs from "./gate.js";
-import * as fajs from "./fa.js";
 import { wireColours } from "./layout.js";
 import * as clockjs from "./clock.js";
 import * as flipflopjs from "./flipflop.js";
@@ -382,11 +381,11 @@ export const bindEvent3 = function () {
                         pos = "Q'";
                     }
                     input.setConnected(true, pos);
-                    if (Object.keys(dropEndpoint.overlays)[0].includes("rin")) {
-                        flipflopjs.flipFlops[dropEndpoint.elementId].setR([input, pos]);
+                    if (Object.keys(dropEndpoint.overlays)[0].includes("kin")) {
+                        flipflopjs.flipFlops[dropEndpoint.elementId].setK([input, pos]);
                     }
-                    else if (Object.keys(dropEndpoint.overlays)[0].includes("sin")) {
-                        flipflopjs.flipFlops[dropEndpoint.elementId].setS([input, pos]);
+                    else if (Object.keys(dropEndpoint.overlays)[0].includes("jin")) {
+                        flipflopjs.flipFlops[dropEndpoint.elementId].setJ([input, pos]);
                     }
                     else if (Object.keys(dropEndpoint.overlays)[0].includes("clk")) {
                         flipflopjs.flipFlops[dropEndpoint.elementId].setClk([input, pos]);
@@ -401,11 +400,11 @@ export const bindEvent3 = function () {
                         pos = "Q'";
                     }
                     input.setConnected(true, pos);
-                    if (Object.keys(endpoint.overlays)[0].includes("rin")) {
-                        flipflopjs.flipFlops[endpoint.elementId].setR([input, pos]);
+                    if (Object.keys(endpoint.overlays)[0].includes("kin")) {
+                        flipflopjs.flipFlops[endpoint.elementId].setK([input, pos]);
                     }
-                    else if (Object.keys(endpoint.overlays)[0].includes("sin")) {
-                        flipflopjs.flipFlops[endpoint.elementId].setS([input, pos]);
+                    else if (Object.keys(endpoint.overlays)[0].includes("jin")) {
+                        flipflopjs.flipFlops[endpoint.elementId].setJ([input, pos]);
                     }
                     else if (Object.keys(endpoint.overlays)[0].includes("clk")) {
                         flipflopjs.flipFlops[endpoint.elementId].setClk([input, pos]);
@@ -417,11 +416,11 @@ export const bindEvent3 = function () {
                     let input = gatejs.gates[dropEndpoint.elementId];
                     input.setConnected(true);
                     let pos = "";
-                    if (Object.keys(endpoint.overlays)[0].includes("rin")) {
-                        flipflopjs.flipFlops[endpoint.elementId].setR([input, pos]);
+                    if (Object.keys(endpoint.overlays)[0].includes("kin")) {
+                        flipflopjs.flipFlops[endpoint.elementId].setK([input, pos]);
                     }
-                    else if (Object.keys(endpoint.overlays)[0].includes("sin")) {
-                        flipflopjs.flipFlops[endpoint.elementId].setS([input, pos]);
+                    else if (Object.keys(endpoint.overlays)[0].includes("jin")) {
+                        flipflopjs.flipFlops[endpoint.elementId].setJ([input, pos]);
                     }
                     else if (Object.keys(endpoint.overlays)[0].includes("clk")) {
                         flipflopjs.flipFlops[endpoint.elementId].setClk([input, pos]);
@@ -433,11 +432,11 @@ export const bindEvent3 = function () {
                     let input = gatejs.gates[endpoint.elementId];
                     input.setConnected(true);
                     let pos = "";
-                    if (Object.keys(dropEndpoint.overlays)[0].includes("rin")) {
-                        flipflopjs.flipFlops[dropEndpoint.elementId].setR([input, pos]);
+                    if (Object.keys(dropEndpoint.overlays)[0].includes("kin")) {
+                        flipflopjs.flipFlops[dropEndpoint.elementId].setK([input, pos]);
                     }
-                    else if (Object.keys(dropEndpoint.overlays)[0].includes("sin")) {
-                        flipflopjs.flipFlops[dropEndpoint.elementId].setS([input, pos]);
+                    else if (Object.keys(dropEndpoint.overlays)[0].includes("jin")) {
+                        flipflopjs.flipFlops[dropEndpoint.elementId].setJ([input, pos]);
                     }
                     else if (Object.keys(dropEndpoint.overlays)[0].includes("clk")) {
                         flipflopjs.flipFlops[dropEndpoint.elementId].setClk([input, pos]);
@@ -516,11 +515,11 @@ export const bindEvent3 = function () {
                     let input = gatejs.gates[dropEndpoint.elementId];
                     input.setConnected(true);
                     let pos = "";
-                    if (Object.keys(endpoint.overlays)[0].includes("rin")) {
-                        flipflopjs.flipFlops[endpoint.elementId].setR([input, pos]);
+                    if (Object.keys(endpoint.overlays)[0].includes("kin")) {
+                        flipflopjs.flipFlops[endpoint.elementId].setK([input, pos]);
                     }
-                    else if (Object.keys(endpoint.overlays)[0].includes("sin")) {
-                        flipflopjs.flipFlops[endpoint.elementId].setS([input, pos]);
+                    else if (Object.keys(endpoint.overlays)[0].includes("jin")) {
+                        flipflopjs.flipFlops[endpoint.elementId].setJ([input, pos]);
                     }
                     else if (Object.keys(endpoint.overlays)[0].includes("clk")) {
                         flipflopjs.flipFlops[endpoint.elementId].setClk([input, pos]);
@@ -535,11 +534,11 @@ export const bindEvent3 = function () {
                     let input = gatejs.gates[endpoint.elementId];
                     input.setConnected(true);
                     let pos = "";
-                    if (Object.keys(dropEndpoint.overlays)[0].includes("rin")) {
-                        flipflopjs.flipFlops[dropEndpoint.elementId].setR([input, pos]);
+                    if (Object.keys(dropEndpoint.overlays)[0].includes("kin")) {
+                        flipflopjs.flipFlops[dropEndpoint.elementId].setK([input, pos]);
                     }
-                    else if (Object.keys(dropEndpoint.overlays)[0].includes("sin")) {
-                        flipflopjs.flipFlops[dropEndpoint.elementId].setS([input, pos]);
+                    else if (Object.keys(dropEndpoint.overlays)[0].includes("jin")) {
+                        flipflopjs.flipFlops[dropEndpoint.elementId].setJ([input, pos]);
                     }
                     else if (Object.keys(dropEndpoint.overlays)[0].includes("clk")) {
                         flipflopjs.flipFlops[dropEndpoint.elementId].setClk([input, pos]);
@@ -1088,7 +1087,7 @@ export function refreshWorkingArea() {
     window.numComponents = 0;
 
     gatejs.clearGates();
-    fajs.clearFAs();
+    flipflopjs.clearFlipFlops();
 }
 
 const getInfo = function () {

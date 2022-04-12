@@ -2,7 +2,7 @@ import { registerGate } from "./main.js";
 import { setPosition } from "./layout.js";
 import { halfAdder, fullAdderTest, rippleAdderTest } from "./validator.js";
 import { jsPlumbInstance } from "./main.js";
-import { flipFlops, simulateFFRS } from "./flipflop.js";
+import { checkConnectionsRS, checkConnectionsJK, simulateFFJK, simulateFFRS } from "./flipflop.js";
 
 export let gates = {}; // Array of gates
 window.numComponents = 0;
@@ -42,8 +42,8 @@ export class Gate {
     removeInput(gate) {
         let index = -1;
         let i = 0;
-        for (let input in inputs) {
-            if (inputs[input][0] == gate) {
+        for (let input in this.inputs) {
+            if (this.inputs[input][0] == gate) {
                 index = i;
                 break;
             }
@@ -286,6 +286,17 @@ export function simulate() {
         return;
     }
 
+    if(window.currentTab == "Task2"){
+        if(!checkConnectionsRS()){
+            return;
+        }
+    }
+    else if(window.currentTab == "Task4"){
+        if(!checkConnectionsJK()){
+            return;
+        }
+    }
+
     let flag = 0;
 
     for (let gateId in gates) {
@@ -402,8 +413,12 @@ function simulate2() {
             }
         }
 
-
+        if(window.currentTab === "Task2"){
         simulateFFRS();
+        }
+        else if(window.currentTab === "Task4"){
+            simulateFFJK();
+        }
 
     }
     // output bits
