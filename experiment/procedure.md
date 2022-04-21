@@ -1,9 +1,7 @@
-1. With The help of Theory Page , try to build the Flip Flop Circuit.
-2. First of all build the RS Flip Flop Circuit.
-3. Then use RS Flip Flop to build D Flip Flop.
-4. Then make J K Flip Flop
-5. Use J K Flip Flop to make T Flip Flop.
-6. If You are unable to make it , load or export the circuit directly and use it.
-7. Use time variant Input pulse to analyze the output.
-8. There is an import feature, which lets you construct building blocks. Click on import and then click on circuit board to see the imported block. For more details, refer import section in manual.
-
+1. Firstly learn everything from the 'Demo' section.
+2. Then, test your understanding about Latch and Flip Flops in the 'Pretest' section.
+3. Then in the 'Practice' section in the task-1 "RS Flip-Flop", make RS Flip-Flop using logic gates and test it with different inputs.
+4. Then, in the task-2 "D Flip-Flop", implement a D flip-flop using RS Flip-Flop.
+5. After that, in task-3 "JK Flip-Flop" make a JK Flip-Flop using logic gates and test it with different inputs.
+6. Then, in the task-4 "T Flip-Flop", implement a T flip-flop using JK Flip-Flop.
+7. Finally, test your understanding of the experiment in the 'Posttest' section.
