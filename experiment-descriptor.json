@@ -35,8 +35,8 @@
       "target": "pretest.html"
     },
     {
-      "target": "demo.html",
-      "source": "simulation/demo.html",
+      "target": "demo-RSFF.html",
+      "source": "simulation/demo-RSFF.html",
       "label": "Demo",
       "unit-type": "task",
       "content-type": "simulation"
