@@ -295,7 +295,7 @@ outputDisappear();
 var tl = gsap.timeline({ repeat: 0, repeatDelay: 0 });
 
 function fourXspeed() {
-    if (textClock.textContent == 1 && textToggle.textContent != 2 && tl.progress() != 1) {
+    if (textClock.textContent == 1 && textToggle.textContent != 2 && tl.progress() != 1 && tl.progress()!=0) {
         tl.resume();
         tl.timeScale(4);
         OBSERV.innerHTML = "4x speed";
@@ -318,7 +318,7 @@ function SetSpeed(speed) {
 }
 const SPEED = document.getElementById("speed");
 function doubleSpeed() {
-    if (textClock.textContent == 1 && textToggle.textContent != 2 && tl.progress() != 1) {
+    if (textClock.textContent == 1 && textToggle.textContent != 2 && tl.progress() != 1 && tl.progress()!=0) {
         tl.resume();
         tl.timeScale(2);
         OBSERV.innerHTML = "2x speed";
@@ -344,6 +344,7 @@ function restartCircuit() {
     reboot();
 
     myFunction();
+    OBSERV.innerHTML="Successfully Restored";
     decide = 0;
     BUTTON.innerHTML = "Start";
     SPEED.selectedIndex=0;

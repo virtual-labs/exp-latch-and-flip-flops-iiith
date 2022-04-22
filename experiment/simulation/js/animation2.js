@@ -459,7 +459,7 @@ outputDisappear();
 var tl = gsap.timeline({ repeat: 0, repeatDelay: 0 });
 
 function fourXspeed() {
-    if ((textClock.textContent == 1 && textSet.textContent != 2 && textReset.textContent != 2 && tl.progress() != 1) || tl.progress() >= 8 / 22) {
+    if ((textClock.textContent == 1 && textSet.textContent != 2 && textReset.textContent != 2 && tl.progress() != 1 && tl.progress()!=0) || tl.progress() >= 8 / 22) {
         tl.resume();
         tl.timeScale(4);
         document.getElementById("Observations").innerHTML = "4x speed";
@@ -468,7 +468,7 @@ function fourXspeed() {
     }
 }
 function doubleSpeed() {
-    if ((textClock.textContent == 1 && textSet.textContent != 2 && textReset.textContent != 2 && tl.progress() != 1) || tl.progress() >= 8 / 22) {
+    if ((textClock.textContent == 1 && textSet.textContent != 2 && textReset.textContent != 2 && tl.progress() != 1 && tl.progress()!=0) || tl.progress() >= 8 / 22) {
         tl.resume();
         tl.timeScale(2);
         document.getElementById("Observations").innerHTML = "2x speed";
@@ -509,6 +509,7 @@ function restartCircuit() {
     reboot();
 
     myFunction();
+    OBSERV.innerHTML="Successfully Restored";
     decide = 0;
     BUTTON.innerHTML = "Start";
     SPEED.selectedIndex=0;
@@ -517,7 +518,7 @@ function stopCircuit() {
     if (tl.time() != 0 && tl.progress() != 1) {
         tl.pause();
         // console.log(tl.progress());
-        OBSERV.innerHTML = "Simulation has been stopped."
+        OBSERV.innerHTML = "Simulation has been stopped.";
         decide = 0;
         BUTTON.innerHTML = "Start";
         SPEED.selectedIndex=0;
