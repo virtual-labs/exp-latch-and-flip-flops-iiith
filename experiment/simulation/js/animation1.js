@@ -285,7 +285,7 @@ function errno() {
 
 }
 function batado() {
-    OBSERV.innerHTML = "Simulation has finished. Press Restart to start again"
+    OBSERV.innerHTML = "Simulation has finished. Press Restart to start again";
 }
 function setter(a, b) {
     if (a == 1) {
@@ -300,7 +300,7 @@ outputDisappear();
 var tl = gsap.timeline({ repeat: 0, repeatDelay: 0 });
 
 function fourXspeed() {
-    if (textClock.textContent == 1 && textData.textContent != 2 && tl.progress() != 1) {
+    if (textClock.textContent == 1 && textData.textContent != 2 && tl.progress() != 1 && tl.progress()!=0) {
         tl.resume();
         tl.timeScale(4);
         OBSERV.innerHTML = "4x speed";
@@ -309,7 +309,7 @@ function fourXspeed() {
     }
 }
 function doubleSpeed() {
-    if (textClock.textContent == 1 && textData.textContent != 2 && tl.progress() != 1) {
+    if (textClock.textContent == 1 && textData.textContent != 2 && tl.progress() != 1 && tl.progress()!=0) {
         tl.resume();
         tl.timeScale(2);
         OBSERV.innerHTML = "2x speed";
@@ -337,6 +337,7 @@ function restartCircuit() {
     allDisappear();
     reboot();
     myFunction();
+    OBSERV.innerHTML="Successfully Restored";
     decide = 0;
     BUTTON.innerHTML = "Start";
     SPEED.selectedIndex=0;
@@ -355,13 +356,13 @@ function button() {
 function stopCircuit() {
     if (tl.time() != 0 && tl.progress() != 1) {
         tl.pause();
-        OBSERV.innerHTML = "Simulation has been stopped."
+        OBSERV.innerHTML = "Simulation has been stopped.";
         decide = 0;
         BUTTON.innerHTML = "Start";
         SPEED.selectedIndex=0;
     }
     else if (tl.progress() == 1) {
-        OBSERV.innerHTML = "Please Restart the simulation"
+        OBSERV.innerHTML = "Please Restart the simulation";
     }
 }
 
@@ -369,19 +370,19 @@ function startCircuit() {
     if (textClock.textContent == 1 && textData.textContent != 2 && tl.progress() != 1) {
         tl.play();
         tl.timeScale(1);
-        OBSERV.innerHTML = "Simulation has started."
+        OBSERV.innerHTML = "Simulation has started.";
         decide = 1;
         BUTTON.innerHTML = "Halt";
         SPEED.selectedIndex=0;
     }
     else if (textData.textContent == 2 || textClock.textcontent == 2) {
-        OBSERV.innerHTML = "Please select the values"
+        OBSERV.innerHTML = "Please select the values";
     }
     else if (textClock.textContent == 0) {
-      OBSERV.innerHTML = "Please setup the clock."
+      OBSERV.innerHTML = "Please setup the clock.";
     }
     else if (tl.progress() == 1) {
-      OBSERV.innerHTML = "Please Restart the simulation"
+      OBSERV.innerHTML = "Please Restart the simulation";
     }
 }
 tl.add(dataDotVisible, 0);

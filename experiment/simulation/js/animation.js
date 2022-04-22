@@ -430,6 +430,7 @@ function restartCircuit() {
     allDisappear();
     reboot();
     myFunction();
+    OBSERV.innerHTML="Successfully Restored";
     decide = 0;
     BUTTON.innerHTML = "Start";
     SPEED.selectedIndex=0;
