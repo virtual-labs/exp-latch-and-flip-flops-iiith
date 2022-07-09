@@ -91,24 +91,24 @@ function changeTabs(e) {
 
 window.changeTabs = changeTabs;
 
-function updateInstructions() {
-  if (window.currentTab === "task1") {
-    document.getElementById("TaskTitle").innerHTML = "RS Flip-Flop";
-    document.getElementById("TaskDescription").innerHTML = 'Implement an RS Flip-Flop using logic gates.';
+// Instruction box
+const updateInstructions = () => {
+  const task = window.currentTab;
+  const instructionBox = document.getElementById("instruction-title");
+  let title = ""; 
+  if (task === "task1") {
+    title = `Instructions<br>Implement an RS Flip-Flop using logic gates`;
+  } else if (task === "task2") {
+    title = `Instructions<br>Implement a D Flip-Flop using RS Flip-Flop`;
+  } else if (task === "task3") {
+    title = `Instructions<br>Implement a JK Flip-Flop using logic gates`;
   }
-  if (window.currentTab === "task3") {
-    document.getElementById("TaskTitle").innerHTML = "JK Flip-Flop";
-    document.getElementById("TaskDescription").innerHTML = 'Implement a JK Flip-Flop using logic gates.';
+  else if (task === "task4") {
+    title = `Instructions<br>Implement a T Flip-Flop using JK Flip-Flop`;
   }
-  else if (window.currentTab === "task4") {
-    document.getElementById("TaskTitle").innerHTML = "T Flip-Flop";
-    document.getElementById("TaskDescription").innerHTML = 'Implement T flip-flops using RS Flip-Flop '
-  }
-  else if (window.currentTab === "task2") {
-    document.getElementById("TaskTitle").innerHTML = "D Flip-Flop";
-    document.getElementById("TaskDescription").innerHTML = 'Implement D flip-flops using RS Flip-Flop ';
-  }
+  instructionBox.innerHTML = title;
 }
+
 
 // Toolbar
 
@@ -185,11 +185,6 @@ simButton.addEventListener("click", toggleSimulation);
 
 
 
-// Instruction box
-const instructionBox = document.getElementsByClassName("instructions-box")[0];
-instructionBox.addEventListener("click", (e) => {
-  instructionBox.classList.toggle("expand");
-});
 
 // Making webpage responsive
 
