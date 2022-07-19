@@ -2,9 +2,8 @@ import { setCoordinates,fillInputDots,fillColor,objectDisappear,objectAppear,set
 
 'use strict'
 
-window.appendSet = appendSet;
+window.appendToggle = appendToggle;
 window.appendClock = appendClock;
-window.appendReset = appendReset;
 window.simulationStatus = simulationStatus;
 window.restartCircuit = restartCircuit;
 window.setSpeed=setSpeed;
@@ -31,14 +30,12 @@ const speed = document.getElementById("speed");
 
 // global varaibles declared here
 const objects = [
-    document.getElementById("set"),
+    document.getElementById("toggle"),
     document.getElementById("clock"),
-    document.getElementById("reset"),
     document.getElementById("output-q"),
     document.getElementById("output-qbar")
 ];
 const textInput = [
-    document.createElementNS(svgns, "text"),
     document.createElementNS(svgns, "text"),
     document.createElementNS(svgns, "text")
 ];
@@ -49,12 +46,10 @@ const textOutput = [
 const dots = [
     document.createElementNS(svgns, "circle"),
     document.createElementNS(svgns, "circle"),
-    document.createElementNS(svgns, "circle"),
     document.createElementNS(svgns, "circle")
 ];
-// First dot emerges from Set
-// Next 2 dots emerge from Clock
-// Third dot is from Reset
+// First 2 dots emerge from Data
+// Third dot is from Clock
 
 
 
@@ -84,9 +79,9 @@ function textIOInit() {
 
 // function to mark the output coordinates
 function outputCoordinates() {
-    setCoordinates(946,234,textOutput[0]);
+    setCoordinates(896,424,textOutput[0]);
     svg.append(textOutput[0]);
-    setCoordinates(946,494,textOutput[1]);
+    setCoordinates(896,604,textOutput[1]);
     svg.append(textOutput[1]);
 }
 
@@ -142,38 +137,27 @@ function allDisappear() {
     }
 }
 
-function appendSet() {
+function appendToggle() {
     if (textInput[0].textContent !== "0" && timeline.progress() === 0) {
-        changeto0(16,24,0,0);
-        observ.innerHTML = "Set bit is equal to 0";
+        changeto0(16,124,0,0);
+        observ.innerHTML = "Data bit is equal to 0";
     }
     else if (textInput[0].textContent !== "1" && timeline.progress() === 0) {
-        changeto1(16,24,0,0);
-        observ.innerHTML = "Set bit is equal to 1";
+        changeto1(16,124,0,0);
+        observ.innerHTML = "Data bit is equal to 1";
     }
     setter(textInput[0].textContent,dots[0]);
+    setter(textInput[0].textContent,dots[1]);
 }
 function appendClock() {
     if (textInput[1].textContent !== "0" && timeline.progress() === 0) {
-        changeto0(16,364,1,1);
+        changeto0(16,514,1,1);
     }
     else if (textInput[1].textContent !== "1" && timeline.progress() === 0) {
-        changeto1(16,364,1,1);
+        changeto1(16,514,1,1);
         observ.innerHTML = "Clock is turned ON";
     }
-    setter(textInput[1].textContent,dots[1]);
     setter(textInput[1].textContent,dots[2]);
-}
-function appendReset() {
-    if (textInput[2].textContent !== "0" && timeline.progress() === 0) {
-        changeto0(16,704,2,2);
-        observ.innerHTML = "Reset bit is equal to 0";
-    }
-    else if (textInput[2].textContent !== "1" && timeline.progress() === 0) {
-        changeto1(16,704,2,2);
-        observ.innerHTML = "Reset bit is equal to 1";
-    }
-    setter(textInput[2].textContent,dots[3]);
 }
 
 function changeto1(coordinateX,coordinateY,object,textObject) {
@@ -194,42 +178,35 @@ function changeto0(coordinateX,coordinateY,object,textObject) {
     objectAppear(textInput[textObject]);
 }
 
-let nand1 = "0";
-let nand2 = "0";
-
+let q = "0";
+let qbar = "0";
 
 function stage1() {
-    nand1 = calculateNot(calculateAnd(textInput[0].textContent,textInput[1].textContent));
-    nand2 = calculateNot(calculateAnd(textInput[1].textContent,textInput[2].textContent));
-    setter(nand1,dots[0]);
-    setter(nand2,dots[2]);
-    objectDisappear(dots[1]);
-    objectDisappear(dots[3]);   
+    if(textInput[0].textContent === "0"){
+        q = textOutput[0].textContent;
+        qbar = textOutput[1].textContent;
+    }
+    else if(textInput[0].textContent === "1"){
+        q = textOutput[1].textContent;
+        qbar = textOutput[0].textContent;
+    }
+    else
+    {
+        console.log("Error! Unreachable state");
+    }
+    setter(q,dots[0]);
+    setter(qbar,dots[1]);
+    objectDisappear(dots[2]);
+
 }
 
 function outputSetter(){
-    if(textInput[1].textContent === "1" )
-    {
-        if(textInput[0].textContent === "1" && textInput[2].textContent === "0")
-        {
-            textOutput[0].textContent = "1";
-            textOutput[1].textContent = "0";
-        }
-        else if(textInput[0].textContent === "0" && textInput[2].textContent === "1")
-        {
-            textOutput[0].textContent = "0";
-            textOutput[1].textContent = "1";
-        }
-        else
-        {
-            console.log("error! Invalid state");
-        }
-        
-    }
-    setter(textOutput[0].textContent,objects[3]);
-    setter(textOutput[1].textContent,objects[4]);
+    textOutput[0].textContent = q;
+    textOutput[1].textContent = qbar;
+    setter(textOutput[0].textContent,objects[2]);
+    setter(textOutput[1].textContent,objects[3]);
     objectDisappear(dots[0]);
-    objectDisappear(dots[2]);
+    objectDisappear(dots[1]);
 }
 
 function display() {
@@ -260,7 +237,8 @@ function restartCircuit() {
     clearObservation();
     decide = false;
     status.innerHTML = "Start";
-    observ.innerHTML = "Successfully restored";
+    observ.innerHTML = "Successfully restored. ";
+    observ.innerHTML += "Initially the circuit is in reset state. i.e. Q = 0 and Q' = 1";
     speed.selectedIndex = 0;
 }
 
@@ -290,12 +268,8 @@ function startCircuit() {
         observ.innerHTML = "Please set the Clock as 1";
         return;
     }
-
-    if(textInput[0].textContent==="1" && textInput[2].textContent==="1")
-    {
-        observ.innerHTML = "Invaid State, Set and Reset both cannot be 1";
-        return;
-    }
+    textOutput[0].textContent = "0";
+    textOutput[1].textContent = "1";
 
 
     for(const text of textInput){
@@ -334,8 +308,8 @@ outputDisappear();
 
 timeline.add(inputDotVisible, 0);
 timeline.add(stage1,10);
-timeline.add(outputSetter,18);
-timeline.add(outputVisible,18);
+timeline.add(outputSetter,15);
+timeline.add(outputVisible,15);
 timeline.eventCallback("onComplete", outputVisible);
 timeline.eventCallback("onComplete", display);
 
@@ -387,7 +361,7 @@ timeline.to(dots[2], {
     paused: false,
 
 }, 0);
-timeline.to(dots[3], {
+timeline.to(dots[0], {
     motionPath: {
         path: "#path4",
         align: "#path4",
@@ -395,7 +369,8 @@ timeline.to(dots[3], {
         alignOrigin: [0.5, 0.5]
     },
 
-    duration: 10,
+    duration: 5,
+    delay: 10,
     repeat: 0,
     repeatDelay: 3,
     yoyo: true,
@@ -403,7 +378,7 @@ timeline.to(dots[3], {
     paused: false,
 
 }, 0);
-timeline.to(dots[0], {
+timeline.to(dots[1], {
     motionPath: {
         path: "#path5",
         align: "#path5",
@@ -411,7 +386,7 @@ timeline.to(dots[0], {
         alignOrigin: [0.5, 0.5]
     },
     
-    duration: 7,
+    duration: 5,
     delay: 10,
     repeat: 0,
     repeatDelay: 3,
@@ -420,23 +395,6 @@ timeline.to(dots[0], {
     paused: false,
 
 },0);
-timeline.to(dots[2], {
-    motionPath: {
-        path: "#path6",
-        align: "#path6",
-        autoRotate: true,
-        alignOrigin: [0.5, 0.5]
-    },
-
-    duration: 7,
-    delay: 10,
-    repeat: 0,
-    repeatDelay: 3,
-    yoyo: true,
-    ease: "none",
-    paused: false,
-
-}, 0);
-
+observ.innerHTML = "Initially the circuit is in reset state. i.e. Q = 0 and Q' = 1";
 timeline.pause();
 inputDotDisappear();
