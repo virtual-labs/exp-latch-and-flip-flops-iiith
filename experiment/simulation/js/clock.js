@@ -1,10 +1,8 @@
-import { gates } from "./gate.js";
+import { gates,clearResult } from "./gate.js";
 import { registerGate } from "./main.js";
-import { setPosition, toggleModal } from "./layout.js";
+import { toggleModal } from "./layout.js";
 
 'use strict';
-
-window.simulate = 0;
 
 export class Clock {
     constructor(frequency, dutyCycle) {
@@ -69,6 +67,7 @@ export class Clock {
     }
 
     simulate() {
+        clearResult();
         const time = 1000 / this.frequency;
         const intervalOn = (time * this.dutyCycle) / 100;
         const intervalOff = time - intervalOn;
@@ -79,7 +78,7 @@ export class Clock {
         let timerOn = null;
 
         const run = () => {
-            if(window.simulate === 1) {
+            if(window.simulationStatus === 1) {
                 return;
             }
             if (!currentState) {
@@ -97,7 +96,7 @@ export class Clock {
                 timerOff = setTimeout(run, intervalOff);
             }
 
-            window.sim2();
+            window.simClk();
         }
 
         timerOff = setTimeout(run, intervalOff);

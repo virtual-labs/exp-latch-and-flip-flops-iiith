@@ -1,3 +1,15 @@
+import { setCoordinates,fillInputDots,fillColor,objectDisappear,objectAppear,setter} from "./animation-utility.js";
+
+'use strict'
+
+window.appendToggle = appendToggle;
+window.appendClock = appendClock;
+window.simulationStatus = simulationStatus;
+window.restartCircuit = restartCircuit;
+window.setSpeed=setSpeed;
+
+
+
 // Dimensions of working area
 const circuitBoard = document.getElementById("circuit-board");
 const sidePanels = document.getElementsByClassName("v-datalist-container");
@@ -6,392 +18,302 @@ const circuitBoardTop = circuitBoard.offsetTop;
 // Full height of window
 const windowHeight = window.innerHeight;
 const width = window.innerWidth;
-if (width < 1024) {
-  circuitBoard.style.height = 600 + "px";
-} else {
-  circuitBoard.style.height = windowHeight - circuitBoardTop - 20 + "px";
-}
-sidePanels[0].style.height = circuitBoard.style.height;
-"use strict";
+
 const svg = document.querySelector(".svg");
-const inputpath1 = document.querySelector("#inputpath1");
 const svgns = "http://www.w3.org/2000/svg";
-gsap.registerPlugin(MotionPathPlugin);
+
+const EMPTY="";
+// stroing the necessary div elements in const
+const status = document.getElementById("play-or-pause");
+const observ = document.getElementById("observations");
+const speed = document.getElementById("speed");
+
+// global varaibles declared here
+const objects = [
+    document.getElementById("toggle"),
+    document.getElementById("clock"),
+    document.getElementById("output-q"),
+    document.getElementById("output-qbar")
+];
+const textInput = [
+    document.createElementNS(svgns, "text"),
+    document.createElementNS(svgns, "text")
+];
+const textOutput = [
+    document.createElementNS(svgns, "text"),
+    document.createElementNS(svgns, "text")
+];
+const dots = [
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle")
+];
+// First 2 dots emerge from Data
+// Third dot is from Clock
 
 
-let textToggle = document.createElementNS(svgns, "text");
 
-let textClock = document.createElementNS(svgns, "text");
-let textOutput1 = document.createElementNS(svgns, "text");
-let textOutput2 = document.createElementNS(svgns, "text");
-textOutput1.textContent = 0;
-textOutput2.textContent = 1;// THIS IS IN THE RESET STATE
-textToggle.textContent = 2;
+// decide help to decide the speed
+let decide = false;
+// circuitStarted is initialised to 0 which depicts that demo hasn't started whereas circuitStarted 1 depicts that the demo has started.
+let circuitStarted = false;
 
-textClock.textContent = 2;
-gsap.set(textOutput1, {
-    x: 896,
-    y: 424
-});
-gsap.set(textOutput2, {
-    x: 896,
-    y: 604
-});
-svg.appendChild(textOutput1);
-svg.appendChild(textOutput2);
-const TOGGLE = document.getElementById("TOGGLE");
 
-const CLOCK = document.getElementById("CLOCK");
-const OUTPUT1 = document.getElementById("OUTPUTQ1");
-const OUTPUT2 = document.getElementById("OUTPUTQ2");
-const BUTTON = document.getElementById("play/pause");
-const OBSERV = document.getElementById("Observations");
-
-let toggleDot1 = document.createElementNS(svgns, "circle");
-gsap.set(toggleDot1, {
-    attr: { cx: 20, cy: 120, r: 15, fill: "#FF0000" }
-});
-let clockDot = document.createElementNS(svgns, "circle");
-gsap.set(clockDot, {
-    attr: { cx: 20, cy: 510, r: 15, fill: "#FF0000" }
-});
-let toggleDot2 = document.createElementNS(svgns, "circle");
-gsap.set(toggleDot2, {
-    attr: { cx: 20, cy: 120, r: 15, fill: "#FF0000" }
-});
-
-svg.appendChild(toggleDot1);
-svg.appendChild(clockDot);
-svg.appendChild(toggleDot2);
-
-function myFunction() {
-    OBSERV.innerHTML = "Initially the flip flop is in the reset state";
-}
-function toggleDotDisappear() {
-    TweenLite.to(toggleDot1, 0, { autoAlpha: 0 });
-    TweenLite.to(toggleDot2, 0, { autoAlpha: 0 });
+// function to take care of width
+function demoWidth() {
+    if (width < 1024) {
+        circuitBoard.style.height = "600px";
+    } else {
+        circuitBoard.style.height = `${windowHeight - circuitBoardTop - 20}px`;
+    }
+    sidePanels[0].style.height = circuitBoard.style.height;
 }
 
-function clockDotDisappear() {
-    TweenLite.to(clockDot, 0, { autoAlpha: 0 });
-
-}
-function toggleDotVisible() {
-    TweenLite.to(toggleDot1, 0, { autoAlpha: 1 });
-    TweenLite.to(toggleDot2, 0, { autoAlpha: 1 });
+// function to initialise the input text i.e. either 0/1 that gets displayed after user click on them
+function textIOInit() {
+    for( const text of textInput){
+        text.textContent = 2;
+    }
 }
 
-function clockDotVisible() {
-    TweenLite.to(clockDot, 0, { autoAlpha: 1 });
 
+// function to mark the output coordinates
+function outputCoordinates() {
+    setCoordinates(896,424,textOutput[0]);
+    svg.append(textOutput[0]);
+    setCoordinates(896,604,textOutput[1]);
+    svg.append(textOutput[1]);
 }
+
+// function to mark the input dots
+function inputDots() {
+    for(const dot of dots){
+        fillInputDots(dot,20,550,15,"#FF0000");
+        svg.append(dot);
+    }
+}
+
+// function to disappear the input dots
+function inputDotDisappear() {
+    for(const dot of dots){
+        objectDisappear(dot);
+    }
+}
+
+// function to appear the input dots
+function inputDotVisible() {
+    for(const dot of dots){
+        objectAppear(dot);
+    }
+}
+// function to disappear the output text
 function outputDisappear() {
-    TweenLite.to(textOutput1, 0, { autoAlpha: 0 });
-    TweenLite.to(textOutput2, 0, { autoAlpha: 0 });
+    for(const text of textOutput){
+        objectDisappear(text);
+    }
 }
+// function to appear the output text
 function outputVisible() {
-    TweenLite.to(textOutput1, 0, { autoAlpha: 1 });
-    TweenLite.to(textOutput2, 0, { autoAlpha: 1 });
+    for(const text of textOutput){
+        objectAppear(text);
+    }
 }
-function toggleDisappear() {
-    TweenLite.to(textToggle, 0, { autoAlpha: 0 });
-}
-function clockDisappear() {
-    TweenLite.to(textClock, 0, { autoAlpha: 0 });
-}
-function free() {
-    OBSERV.innerHTML = "";
-}
-function toggleVisible() {
-    TweenLite.to(textToggle, 0, { autoAlpha: 1 });
-}
-function clockVisible() {
-    TweenLite.to(textClock, 0, { autoAlpha: 1 });
+// function to diappear the input text
+function inputTextDisappear() {
+    for(const text of textInput){
+        objectDisappear(text);
+    }
 }
 
-
-outputDisappear();
+function clearObservation() {
+    observ.innerHTML = EMPTY;
+}
 function allDisappear() {
-    toggleDisappear();
-    toggleDotDisappear();
-
-    clockDisappear();
-    clockDotDisappear();
+    inputDotDisappear();
     outputDisappear();
-    gsap.set(TOGGLE, {
-
-        fill: "#008000"
-    });
-
-    gsap.set(CLOCK, {
-
-        fill: "#008000"
-    });
-    gsap.set(OUTPUT1, {
-
-        fill: "#008000"
-    });
-    gsap.set(OUTPUT2, {
-
-        fill: "#008000"
-    });
-
-}
-function outputHandler() {
-    if (textToggle.textContent == 1) {
-        var temp = textOutput1.textContent;
-        textOutput1.textContent = textOutput2.textContent;
-        textOutput2.textContent = temp;
+    inputTextDisappear();
+    for(const object of objects){
+        fillColor(object,"#008000");
     }
-    else if (textToggle.textContent == 0) {
-        textOutput1.textContent = textOutput1.textContent;
-        textOutput2.textContent = textOutput2.textContent;
-    }
-
 }
-function set(a) {
-    gsap.set(a, {
 
-        fill: "#eeeb22"
-    });
-}//output 0
-function unset(a) {
-    gsap.set(a, {
-
-        fill: "#29e"
-    });
-}//output 1
 function appendToggle() {
-    if (textToggle.textContent != 0 && tl.progress()==0) {
-        toggleDisappear();
-        textToggle.textContent = 0;
-        svg.appendChild(textToggle);
-        gsap.set(textToggle, {
-            x: 16,
-            y: 124
-        });
-        gsap.set(TOGGLE, {
-
-            fill: "#eeeb22"
-        });
-        free();
-        toggleVisible();
-        errno();
-        setter(textToggle.textContent, toggleDot1);
-        setter(textToggle.textContent, toggleDot2);
-        OBSERV.innerHTML = "Toggle bit is set to 0";
+    if (textInput[0].textContent !== "0" && timeline.progress() === 0) {
+        changeto0(16,124,0,0);
+        observ.innerHTML = "Data bit is equal to 0";
     }
-    else if (textToggle.textContent != 1 && tl.progress()==0) {
-        appendToggleTo1();
+    else if (textInput[0].textContent !== "1" && timeline.progress() === 0) {
+        changeto1(16,124,0,0);
+        observ.innerHTML = "Data bit is equal to 1";
     }
-
-
-
-
+    setter(textInput[0].textContent,dots[0]);
+    setter(textInput[0].textContent,dots[1]);
 }
 function appendClock() {
-    if (textClock.textContent != 0 && tl.progress()==0) {
-        clockDisappear();
-        textClock.textContent = 0;
-        svg.appendChild(textClock);
-        gsap.set(textClock, {
-            x: 16,
-            y: 514
-        });
-        gsap.set(CLOCK, {
-
-            fill: "#eeeb22"
-        });
-        free();
-        clockVisible();
-        setter(textClock.textContent, clockDot);
-
-        errno();
+    if (textInput[1].textContent !== "0" && timeline.progress() === 0) {
+        changeto0(16,514,1,1);
     }
-    else if (textClock.textContent != 1 && tl.progress()==0) {
-        appendClockTo1()
+    else if (textInput[1].textContent !== "1" && timeline.progress() === 0) {
+        changeto1(16,514,1,1);
+        observ.innerHTML = "Clock is turned ON";
     }
+    setter(textInput[1].textContent,dots[2]);
+}
+
+function changeto1(coordinateX,coordinateY,object,textObject) {
+    textInput[textObject].textContent = 1;
+    svg.appendChild(textInput[textObject]);
+    setCoordinates(coordinateX,coordinateY,textInput[textObject]);
+    fillColor(objects[object],"#29e");
+    clearObservation();
+    objectAppear(textInput[textObject]);
+}
+
+function changeto0(coordinateX,coordinateY,object,textObject) {
+    textInput[textObject].textContent = 0;
+    svg.appendChild(textInput[textObject]);
+    setCoordinates(coordinateX,coordinateY,textInput[textObject]);
+    fillColor(objects[object],"#eeeb22");
+    clearObservation();
+    objectAppear(textInput[textObject]);
+}
+
+let q = "0";
+let qbar = "0";
+
+function stage1() {
+    if(textInput[0].textContent === "0"){
+        q = textOutput[0].textContent;
+        qbar = textOutput[1].textContent;
+    }
+    else if(textInput[0].textContent === "1"){
+        q = textOutput[1].textContent;
+        qbar = textOutput[0].textContent;
+    }
+    else
+    {
+        console.log("Error! Unreachable state");
+    }
+    setter(q,dots[0]);
+    setter(qbar,dots[1]);
+    objectDisappear(dots[2]);
 
 }
-function appendClockTo1() {
-    clockDisappear();
-    textClock.textContent = 1;
-    svg.appendChild(textClock);
-    gsap.set(textClock, {
-        x: 16,
-        y: 514
-    });
-    gsap.set(CLOCK, {
 
-        fill: "#29e"
-    });
-    free();
-    clockVisible();
-    setter(textClock.textContent, clockDot);
-
-    errno();
-    OBSERV.innerHTML = "Clock is turned ON";
-
+function outputSetter(){
+    textOutput[0].textContent = q;
+    textOutput[1].textContent = qbar;
+    setter(textOutput[0].textContent,objects[2]);
+    setter(textOutput[1].textContent,objects[3]);
+    objectDisappear(dots[0]);
+    objectDisappear(dots[1]);
 }
+
+function display() {
+    observ.innerHTML = "Simulation has finished. Press Restart to start again"
+}
+
 function reboot() {
-    textToggle.textContent = 2;
-
-    textClock.textContent = 2;
-
-}
-
-
-
-function appendToggleTo1() {
-    toggleDisappear();
-    textToggle.textContent = 1;
-    svg.appendChild(textToggle);
-    gsap.set(textToggle, {
-        x: 16,
-        y: 124
-    });
-    gsap.set(TOGGLE, {
-
-        fill: "#29e"
-    });
-    free();
-    toggleVisible();
-    errno();
-    setter(textToggle.textContent, toggleDot1);
-    setter(textToggle.textContent, toggleDot2);
-    OBSERV.innerHTML = "Toggle bit is set to 1";
-
-}
-
-
-
-function outputSetter() {
-    setter(textOutput1.textContent, OUTPUT1);
-    setter(textOutput2.textContent, OUTPUT2);
-}
-
-function errno() {
-
-}
-function batado() {
-    OBSERV.innerHTML = "Simulation has finished. Press Restart to start again";
-}
-function setter(a, b) {
-    if (a == 1) {
-        unset(b);
-
-    }
-    else if (a == 0) {
-        set(b);
+    for(const text of textInput){
+        text.textContent = 2;
     }
 }
-outputDisappear();
-var tl = gsap.timeline({ repeat: 0, repeatDelay: 0 });
 
-function fourXspeed() {
-    if (textClock.textContent == 1 && textToggle.textContent != 2 && tl.progress() != 1 && tl.progress()!=0) {
-        tl.resume();
-        tl.timeScale(4);
-        OBSERV.innerHTML = "4x speed";
-        decide = 1;
-        BUTTON.innerHTML = "Halt";
-    }
-}
 function setSpeed(speed) {
-    if (speed == "1") {
-        startCircuit();
-    }
-    else if (speed == "2") {
-        doubleSpeed();
-    }
-    else if (speed == "4") {
-        fourXspeed();
-    }
-    
-
-}
-const SPEED = document.getElementById("speed");
-function doubleSpeed() {
-    if (textClock.textContent == 1 && textToggle.textContent != 2 && tl.progress() != 1 && tl.progress()!=0) {
-        tl.resume();
-        tl.timeScale(2);
-        OBSERV.innerHTML = "2x speed";
-        decide = 1;
-        BUTTON.innerHTML = "Halt";
+    if (circuitStarted) {
+        timeline.timeScale(parseInt(speed));
+        observ.innerHTML = `${speed}x speed`;
     }
 }
-var decide = 0;
-function button() {
-    if (decide == 0) {
-        startCircuit();
 
-    }
-    else if (decide == 1) {
-        stopCircuit();
-
-    }
-}
 function restartCircuit() {
-    tl.seek(0);
-    tl.pause();
+    if (circuitStarted) {
+        circuitStarted = false;
+    }
+    timeline.seek(0);
+    timeline.pause();
     allDisappear();
     reboot();
+    clearObservation();
+    decide = false;
+    status.innerHTML = "Start";
+    observ.innerHTML = "Successfully restored. ";
+    observ.innerHTML += "Initially the circuit is in reset state. i.e. Q = 0 and Q' = 1";
+    speed.selectedIndex = 0;
+}
 
-    myFunction();
-    OBSERV.innerHTML="Successfully Restored";
-    decide = 0;
-    BUTTON.innerHTML = "Start";
-    SPEED.selectedIndex=0;
+function simulationStatus() {
+    if (!decide) {
+        startCircuit();
+    }
+    else {
+        stopCircuit();
+    }
 }
 function stopCircuit() {
-    if (tl.time() != 0 && tl.progress() != 1) {
-        tl.pause();
-        OBSERV.innerHTML = "Simulation has been stopped.";
-        decide = 0;
-        BUTTON.innerHTML = "Start";
-        SPEED.selectedIndex=0;
+    if (timeline.progress() !== 1) {
+        timeline.pause();
+        observ.innerHTML = "Simulation has been stopped.";
+        decide = false;
+        status.innerHTML = "Start";
+        speed.selectedIndex = 0;
     }
-    else if (tl.progress() == 1) {
-        OBSERV.innerHTML = "Please Restart the simulation";
+    else {
+        observ.innerHTML = "Please Restart the simulation";
     }
 }
-
 function startCircuit() {
-    if (textClock.textContent == 1 && textToggle.textContent != 2 && tl.progress() != 1) {
-        tl.play();
-        tl.timeScale(1);
-        OBSERV.innerHTML = "Simulation has started.";
-        decide = 1;
-        BUTTON.innerHTML = "Halt";
-        SPEED.selectedIndex=0;
+    if(textInput[1].textContent==="0")
+    {
+        observ.innerHTML = "Please set the Clock as 1";
+        return;
     }
-    else if (textToggle.textContent == 2 || textClock.textcontent == 2) {
-        OBSERV.innerHTML = "Please select the values";
+    textOutput[0].textContent = "0";
+    textOutput[1].textContent = "1";
+
+
+    for(const text of textInput){
+        if (text.textContent === "2") {
+            observ.innerHTML = "Please set the input values";
+            return;
+        }
     }
-    else if (textClock.textContent == 0) {
-       OBSERV.innerHTML = "Please setup the clock.";
+    if (timeline.progress() !== 1) {
+        if (!circuitStarted) {
+            circuitStarted = true;
+        }
+        timeline.play();
+        timeline.timeScale(1);
+        observ.innerHTML = "Simulation has started.";
+        decide = true;
+        status.innerHTML = "Pause";
+        speed.selectedIndex = 0;
     }
-    else if (tl.progress() == 1) {
-       OBSERV.innerHTML = "Please Restart the simulation";
+    else {
+        observ.innerHTML = "Please Restart the simulation";
     }
 }
-tl.add(toggleDotVisible, 0);
-
-tl.add(clockDotVisible, 0);
-
-tl.add(clockDotDisappear, 10);
-
-tl.add(toggleDotDisappear, 10);
-
-tl.add(outputVisible, 12);
-tl.add(outputHandler, 10);
-
-tl.add(outputSetter, 12);
-tl.eventCallback("onComplete", outputVisible);
-tl.eventCallback("onComplete", batado);
 
 
-tl.to(toggleDot1, {
+
+// all the execution begin here
+let timeline = gsap.timeline({ repeat: 0, repeatDelay: 0 });
+gsap.registerPlugin(MotionPathPlugin);
+demoWidth();
+// calling all the functions that are going to initialise 
+textIOInit();
+outputCoordinates();
+inputDots();
+outputDisappear();
+
+timeline.add(inputDotVisible, 0);
+timeline.add(stage1,10);
+timeline.add(outputSetter,15);
+timeline.add(outputVisible,15);
+timeline.eventCallback("onComplete", outputVisible);
+timeline.eventCallback("onComplete", display);
+
+timeline.to(dots[0], {
     motionPath: {
         path: "#path1",
         align: "#path1",
@@ -407,23 +329,7 @@ tl.to(toggleDot1, {
     paused: false,
 
 }, 0);
-tl.to(clockDot, {
-    motionPath: {
-        path: "#path3",
-        align: "#path3",
-        autoRotate: true,
-        alignOrigin: [0.5, 0.5]
-    },
-
-    duration: 10,
-    repeat: 0,
-    repeatDelay: 3,
-    yoyo: true,
-    ease: "none",
-    paused: false,
-
-}, 0);
-tl.to(toggleDot2, {
+timeline.to(dots[1], {
     motionPath: {
         path: "#path2",
         align: "#path2",
@@ -439,11 +345,56 @@ tl.to(toggleDot2, {
     paused: false,
 
 }, 0);
+timeline.to(dots[2], {
+    motionPath: {
+        path: "#path3",
+        align: "#path3",
+        autoRotate: true,
+        alignOrigin: [0.5, 0.5]
+    },
 
+    duration: 10,
+    repeat: 0,
+    repeatDelay: 3,
+    yoyo: true,
+    ease: "none",
+    paused: false,
 
+}, 0);
+timeline.to(dots[0], {
+    motionPath: {
+        path: "#path4",
+        align: "#path4",
+        autoRotate: true,
+        alignOrigin: [0.5, 0.5]
+    },
 
-tl.pause();
+    duration: 5,
+    delay: 10,
+    repeat: 0,
+    repeatDelay: 3,
+    yoyo: true,
+    ease: "none",
+    paused: false,
 
-toggleDotDisappear();
+}, 0);
+timeline.to(dots[1], {
+    motionPath: {
+        path: "#path5",
+        align: "#path5",
+        autoRotate: true,
+        alignOrigin: [0.5, 0.5]
+    },
+    
+    duration: 5,
+    delay: 10,
+    repeat: 0,
+    repeatDelay: 3,
+    yoyo: true,
+    ease: "none",
+    paused: false,
 
-clockDotDisappear();
+},0);
+observ.innerHTML = "Initially the circuit is in reset state. i.e. Q = 0 and Q' = 1";
+timeline.pause();
+inputDotDisappear();

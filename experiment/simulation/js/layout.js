@@ -1,4 +1,4 @@
-import { simulate, deleteElement } from "./gate.js";
+import { deleteElement } from "./gate.js";
 import { connectGate, connectRSFF, connectJKFF, unbindEvent, initRSFlipFlop, initDFlipFlop, initJKFlipFlop, refreshWorkingArea, initTFlipFlop } from "./main.js";
 import { deleteFF } from "./flipflop.js";
 
@@ -27,6 +27,9 @@ menuOption.addEventListener("click", e => {
   if (e.target.innerHTML === "Delete") {
     if (window.componentType === "gate") {
       deleteElement(window.selectedComponent);
+    }
+    else if (window.componentType === "flipflop") {
+      deleteFF(window.selectedComponent);
     }
   }
   window.selectedComponent = null;
@@ -72,7 +75,7 @@ function changeTabs(e) {
     refreshWorkingArea();
     initTFlipFlop();
   }
-  window.simulate = 1;
+  window.simulationStatus = 1;
   simButton.innerHTML = "Simulate";  
   updateInstructions();
   updateToolbar();
@@ -120,16 +123,6 @@ function updateToolbar() {
   document.getElementById("toolbar").innerHTML = elem;
 }
 
-// Clear observations
-function clearObservations() {
-
-  document.getElementById("table-body").innerHTML = "";
-  let head = ''
-  document.getElementById("table-head").innerHTML = head;
-  document.getElementById('result').innerHTML = "";
-
-}
-
 // Modal
 
 const modal = document.querySelector(".modal");
@@ -154,26 +147,110 @@ window.addEventListener("click", windowOnClick);
 
 
 // Simulation
-
+window.simulationStatus = 1;
 const simButton = document.getElementById("simulate-button");
+const submitButton = document.getElementById("submit-button");
 function toggleSimulation() {
-  if (window.simulate === 0) {
-    window.simulate = 1;
+  if (window.simulationStatus === 0) {
+    window.simulationStatus = 1;
     simButton.innerHTML = "Simulate";
+    submitButton.disabled = false;
   }
   else {
-    window.simulate = 0;
+    window.simulationStatus = 0;
     simButton.innerHTML = "Stop";
-    if(!window.sim())
+    submitButton.disabled = true;
+    if(!window.simulate())
     {
-      window.simulate = 1;
+      window.simulationStatus = 1;
       simButton.innerHTML = "Simulate";
+      submitButton.disabled = false;
     }
   }
 }
+window.toggleSimulation = toggleSimulation;
 
-simButton.addEventListener("click", toggleSimulation);
+// Clear observations
+function clearObservations() {
+  document.getElementById("table-body").innerHTML = "";
+  let head = "";
 
+  if (window.currentTab === "task1") {
+    head = `<thead id="table-head">
+              <tr>
+                <th colspan="3">Inputs</th>
+                <th colspan="2">Expected Values</th>
+                <th colspan="2">Observed Values</th>
+              </tr>
+              <tr>
+                <th>R</th>
+                <th>S</th>
+                <th>Clk</th>
+                <th>Q</th>
+                <th>Q'</th>
+                <th>Q</th>
+                <th>Q'</th>
+              </tr>
+            </thead>`
+  } else if (window.currentTab === "task2") {
+    head = `<thead id="table-head">
+              <tr>
+                <th colspan="2">Inputs</th>
+                <th colspan="2">Expected Values</th>
+                <th colspan="2">Observed Values</th>
+              </tr>
+              <tr>
+                <th>D</th>
+                <th>Clk</th>
+                <th>Q</th>
+                <th>Q'</th>
+                <th>Q</th>
+                <th>Q'</th>
+              </tr>
+            </thead>` 
+  } else if (window.currentTab === "task3") {
+    head = `<thead id="table-head">
+              <tr>
+                <th colspan="3">Inputs</th>
+                <th colspan="2">Expected Values</th>
+                <th colspan="2">Observed Values</th>
+              </tr>
+              <tr>
+                <th>J</th>
+                <th>K</th>
+                <th>Clk</th>
+                <th>Q</th>
+                <th>Q'</th>
+                <th>Q</th>
+                <th>Q'</th>
+              </tr>
+            </thead>`
+  }
+  else if(window.currentTab === "task4"){
+    head = `<thead id="table-head">
+              <tr>
+                <th colspan="2">Inputs</th>
+                <th colspan="2">Expected Values</th>
+                <th colspan="2">Observed Values</th>
+              </tr>
+              <tr>
+                <th>T</th>
+                <th>Clk</th>
+                <th>Q</th>
+                <th>Q'</th>
+                <th>Q</th>
+                <th>Q'</th>
+              </tr>
+            </thead>`
+  }
+  else
+  {
+    console.log("Error: Unknown tab");
+  }
+
+  document.getElementById("table-head").innerHTML = head;
+  document.getElementById("result").innerHTML = "";
+}
 
 
 

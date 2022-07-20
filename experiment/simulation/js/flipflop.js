@@ -1,6 +1,6 @@
 import { registerGate,jsPlumbInstance } from "./main.js";
 import { setPosition } from "./layout.js";
-import { gates } from './gate.js';
+import { gates,printErrors } from './gate.js';
 
 'use strict';
 
@@ -20,8 +20,8 @@ export class RSFlipFlop {
         this.r = [];  // Takes 2 items in a list : Gate, Output endpoint of gate
         this.s = [];
         this.clk = [];
-        this.q = null;
-        this.qbar = null;
+        this.q = true;
+        this.qbar = false;
         this.inputPoints = [];
         this.outputPoints = [];
         this.qIsConnected = false;
@@ -43,7 +43,7 @@ export class RSFlipFlop {
             };
             setPosition(origin);
             window.selectedComponent = this.id;
-            window.componentType = "flipFlop";
+            window.componentType = "flipflop";
             // deleteElement(this.id);
             return false;
         }, false);
@@ -157,64 +157,60 @@ export function getResultRS(ff) {
 
 // done checking
 export function checkConnectionsRS() {
-    let correctConnection = true;
     for (let ffID in flipFlops) {
         const gate = flipFlops[ffID];
+        const id = document.getElementById(gate.id);
         // For Full Adder objects
         // Check if all the outputs are connected
         if (!gate.qIsConnected) {
-            correctConnection = false;
-            break;
+            printErrors("Q of RS Flip FLop not connected properly\n",id);
+            return false;
         }
         if (!gate.qbarIsConnected) {
-            correctConnection = false;
-            break;
+            printErrors("Q' of RS Flip FLop not connected properly\n",id);
+            return false;
         }
         // Check if all the inputs are connected
         if (gate.r == null || gate.r.length === 0) {
-            correctConnection = false;
-            break;
+            printErrors("R of RS Flip FLop not connected properly\n",id);
+            return false;
         }
         if (gate.s == null || gate.s.length === 0) {
-            correctConnection = false;
-            break;
+            printErrors("S of RS Flip FLop not connected properly\n",id);
+            return false;
         }
         if (gate.clk == null || gate.clk.length === 0) {
-            correctConnection = false;
-            break;
+            printErrors("Clk of RS Flip FLop not connected properly\n",id);
+            return false;
         }
     }
     for (let gateId in gates) {
         const gate = gates[gateId];
         if (gate.isInput) {
             if (!gate.isConnected) {
-                correctConnection = false;
-                break;
+                printErrors("Highlighted component not connected properly\n",id);
+                return false;
             }
         }
         else if (gate.isOutput) {
             if (gate.inputs.length === 0) {
-                correctConnection = false;
-                break;
+                printErrors("Highlighted component not connected properly\n",id);
+                return false;
             }
         }
         else {
             if (gate.inputPoints.length != gate.inputs.length) {
-                correctConnection = false;
+                printErrors("Highlighted component not connected properly\n",id);
+                return false;
             }
             else if (!gate.isConnected && !gate.isOutput) {
-                correctConnection = false;
+                printErrors("Highlighted component not connected properly\n",id);
+                return false;
             }
         }
     }
 
-    if (correctConnection) {
-        return true;
-    }
-    else {
-        alert("Connections are not correct");
-        return false;
-    }
+    return true;
 }
 
 export function simulateFFRS() {
@@ -263,7 +259,7 @@ export class JKFlipFlop {
             };
             setPosition(origin);
             window.selectedComponent = this.id;
-            window.componentType = "flipFlop";
+            window.componentType = "flipflop";
             // deleteElement(this.id);
             return false;
         }, false);
@@ -378,64 +374,60 @@ export function getResultJK(ff) {
 
 // done checking
 export function checkConnectionsJK() {
-    let correctConnection = true;
     for (let ffID in flipFlops) {
         const gate = flipFlops[ffID];
+        const id = document.getElementById(gate.id);
         // For Full Adder objects
         // Check if all the outputs are connected
         if (!gate.qIsConnected) {
-            correctConnection = false;
-            break;
+            printErrors("Q of JK flip flop not connected\n",id);
+            return false;
         }
         if (!gate.qbarIsConnected) {
-            correctConnection = false;
-            break;
+            printErrors("Q' of JK flip flop not connected\n",id);
+            return false;
         }
         // Check if all the inputs are connected
         if (gate.k == null || gate.k.length === 0) {
-            correctConnection = false;
-            break;
+            printErrors("K of JK flip flop not connected\n",id);
+            return false;
         }
         if (gate.j == null || gate.j.length === 0) {
-            correctConnection = false;
-            break;
+            printErrors("J of JK flip flop not connected\n",id);
+            return false;
         }
         if (gate.clk == null || gate.clk.length === 0) {
-            correctConnection = false;
-            break;
+            printErrors("Clk of JK flip flop not connected\n",id);
+            return false;
         }
     }
     for (let gateId in gates) {
         const gate = gates[gateId];
         if (gate.isInput) {
             if (!gate.isConnected) {
-                correctConnection = false;
-                break;
+                printErrors("Highlighted component not connected properly\n",id);
+                return false;
             }
         }
         else if (gate.isOutput) {
             if (gate.inputs.length === 0) {
-                correctConnection = false;
-                break;
+                printErrors("Highlighted component not connected properly\n",id);
+                return false;
             }
         }
         else {
             if (gate.inputPoints.length != gate.inputs.length) {
-                correctConnection = false;
+                printErrors("Highlighted component not connected properly\n",id);
+                return false;
             }
             else if (!gate.isConnected && !gate.isOutput) {
-                correctConnection = false;
+                printErrors("Highlighted component not connected properly\n",id);
+                return false;
             }
         }
     }
 
-    if (correctConnection) {
-        return true;
-    }
-    else {
-        alert("Connections are not correct");
-        return false;
-    }
+    return true;
 }
 
 export function simulateFFJK() {

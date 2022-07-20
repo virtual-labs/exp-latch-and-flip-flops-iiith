@@ -4,7 +4,7 @@
         {
             "question": "1. If S=0, R=1 , CLK =X , then what is the output of a SR flip flop ?",
             "answers": {
-                "a": "Nochange",
+                "a": "No change",
                 "b": "SET",
                 "c": "RESET",
                 "d": "TOGGLE"
@@ -14,7 +14,7 @@
             "difficulty": "beginner"
         },
         {
-            "question": "2. A NAND gate is 0 iff ?",
+            "question": "2. A NAND gate is 0 if and only if ?",
             "answers": {
                 "a": "Both inputs are 0",
                 "b": "Atleast one is 0",
