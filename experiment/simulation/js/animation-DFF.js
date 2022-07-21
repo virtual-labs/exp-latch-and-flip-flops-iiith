@@ -146,6 +146,10 @@ function appendData() {
         changeto1(16,124,0,0);
         observ.innerHTML = "Data bit is equal to 1";
     }
+    else
+    {
+        observ.innerHTML = "Cannot change the data bit once the simulation has started";
+    }
     setter(textInput[0].textContent,dots[0]);
     setter(textInput[0].textContent,dots[1]);
 }
@@ -156,6 +160,10 @@ function appendClock() {
     else if (textInput[1].textContent !== "1" && timeline.progress() === 0) {
         changeto1(16,514,1,1);
         observ.innerHTML = "Clock is turned ON";
+    }
+    else
+    {
+        observ.innerHTML = "Cannot change the clock once the simulation has started";
     }
     setter(textInput[1].textContent,dots[2]);
 }
@@ -198,7 +206,7 @@ function stage2() {
     }
     else
     {
-        console.log("Error! Unreachable state");
+        console.debug("Error! Unreachable state");
     }
     setter(q,dots[0]);
     setter(qbar,dots[1]);
@@ -282,9 +290,7 @@ function startCircuit() {
         }
     }
     if (timeline.progress() !== 1) {
-        if (!circuitStarted) {
-            circuitStarted = true;
-        }
+        circuitStarted = true;
         timeline.play();
         timeline.timeScale(1);
         observ.innerHTML = "Simulation has started.";

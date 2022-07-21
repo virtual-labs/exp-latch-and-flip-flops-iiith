@@ -49,31 +49,31 @@ function changeTabs(e) {
   }
   window.currentTab = task;
   document.getElementById(task).classList.add("is-active");
-
+  unbindEvent();
   // Half adder
-  if (task === "task1") {
-    unbindEvent();
-    connectGate();
-    refreshWorkingArea();
-    initRSFlipFlop();
-  }
-  if (task === "task3") {
-    unbindEvent();
-    connectGate();
-    refreshWorkingArea();
-    initJKFlipFlop();
-  }
-  else if (task === "task2") {
-    unbindEvent();
-    connectRSFF();
-    refreshWorkingArea();
-    initDFlipFlop();
-  }
-  else if (task === "task4") {
-    unbindEvent();
-    connectJKFF();
-    refreshWorkingArea();
-    initTFlipFlop();
+  switch (task) {
+    case "task1":
+      connectGate();
+      refreshWorkingArea();
+      initRSFlipFlop();
+      break;
+    case "task2":
+      connectRSFF();
+      refreshWorkingArea();
+      initDFlipFlop();
+      break;
+    case "task3":
+      connectGate();
+      refreshWorkingArea();
+      initJKFlipFlop();
+      break;
+    case "task4":
+      connectJKFF();
+      refreshWorkingArea();
+      initTFlipFlop();
+      break;
+    default:
+      console.debug("Error, invalid tab");
   }
   window.simulationStatus = 1;
   simButton.innerHTML = "Simulate";  
@@ -111,14 +111,14 @@ function updateToolbar() {
   if (window.currentTab === "task1") {
     elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button clock" id="addclock">CLOCK</div>'
   }
-  else if (window.currentTab === "task4") {
-    elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button jkflipflop" onclick="addJKFlipFlop(event)"></div>'
-  }
   else if (window.currentTab === "task2") {
     elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button rsflipflop" onclick="addRSFlipFlop(event)"></div>'
   }
   else if (window.currentTab === "task3") {
-    elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button threeipnand" onclick="addGate(event)">3-NAND</div>'
+    elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button three-ip-nand" onclick="addGate(event)">3-NAND</div>'
+  }
+  else if (window.currentTab === "task4") {
+    elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button jkflipflop" onclick="addJKFlipFlop(event)"></div>'
   }
   document.getElementById("toolbar").innerHTML = elem;
 }
@@ -245,7 +245,7 @@ function clearObservations() {
   }
   else
   {
-    console.log("Error: Unknown tab");
+    console.debug("Error: Unknown tab");
   }
 
   document.getElementById("table-head").innerHTML = head;

@@ -653,7 +653,7 @@ export function registerGate(id, gate) {
             })
         );
     }
-    else if (gateType === "ThreeIPNAND") {
+    else if (gateType === "THREEIPNAND") {
         gate.addInputPoints(
             jsPlumbInstance.addEndpoint(element, {
                 anchor: [0, 0.15, -1, 0, -7, 0],
@@ -939,8 +939,8 @@ export function initRSFlipFlop() {
     const types = ["Input", "Input", "Output", "Output"];
     const names = ["S", "R", "Q", "Q'"];
     const positions = [
-        { x: 40, y: 650 },
         { x: 40, y: 150 },
+        { x: 40, y: 650 },
         { x: 820, y: 275 },
         { x: 820, y: 525 },
     ];
@@ -1030,9 +1030,6 @@ export function refreshWorkingArea() {
 }
 
 
-// window.getInfo = function () {
-//     console.log(gatejs.gates);
-// }
 
 
 window.currentTab = "task1";

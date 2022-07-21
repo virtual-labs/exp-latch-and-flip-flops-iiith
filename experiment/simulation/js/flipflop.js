@@ -7,10 +7,6 @@ import { gates,printErrors } from './gate.js';
 export let flipFlops = {};
 
 export function clearFlipFlops() {
-
-    for (let ffID in flipFlops) {
-        delete flipFlops[ffID];
-    }
     flipFlops = {};
 }
 

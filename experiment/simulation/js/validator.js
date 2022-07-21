@@ -41,11 +41,18 @@ export function testRSFF(inputR, inputS, inputClk, outputQ, outputQbar)  // This
 
     let q = gates_list[outputQ];
     let qbar = gates_list[outputQbar];
+    for(let key in gates_list)
+    {
+        if(!gates_list[key].isInput)
+        {
+            gates_list[key].setOutput(null);
+        }
+    }
     q.setOutput(true);
     qbar.setOutput(false);
-
+    
     // each list element consists of 5 values, R,S,Clk,Q,Qbar
-    const evaluator = [[0, 0, 0, 1, 0], [0, 1, 0, 1, 0], [1, 0, 0, 1, 0], [1, 1, 0, 1, 0], [0, 1, 1, 0, 1], [0, 0, 1, 0, 1], [1, 0, 1, 1, 0]]
+    const evaluator = [[0, 0, 0, 1, 0], [0, 1, 0, 1, 0], [1, 0, 0, 1, 0], [1, 1, 0, 1, 0], [1, 0, 1, 0, 1], [0, 0, 1, 0, 1], [0, 1, 1, 1, 0]]
     let incorrectConnections = false;
     evaluator.every((element, index) => {
         r.setOutput(element[0] === 1);
@@ -99,6 +106,13 @@ export function testJKFF(inputJ, inputK, inputClk, outputQ, outputQbar)  // This
 
     let q = gates_list[outputQ];
     let qbar = gates_list[outputQbar];
+    for(let key in gates_list)
+    {
+        if(!gates_list[key].isInput)
+        {
+            gates_list[key].setOutput(null);
+        }
+    }
     q.setOutput(true);
     qbar.setOutput(false);
     // each list element consists of 5 values, j,k,Clk,Q,Qbar

@@ -2,7 +2,7 @@
     "version": 2.0,
     "questions": [
         {
-            "question": "1. The output of a sequenrtial circuit depends on ?",
+            "question": "1. The output of a sequential circuit depends upon",
             "answers": {
                 "a": "Present input",
                 "b": "Past input",
@@ -16,7 +16,7 @@
             "difficulty": "beginner"
         },
         {
-            "question": "2. What id the full form of SR flip flop ?",
+            "question": "2. What is the full form of SR flip flop ?",
             "answers": {
                 "a": "Set-Reboot",
                 "b": "Sciver-Rasmund",
@@ -44,7 +44,7 @@
             "difficulty": "Intermediate"
         },
         {
-            "question": "The JK flip flop have a _________ memory ? ",
+            "question": "The JK flip flop has a _________ memory ",
             "answers": {
                 "a": "Random",
                 "b": "Nonrandom",
@@ -58,7 +58,7 @@
             "difficulty": "Intermediate"
         },
         {
-            "question": "5. THe flip-flop is a/an _________ device ?",
+            "question": "5. The flip-flop is a/an _________ device",
             "answers": {
                 "a": "unstable",
                 "b": "bistable",

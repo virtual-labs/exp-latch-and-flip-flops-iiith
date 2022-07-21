@@ -69,6 +69,9 @@ export class Gate {
                 component = `<div class="output" id= ${this.id}><a></a><p>  ${this.name}  </p></div>`;
                 this.isOutput = true;
                 break;
+            case "THREEIPNAND":
+                component = `<div class="drag-drop logic-gate three-ip-nand" id= ${this.id}></div>`;
+                break;
             default:
                 component = `<div class="drag-drop logic-gate ${this.type.toLowerCase()}" id= ${this.id}></div>`;
         }
@@ -146,7 +149,7 @@ export class Gate {
             case "XNOR":
                 this.output = computeXnor(getOutput(this.inputs[0]), getOutput(this.inputs[1]));
                 break;
-            case "ThreeIPNAND":
+            case "THREEIPNAND":
                 this.output = !(getOutput(this.inputs[0]) && getOutput(this.inputs[1]) && getOutput(this.inputs[2]));
                 break;
             case "Output":
@@ -182,7 +185,7 @@ function getOutput(input) {
 function addGate(event) {
     let type = event.target.innerHTML;
     if (type === "3-NAND")
-        type = "ThreeIPNAND";
+        type = "THREEIPNAND";
     const gate = new Gate(type);
     const component = gate.generateComponent();
     const parent = document.getElementById("working-area");
@@ -314,7 +317,7 @@ function simulateWithClock() {
                 if (gate.type === "NAND" && val === false) {
                     gate.setOutput(true);
                 }
-                if (gate.type === "ThreeIPNAND" && val === false) {
+                if (gate.type === "THREEIPNAND" && val === false) {
                     gate.setOutput(true);
                 }
             }
@@ -327,18 +330,18 @@ function simulateWithClock() {
     for (let iterations = 0; iterations < 5; iterations++) {
         for (let gateId in gates) {
             const gate = gates[gateId];
-            if (gate.isOutput === false && gate.isInput === false && gate.type != "NOT" && gate.type != "ThreeIPNAND") {
+            if (gate.isOutput === false && gate.isInput === false && gate.type != "NOT" && gate.type != "THREEIPNAND") {
                 const val1 = getOutput(gate.inputs[0]);
                 const val2 = getOutput(gate.inputs[1]);
-                if (val1 == null || val2 == null) {
+                if (val1 === null || val2 === null) {
                     let val = null;
-                    if (val1 == null && val2 == null) {
+                    if (val1 === null && val2 === null) {
                         continue;
                     }
-                    else if (val1 == null) {
+                    else if (val1 === null) {
                         val = val2;
                     }
-                    else if (val2 == null) {
+                    else if (val2 === null) {
                         val = val1;
                     }
 
@@ -368,7 +371,7 @@ function simulateWithClock() {
                     gate.generateOutput();
                 }
             }
-            else if (gate.isOutput === false && gate.isInput === false && gate.type === "ThreeIPNAND") {
+            else if (gate.isOutput === false && gate.isInput === false && gate.type === "THREEIPNAND") {
                 const val1 = getOutput(gate.inputs[0]);
                 const val2 = getOutput(gate.inputs[1]);
                 const val3 = getOutput(gate.inputs[2]);
@@ -464,7 +467,7 @@ export function testSimulation(gates,flipFlops) {
                 if (gate.type === "NAND" && val === false) {
                     gate.setOutput(true);
                 }
-                if (gate.type === "ThreeIPNAND" && val === false) {
+                if (gate.type === "THREEIPNAND" && val === false) {
                     gate.setOutput(true);
                 }
             }
@@ -474,7 +477,7 @@ export function testSimulation(gates,flipFlops) {
     for (let iterations = 0; iterations < 5; iterations++) {
         for (let gateId in gates) {
             const gate = gates[gateId];
-            if (gate.isOutput === false && gate.isInput === false && gate.type != "NOT" && gate.type != "ThreeIPNAND") {
+            if (gate.isOutput === false && gate.isInput === false && gate.type != "NOT" && gate.type != "THREEIPNAND") {
                 const val1 = getOutput(gate.inputs[0]);
                 const val2 = getOutput(gate.inputs[1]);
                 if (val1 == null || val2 == null) {
@@ -515,7 +518,7 @@ export function testSimulation(gates,flipFlops) {
                     gate.generateOutput();
                 }
             }
-            else if (gate.isOutput === false && gate.isInput === false && gate.type === "ThreeIPNAND") {
+            else if (gate.isOutput === false && gate.isInput === false && gate.type === "THREEIPNAND") {
                 const val1 = getOutput(gate.inputs[0]);
                 const val2 = getOutput(gate.inputs[1]);
                 const val3 = getOutput(gate.inputs[2]);

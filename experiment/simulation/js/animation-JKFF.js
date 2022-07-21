@@ -153,6 +153,10 @@ function appendSet() {
         changeto1(16,124,0,0);
         observ.innerHTML = "Set bit is equal to 1";
     }
+    else
+    {
+        observ.innerHTML = "Cannot change the set bit once the simulation has started";
+    }
     setter(textInput[0].textContent,dots[0]);
 }
 function appendClock() {
@@ -162,6 +166,10 @@ function appendClock() {
     else if (textInput[1].textContent !== "1" && timeline.progress() === 0) {
         changeto1(16,324,1,1);
         observ.innerHTML = "Clock is turned ON";
+    }
+    else
+    {
+        observ.innerHTML = "Cannot change the clock bit once the simulation has started";
     }
     setter(textInput[1].textContent,dots[1]);
     setter(textInput[1].textContent,dots[2]);
@@ -176,6 +184,10 @@ function appendReset() {
     else if (textInput[2].textContent !== "1" && timeline.progress() === 0) {
         changeto1(16,524,2,2);
         observ.innerHTML = "Reset bit is equal to 1";
+    }
+    else
+    {
+        observ.innerHTML = "Cannot change the reset bit once the simulation has started";
     }
     setter(textInput[2].textContent,dots[5]);
 }
@@ -294,7 +306,7 @@ function outputSetter(){
     else
     {
         // output remains the same
-        console.log("Error! Clock is not turned ON");
+        console.debug("Error! Clock is not turned ON");
     }
     objectDisappear(dots[0]);
     objectDisappear(dots[5]);
@@ -372,9 +384,7 @@ function startCircuit() {
         }
     }
     if (timeline.progress() !== 1) {
-        if (!circuitStarted) {
-            circuitStarted = true;
-        }
+        circuitStarted = true;
         timeline.play();
         timeline.timeScale(1);
         observ.innerHTML = "Simulation has started.";
