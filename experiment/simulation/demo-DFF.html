@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/virtual-labs/virtual-style@0.0.8-b/css/style.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/MotionPathPlugin.min.js"></script>
+    <title>
+        Latches and Flip-Flops: Demo
+    </title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-one-quarter v-instruction-title">
+                Tasks
+            </div>
+            <div class="column">
+                <div class="v-tabs">
+                    <ul>
+                        <li id="Task1" onclick="window.location.href = 'demo.html';">
+                            <a>
+                                RS Flip-Flop
+                            </a>
+                        </li>
+                        <li id="Task2" class="is-active">
+                            <a>
+                                D Flip-Flop
+                            </a>
+                        </li>
+                        <li id="Task3" onclick="window.location.href = 'demo-JKFF.html';">
+                            <a>
+                                JK Flip-Flop
+                            </a>
+                        </li>
+                        <li id="Task4" onclick="window.location.href = 'demo-TFF.html';">
+                            <a>
+                                T Flip-Flop
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="columns is-centered">
+            <div class="column">
+                <div class="v-collapsible-instruction-container v-instruction-container">
+                    <div class="v-collapsible is-size-5">Instructions</div>
+                    <div class="v-content" style="text-align: left; padding-left: 10%; padding-right: 10%;">
+                        <ul style="list-style: disc;">
+                            <li><b>Start</b>- Starts the simulation after the inputs are properly selected. Default
+                                speed is 1x.</li>
+                            <li>Select the speed through dropdown menu</li>
+                            <li><b>Reset</b> - Resets the simulation</li>
+                            <li>Click on the green input bits to set their values.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="columns is-centered">
+        <div class="column">
+            <select class="speed-box" autocomplete="off" name="speed" onchange="setSpeed(this.value)" id="speed">
+                <option value="1" selected>1x</option>
+                <option value="2">2x</option>
+                <option value="4">4x</option>
+            </select>
+            <button class="v-button" id="play-or-pause" onclick="simulationStatus()">Start</button>
+            <button class="v-button" id="restart" onclick="restartCircuit()">Reset</button>
+        </div>
+    </div>
+    <div class="columns is-centered is-flex-direction-row is-flex-wrap-wrap is-align-content-start">
+        <div class="column is-9-desktop is-12-tablet is-12-mobile">
+            <div id="circuit-board">
+                <div id="working-area">
+
+                    <svg class="svg" xmlns="http://www.w3.org/2000/svg" width="100%" height="140%"
+                        viewBox="0 40 1025 1000 ">
+
+                        <path id="path1" class="wire-demo" d="M 20 120 L 300 120 L 300 420 L 400 420 L 500 420 L 500 500 L 550 500 L 550 510" />
+                        <path id="path2" class="wire-demo" d="M 20 120 L 100 120 L 100 600 L 400 600 L 500 600 L 500 520 L 550 520 L 550 510" />
+                        <path id="path3" class="wire-demo" d="M 20 510 L 100 510 L 100 510 L 400 510 L 550 510" />
+                        <path id="path4" class="wire-demo" d="M 550 510 L 600 510 L 600 420 L 900 420" />
+                        <path id="path5" class="wire-demo" d="M 550 510 L 600 510 L 600 600 L 900 600" />
+                        <rect id="rsflipflop" class="flipflop-demo" x="400" y="370"/>
+                        <g id="not">
+                            <path class="gate-demo" d="M 160 600 L 160 570 L 200 600 L 160 630 L 160 600 " />
+                            <circle fill="#29e" cx="210" cy="600" r="10" stroke="black" stroke-width="3" />
+                        </g>
+                        <circle id="output-qbar" cx="900" cy="600" r="15" class="color-green" />
+                        <circle id="output-q" cx="900" cy="420" r="15" class="color-green" />
+                        <circle id="data" cx="20" cy="120" r="15" onclick="appendData()" class="color-green" />
+                        <circle id="clock" cx="20" cy="510" r="15" onclick="appendClock()" class="color-green" />
+                        <text class="text-demo" x="7" y="100">DATA</text>
+                        <text class="text-demo" x="04" y="492">CLOCK</text>
+                        <text class="text-demo" x="880" y="400">OUTPUT</text>
+                        <text class="text-demo" x="880" y="580">OUTPUT</text>
+                        <text font-size="0.9em" x="165" y="603">NOT</text>
+
+                        <text class="text-demo" x="0" y="15" fill="black">
+                            <tspan x="500" y="500">Gated</tspan>
+                            <tspan x="500" y="530"> RS flip flop</tspan>
+                        </text>
+
+
+                    </svg>
+
+                </div>
+            </div>
+        </div>
+        <div class="column is-3-desktop is-4-tablet is-12-mobile">
+            <div class="v-datalist-container components-list">
+                <div class="v-datalist-title">Observations</div>
+                <div class="v-datalist-row">
+                    <div id="observations"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/gh/virtual-labs/virtual-style@0.0.8-b/js/script.js"></script>
+    <script type="module" src="js/animation-DFF.js"></script>
+
+</body>
+
+
+</html>

@@ -1,0 +1,75 @@
+{
+    "version": 2.0,
+    "questions": [
+        {
+            "question": "1. The output of a sequential circuit depends upon",
+            "answers": {
+                "a": "Present input",
+                "b": "Past input",
+                "c": "Present input and present state",
+                "d": "None of these"
+            },
+            "correctAnswer": "c",
+            "explanations": {
+                
+            },
+            "difficulty": "beginner"
+        },
+        {
+            "question": "2. What is the full form of SR flip flop ?",
+            "answers": {
+                "a": "Set-Reboot",
+                "b": "Sciver-Rasmund",
+                "c": "Set-Reset",
+                "d": "Sequence-Recursion"
+            },
+            "correctAnswer": "c",
+            "explanations": {
+                
+            },
+            "difficulty": "beginner"
+        },
+        {
+            "question": "3. What is the number of NAND gates used in a SR flip flop ?",
+            "answers": {
+                "a": "1",
+                "b": "2",
+                "c": "8",
+                "d": "4"
+            },
+            "correctAnswer": "d",
+            "explanations": {
+                
+            },
+            "difficulty": "Intermediate"
+        },
+        {
+            "question": "The JK flip flop has a _________ memory ",
+            "answers": {
+                "a": "Random",
+                "b": "Nonrandom",
+                "c": "Temporary",
+                "d": "True"
+            },
+            "correctAnswer": "d",
+            "explanations": {
+               
+            },
+            "difficulty": "Intermediate"
+        },
+        {
+            "question": "5. The flip-flop is a/an _________ device",
+            "answers": {
+                "a": "unstable",
+                "b": "bistable",
+                "c": "Both a and b",
+                "d": "None of the above"
+            },
+            "correctAnswer": "b",
+            "explanations": {
+                
+            },
+            "difficulty": "advanced"
+        }
+    ]
+}
