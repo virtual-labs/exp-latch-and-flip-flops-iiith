@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/virtual-labs/virtual-style@0.0.8-b/css/style.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/MotionPathPlugin.min.js"></script>
+    <title>
+        Latches and Flip-Flops: Demo
+    </title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-one-quarter v-instruction-title">
+                Tasks
+            </div>
+            <div class="column">
+                <div class="v-tabs">
+                    <ul>
+                        <li id="Task1" onclick="window.location.href = 'demo.html';">
+                            <a>
+                                RS Flip-Flop
+                            </a>
+                        </li>
+                        <li id="Task2" onclick="window.location.href = 'demo-DFF.html';">
+                            <a>
+                                D Flip-Flop
+                            </a>
+                        </li>
+                        <li id="Task3" class="is-active">
+                            <a>
+                                JK Flip-Flop
+                            </a>
+                        </li>
+                        <li id="Task4" onclick="window.location.href = 'demo-TFF.html';">
+                            <a>
+                                T Flip-Flop
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="columns is-centered">
+            <div class="column">
+                <div class="v-collapsible-instruction-container v-instruction-container">
+                    <div class="v-collapsible is-size-5">Instructions</div>
+                    <div class="v-content" style="text-align: left; padding-left: 10%; padding-right: 10%;">
+                        <ul style="list-style: disc;">
+                            <li><b>Start</b>- Starts the simulation after the inputs are properly selected. Default
+                                speed is 1x.</li>
+                            <li>Select the speed through dropdown menu</li>
+                            <li><b>Reset</b> - Resets the simulation</li>
+                            <li>Click on the green input bits to set their values.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="columns is-centered">
+        <div class="column">
+            <select class="speed-box" autocomplete="off" name="speed" onchange="setSpeed(this.value)" id="speed">
+                <option value="1" selected>1x</option>
+                <option value="2">2x</option>
+                <option value="4">4x</option>
+            </select>
+            <button class="v-button" id="play-or-pause" onclick="simulationStatus()">Start</button>
+            <button class="v-button" id="restart" onclick="restartCircuit()">Reset</button>
+        </div>
+    </div>
+    <div class="columns is-centered is-flex-direction-row is-flex-wrap-wrap is-align-content-start">
+        <div class="column is-9-desktop is-12-tablet is-12-mobile">
+            <div id="circuit-board">
+                <div id="working-area">
+                    <svg class="svg" xmlns="http://www.w3.org/2000/svg" width="100%" height="140%"
+                        viewBox="0 0 1025 1000 ">
+                        <path id="path1" class="wire-demo" d="M 20 120 L 100 120  L 140 120 L 160 120 L 160 150 L 280 150 L 300 150 L 300 170 L 400 170 L 420 170 L 420 150 L 480 150 L 500 150 L 500 160 L 700 160 L 700 180" />
+                        <path id="path2" class="wire-demo" d="M 20 520 L 100 520  L 140 520 L 160 520 L 160 490 L 280 490 L 300 490 L 300 470 L 400 470 L 420 470 L 420 490 L 480 490 L 500 490 L 500 480 L 700 480 L 700 460" />
+                        <path id="path3" class="wire-demo" d="M 20 320 L 80 320  L 100 320 L 100 160 L 160 160 L 160 150" />
+                        <path id="path4" class="wire-demo" d="M 20 320 L 80 320  L 100 320 L 100 480 L 160 480 L 160 490" />
+                        <path id="path5" class="wire-demo" d="M 20 320 L 60 320  L 60 320 L 60 480 L 60 620 L 450 620 L 450 180 L 500 180 L 500 160" />
+                        <path id="path6" class="wire-demo" d="M 20 320 L 60 320  L 60 320 L 60 480 L 60 620 L 450 620 L 450 460 L 500 460 L 500 480" />
+                        <path id="path7" class="wire-demo" d="M 380 470 L 380 410 L 240 200 L 240 180 L 300 180 L 300 170" />
+                        <path id="path8" class="wire-demo" d="M 380 170 L 380 230 L 240 440 L 240 460 L 300 460 L 300 470" />
+                        <path id="path9" class="wire-demo" d="M 760 460 L 760 400 L 640 240 L 640 200 L 700 200 L 700 180" />
+                        <path id="path10" class="wire-demo" d="M 760 180 L 760 240 L 640 400 L 640 440 L 700 440 L 700 460" />
+                        <path id="path11" class="wire-demo" d="M 760 460 L 760 400 L 640 240 L 640 200 L 640 60 L 80 60 L 80 150 L 160 150" />
+                        <path id="path12" class="wire-demo" d="M 760 180 L 760 240 L 640 400 L 640 440 L 640 670 L 80 670 L 80 520 L 80 490 L 160 490" />
+                        <path id="path13" class="wire-demo" d="M 700 180 L 800 180" />
+                        <path id="path14" class="wire-demo" d="M 700 460 L 800 460" />
+                        <g id="nand1">
+                            <path class="gate-demo" d="M 110 100 L 110 200 L 160 200 Q 210 150 160 100 L 110 100" />
+                            <circle fill="#29e" cx="195" cy="150" r="10" stroke="black" stroke-width="3"/>
+                        </g>
+                        <g id="nand2">
+                            <path class="gate-demo" d="M 110 440 L 110 540 L 160 540 Q 210 490 160 440 L 110 440" />
+                            <circle fill="#29e" cx="195" cy="490" r="10" stroke="black" stroke-width="3"/>
+                        </g>
+                        <g id="nand3">
+                            <path class="gate-demo" d="M 270 420 L 270 520 L 320 520 Q 370 470 320 420 L 270 420" />
+                            <circle fill="#29e" cx="355" cy="470" r="10" stroke="black" stroke-width="3"/>
+                        </g>
+                        <g id="nand4">
+                            <path class="gate-demo" d="M 270 120 L 270 220 L 320 220 Q 370 170 320 120 L 270 120" />
+                            <circle fill="#29e" cx="355" cy="170" r="10" stroke="black" stroke-width="3"/>
+                        </g>
+                        <g id="nand5">
+                            <path class="gate-demo" d="M 470 110 L 470 210 L 520 210 Q 570 160 520 110 L 470 110" />
+                            <circle fill="#29e" cx="555" cy="160" r="10" stroke="black" stroke-width="3"/>
+                        </g>
+                        <g id="nand6">
+                            <path class="gate-demo" d="M 470 430 L 470 530 L 520 530 Q 570 480 520 430 L 470 430" />
+                            <circle fill="#29e" cx="555" cy="480" r="10" stroke="black" stroke-width="3"/>
+                        </g>
+                        <g id="nand7">
+                            <path class="gate-demo" d="M 655 130 L 655 230 L 705 230 Q 755 180 705 130 L 655 130" />
+                            <circle fill="#29e" cx="740" cy="180" r="10" stroke="black" stroke-width="3"/>
+                        </g>
+                        <g id="nand8">
+                            <path class="gate-demo" d="M 655 410 L 655 510 L 705 510 Q 755 460 705 410 L 655 410" />
+                            <circle fill="#29e" cx="740" cy="460" r="10" stroke="black" stroke-width="3"/>
+                            <g id="not">
+                                <path class="gate-demo" d="M 380 620 L 380 590 L 420 620 L 380 650 L 380 620 " />
+                                <circle  fill="#29e" cx="430" cy="620" r="10" stroke="black" stroke-width="3"/>
+                            </g>
+                        </g>
+                        <text class="text-demo" x="120" y="154">NAND</text>
+                        <text class="text-demo" x="120" y="494">NAND</text>
+                        <text class="text-demo" x="285" y="174">NAND</text>
+                        <text class="text-demo" x="285" y="476">NAND</text>
+                        <text class="text-demo" x="480" y="164">NAND</text>
+                        <text class="text-demo" x="480" y="484">NAND</text>
+                        <text class="text-demo" x="670" y="184">NAND</text>
+                        <text class="text-demo" x="670" y="466">NAND</text>
+                        <text font-size="0.9rem" x="382" y="624">NOT</text>
+                        <circle id="set" cx="20" cy="120" r="15" onclick="appendSet()" class="color-green"/>
+                        <circle id="clock" cx="20" cy="320" r="15" onclick="appendClock()" class="color-green"/>
+                        <circle id="reset" cx="20" cy="520" r="15" onclick="appendReset()" class="color-green"/>
+                        <circle id="output-q" cx="800" cy="180" r="15" class="color-green"/>
+                        <circle id="output-qbar" cx="800" cy="460" r="15" class="color-green"/>
+                        <text class="text-demo" x="5" y="155">SET</text>
+                        <text class="text-demo" x="0" y="500">RESET</text>
+                        <text class="text-demo" x="0" y="300">CLOCK</text>
+                        <text class="text-demo" x="790" y="440">Q'</text>
+                        <text class="text-demo" x="790" y="160">Q</text>
+
+
+                    </svg>
+
+                </div>
+            </div>
+        </div>
+        <div class="column is-3-desktop is-4-tablet is-12-mobile">
+            <div class="v-datalist-container components-list">
+                <div class="v-datalist-title">Observations</div>
+                <div class="v-datalist-row">
+                    <div id="observations"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/gh/virtual-labs/virtual-style@0.0.8-b/js/script.js"></script>
+    <script type="module" src="js/animation-JKFF.js"></script>
+
+</body>
+
+
+</html>

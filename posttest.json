@@ -1,0 +1,59 @@
+{
+    "version": 2.0,
+    "questions": [
+        {
+            "question": "1. If S=0, R=1 , CLK =X , then what is the output of a SR flip flop ?",
+            "answers": {
+                "a": "No change",
+                "b": "SET",
+                "c": "RESET",
+                "d": "TOGGLE"
+            },
+            "correctAnswer": "a",
+            "explanations": {},
+            "difficulty": "beginner"
+        },
+        {
+            "question": "2. A NAND gate is 0 if and only if",
+            "answers": {
+                "a": "Both inputs are 0",
+                "b": "At least one is 0",
+                "c": "Both inputs are 1",
+                "d": "Never takes 0 value"
+            },
+            "correctAnswer": "c",
+            "explanations": {
+               
+            },
+            "difficulty": "intermediate"
+        },
+        {
+            "question": "3. What is the input required to make a JK flip flop toggle its input ?",
+            "answers": {
+                "a": "SET=1 and RESET=0",
+                "b": "SET=0 and RESET=0",
+                "c": "SET=0 and RESET=1 ",
+                "d": "SET=1 and RESET=1"
+            },
+            "correctAnswer": "d",
+            "explanations": {
+                
+            },
+            "difficulty": "intermediate"
+        },
+        {
+            "question": "4. A NAND gate can be formed by",
+            "answers": {
+                "a": "OR and AND",
+                "b": "NOT and AND",
+                "c": "NOT an OR",
+                "d": "NOT and OR"
+            },
+            "correctAnswer": "b",
+            "explanations": {
+               
+            },
+            "difficulty": "beginner"
+        }
+    ]
+}
