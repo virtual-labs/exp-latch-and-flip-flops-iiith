@@ -182,6 +182,7 @@ export function checkConnectionsRS() {
     }
     for (let gateId in gates) {
         const gate = gates[gateId];
+        const id = document.getElementById(gate.id);
         if (gate.isInput) {
             if (!gate.isConnected) {
                 printErrors("Highlighted component not connected properly\n",id);
@@ -399,6 +400,8 @@ export function checkConnectionsJK() {
     }
     for (let gateId in gates) {
         const gate = gates[gateId];
+        const id = document.getElementById(gate.id);
+
         if (gate.isInput) {
             if (!gate.isConnected) {
                 printErrors("Highlighted component not connected properly\n",id);
