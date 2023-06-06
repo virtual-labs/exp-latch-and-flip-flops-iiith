@@ -56,7 +56,7 @@ const dots = [
 ];
 // First dot emerges from Set
 // Next 4 dots emerge from Clock
-// Third dot is from Reset
+// Fifth dot is from Reset
 
 
 
@@ -224,20 +224,24 @@ function partialDotsDisappear() {
 }
 
 function partialDotsAppear() {
+    if (textInput[1].textContent !== "0")
+    changeto0(16,324,1,1);
+    setter(textInput[1].textContent,dots[3]);
+    setter(textInput[1].textContent,dots[4]);
     objectAppear(dots[3]);
     objectAppear(dots[4]);
 }
 
 
 function stage1() {
-    if(textInput[0].textContent==="0" || textInput[1].textContent==="0"){
+    if(textInput[0].textContent==="0" || textInput[1].textContent==="0" || textOutput[1].textContent==="0"){
         nand1 = "1";
     }
     else{
         nand1 = "0";
     }
     
-    if(textInput[1].textContent==="0" || textInput[2].textContent==="0"){
+    if(textInput[1].textContent==="0" || textInput[2].textContent==="0" || textOutput[0].textContent==="0"){
         nand2 = "1";
     }
     else{
@@ -258,9 +262,13 @@ function stage2() {
         nand3 = "1";
         nand4 = "0";
     }
-    else {
+    else if(nand1 ==="0" && nand2 ==="0") {
         nand3 = "1";
         nand4 = "1";
+    }
+    else {
+        nand3 === "0";
+        nand4 === "0";
     }
     setter(nand3,dots[0]);
     setter(nand4,dots[5]);
@@ -284,12 +292,12 @@ function stage5() {
 }
 
 function outputSetter(){
-    if(textInput[1].textContent==="1"){
-        if(textInput[0].textContent === "1" && textInput[2].textContent === "0"){
+    if(textInput[1].textContent==="0"){
+        if(textInput[0].textContent === "0" && textInput[2].textContent === "1"){
             textOutput[0].textContent = "0";
             textOutput[1].textContent = "1";
         }
-        else if(textInput[0].textContent === "0" && textInput[2].textContent === "0"){
+        else if(textInput[0].textContent === "1" && textInput[2].textContent === "0"){
             textOutput[0].textContent = "1";
             textOutput[1].textContent = "0";
         }
@@ -315,7 +323,7 @@ function outputSetter(){
 }
 
 function display() {
-    observ.innerHTML = "SSimulation has finished. Please click on Reset and repeat the instructions given to start again."
+    observ.innerHTML = "Simulation has finished. Please click on Reset and repeat the instructions given to start again."
 }
 
 function reboot() {
