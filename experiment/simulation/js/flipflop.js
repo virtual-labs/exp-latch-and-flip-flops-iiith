@@ -159,24 +159,24 @@ export function checkConnectionsRS() {
         // For Full Adder objects
         // Check if all the outputs are connected
         if (!gate.qIsConnected) {
-            printErrors("Q of RS Flip FLop not connected properly\n",id);
+            printErrors("Q of RS Flip Flop not connected properly\n",id);
             return false;
         }
         if (!gate.qbarIsConnected) {
-            printErrors("Q' of RS Flip FLop not connected properly\n",id);
+            printErrors("Q' of RS Flip Flop not connected properly\n",id);
             return false;
         }
         // Check if all the inputs are connected
         if (gate.r == null || gate.r.length === 0) {
-            printErrors("R of RS Flip FLop not connected properly\n",id);
+            printErrors("R of RS Flip Flop not connected properly\n",id);
             return false;
         }
         if (gate.s == null || gate.s.length === 0) {
-            printErrors("S of RS Flip FLop not connected properly\n",id);
+            printErrors("S of RS Flip Flop not connected properly\n",id);
             return false;
         }
         if (gate.clk == null || gate.clk.length === 0) {
-            printErrors("Clk of RS Flip FLop not connected properly\n",id);
+            printErrors("Clk of RS Flip Flop not connected properly\n",id);
             return false;
         }
     }
