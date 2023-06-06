@@ -193,6 +193,7 @@ let qbar = "0";
 
 function stage1() {
     not = calculateNot(textInput[0].textContent);
+    setter(not,dots[1]);
 }
 
 function stage2() {
