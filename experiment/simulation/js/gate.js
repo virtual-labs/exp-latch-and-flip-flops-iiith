@@ -8,11 +8,6 @@ import { checkConnectionsRS, checkConnectionsJK, simulateFFJK, simulateFFRS, tes
 export let gates = {}; // Array of gates
 window.numComponents = 0;
 export function clearGates() {
-
-    for (let gateId in gates) {
-        delete gates[gateId];
-    }
-
     gates = {};
 }
 
@@ -73,6 +68,9 @@ export class Gate {
             case "Output":
                 component = `<div class="output" id= ${this.id}><a></a><p>  ${this.name}  </p></div>`;
                 this.isOutput = true;
+                break;
+            case "THREEIPNAND":
+                component = `<div class="drag-drop logic-gate three-ip-nand" id= ${this.id}></div>`;
                 break;
             default:
                 component = `<div class="drag-drop logic-gate ${this.type.toLowerCase()}" id= ${this.id}></div>`;
@@ -151,7 +149,7 @@ export class Gate {
             case "XNOR":
                 this.output = computeXnor(getOutput(this.inputs[0]), getOutput(this.inputs[1]));
                 break;
-            case "ThreeIPNAND":
+            case "THREEIPNAND":
                 this.output = !(getOutput(this.inputs[0]) && getOutput(this.inputs[1]) && getOutput(this.inputs[2]));
                 break;
             case "Output":
@@ -187,7 +185,7 @@ function getOutput(input) {
 function addGate(event) {
     let type = event.target.innerHTML;
     if (type === "3-NAND")
-        type = "ThreeIPNAND";
+        type = "THREEIPNAND";
     const gate = new Gate(type);
     const component = gate.generateComponent();
     const parent = document.getElementById("working-area");
@@ -233,30 +231,41 @@ function setInput(event) {
 
 window.setInput = setInput;
 
-export function checkConnections() {
-    let correctConnection = true;
-    for (let gateId in gates) {
-        const gate = gates[gateId];
-        if (gate.inputPoints.length != gate.inputs.length) {
-            correctConnection = false;
-        }
-        else if (!gate.isConnected && !gate.isOutput) {
-            correctConnection = false;
-        }
-    }
-    if (correctConnection) {
-        return true;
-    }
-    else {
-        alert("Connections are not correct");
-        return false;
+export function clearResult() {
+    const result = document.getElementById("result");
+    result.innerHTML = "";
+}
+
+export function printErrors(message,objectId) {
+    const result = document.getElementById('result');
+    result.innerHTML += message;
+    result.className = "failure-message";
+    if(objectId !== null)
+    {
+        objectId.classList.add("highlight")
+        setTimeout(function () {objectId.classList.remove("highlight")}, 5000);
     }
 }
 
+export function checkConnections() {
+    for (let gateId in gates) {
+        const gate = gates[gateId];
+        const id = document.getElementById(gate.id);
+        if (gate.inputPoints.length != gate.inputs.length) {
+            printErrors("Highlighted component not connected properly\n",id);
+            return false;
+        }
+        else if (!gate.isConnected && !gate.isOutput) {
+            printErrors("Highlighted component not connected properly\n",id);
+            return false;
+        }
+    }
+    return true;
+}
+
 export function simulate() {
-
-    window.simulate = 0;
-
+    clearResult();
+    window.simulationStatus = 0;
     if (!checkConnections()) {
         return false;
     }
@@ -282,13 +291,13 @@ export function simulate() {
         }
     }
     if (!circuitHasClock) {
-        simulate2();
+        simulateWithClock();
     }
 
     return true;
 }
 
-function simulate2() {
+function simulateWithClock() {
     // input bits
     for (let gateId in gates) {
         const gate = gates[gateId];
@@ -308,7 +317,7 @@ function simulate2() {
                 if (gate.type === "NAND" && val === false) {
                     gate.setOutput(true);
                 }
-                if (gate.type === "ThreeIPNAND" && val === false) {
+                if (gate.type === "THREEIPNAND" && val === false) {
                     gate.setOutput(true);
                 }
             }
@@ -321,18 +330,18 @@ function simulate2() {
     for (let iterations = 0; iterations < 5; iterations++) {
         for (let gateId in gates) {
             const gate = gates[gateId];
-            if (gate.isOutput === false && gate.isInput === false && gate.type != "NOT" && gate.type != "ThreeIPNAND") {
+            if (gate.isOutput === false && gate.isInput === false && gate.type != "NOT" && gate.type != "THREEIPNAND") {
                 const val1 = getOutput(gate.inputs[0]);
                 const val2 = getOutput(gate.inputs[1]);
-                if (val1 == null || val2 == null) {
+                if (val1 === null || val2 === null) {
                     let val = null;
-                    if (val1 == null && val2 == null) {
+                    if (val1 === null && val2 === null) {
                         continue;
                     }
-                    else if (val1 == null) {
+                    else if (val1 === null) {
                         val = val2;
                     }
-                    else if (val2 == null) {
+                    else if (val2 === null) {
                         val = val1;
                     }
 
@@ -362,7 +371,7 @@ function simulate2() {
                     gate.generateOutput();
                 }
             }
-            else if (gate.isOutput === false && gate.isInput === false && gate.type === "ThreeIPNAND") {
+            else if (gate.isOutput === false && gate.isInput === false && gate.type === "THREEIPNAND") {
                 const val1 = getOutput(gate.inputs[0]);
                 const val2 = getOutput(gate.inputs[1]);
                 const val3 = getOutput(gate.inputs[2]);
@@ -416,22 +425,25 @@ function simulate2() {
     }
 }
 
-window.sim = simulate;
-window.sim2 = simulate2;
+window.simulate = simulate;
+window.simClk = simulateWithClock;
 
 export function testSimulation(gates,flipFlops) {
     if (!checkConnections()) {
-        return;
+        document.getElementById("table-body").innerHTML = "";
+        return false;
     }
 
     if (window.currentTab === "task2") {
         if (!checkConnectionsRS()) {
-            return;
+            document.getElementById("table-body").innerHTML = "";
+            return false;
         }
     }
     else if (window.currentTab === "task4") {
         if (!checkConnectionsJK()) {
-            return;
+            document.getElementById("table-body").innerHTML = "";
+            return false;
         }
     }
 
@@ -455,7 +467,7 @@ export function testSimulation(gates,flipFlops) {
                 if (gate.type === "NAND" && val === false) {
                     gate.setOutput(true);
                 }
-                if (gate.type === "ThreeIPNAND" && val === false) {
+                if (gate.type === "THREEIPNAND" && val === false) {
                     gate.setOutput(true);
                 }
             }
@@ -465,7 +477,7 @@ export function testSimulation(gates,flipFlops) {
     for (let iterations = 0; iterations < 5; iterations++) {
         for (let gateId in gates) {
             const gate = gates[gateId];
-            if (gate.isOutput === false && gate.isInput === false && gate.type != "NOT" && gate.type != "ThreeIPNAND") {
+            if (gate.isOutput === false && gate.isInput === false && gate.type != "NOT" && gate.type != "THREEIPNAND") {
                 const val1 = getOutput(gate.inputs[0]);
                 const val2 = getOutput(gate.inputs[1]);
                 if (val1 == null || val2 == null) {
@@ -506,7 +518,7 @@ export function testSimulation(gates,flipFlops) {
                     gate.generateOutput();
                 }
             }
-            else if (gate.isOutput === false && gate.isInput === false && gate.type === "ThreeIPNAND") {
+            else if (gate.isOutput === false && gate.isInput === false && gate.type === "THREEIPNAND") {
                 const val1 = getOutput(gate.inputs[0]);
                 const val2 = getOutput(gate.inputs[1]);
                 const val3 = getOutput(gate.inputs[2]);
@@ -552,11 +564,12 @@ export function testSimulation(gates,flipFlops) {
             }
         }
     }
+    return true;
 }
 
 // function to submit the desired circuit and get the final success or failure message
 export function submitCircuit() {
-
+    clearResult();
     document.getElementById("table-body").innerHTML = "";
     if (window.currentTab === "task1") {
         testRSFF("Input-1", "Input-0", "Clock-0", "Output-2", "Output-3");

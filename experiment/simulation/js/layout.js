@@ -1,4 +1,4 @@
-import { simulate, deleteElement } from "./gate.js";
+import { deleteElement } from "./gate.js";
 import { connectGate, connectRSFF, connectJKFF, unbindEvent, initRSFlipFlop, initDFlipFlop, initJKFlipFlop, refreshWorkingArea, initTFlipFlop } from "./main.js";
 import { deleteFF } from "./flipflop.js";
 
@@ -10,21 +10,15 @@ export const wireColours = ["#ff0000", "#00ff00", "#0000ff", "#bf6be3", "#ff00ff
 // Contextmenu
 const menu = document.querySelector(".menu");
 const menuOption = document.querySelector(".menu-option");
-let menuVisible = false;
-
-const toggleMenu = command => {
-  menu.style.display = command === "show" ? "block" : "none";
-  menuVisible = !menuVisible;
-};
 
 export const setPosition = ({ top, left }) => {
   menu.style.left = `${left}px`;
   menu.style.top = `${top}px`;
-  toggleMenu("show");
+  menu.style.display = "block";
 };
 
 window.addEventListener("click", e => {
-  if (menuVisible) toggleMenu("hide");
+  menu.style.display = "none";
   window.selectedComponent = null;
   window.componentType = null;
 });
@@ -34,7 +28,7 @@ menuOption.addEventListener("click", e => {
     if (window.componentType === "gate") {
       deleteElement(window.selectedComponent);
     }
-    else if (window.componentType === "flipFlop") {
+    else if (window.componentType === "flipflop") {
       deleteFF(window.selectedComponent);
     }
   }
@@ -55,33 +49,33 @@ function changeTabs(e) {
   }
   window.currentTab = task;
   document.getElementById(task).classList.add("is-active");
-
+  unbindEvent();
   // Half adder
-  if (task === "task1") {
-    unbindEvent();
-    connectGate();
-    refreshWorkingArea();
-    initRSFlipFlop();
+  switch (task) {
+    case "task1":
+      connectGate();
+      refreshWorkingArea();
+      initRSFlipFlop();
+      break;
+    case "task2":
+      connectRSFF();
+      refreshWorkingArea();
+      initDFlipFlop();
+      break;
+    case "task3":
+      connectGate();
+      refreshWorkingArea();
+      initJKFlipFlop();
+      break;
+    case "task4":
+      connectJKFF();
+      refreshWorkingArea();
+      initTFlipFlop();
+      break;
+    default:
+      console.debug("Error, invalid tab");
   }
-  if (task === "task3") {
-    unbindEvent();
-    connectGate();
-    refreshWorkingArea();
-    initJKFlipFlop();
-  }
-  else if (task === "task2") {
-    unbindEvent();
-    connectRSFF();
-    refreshWorkingArea();
-    initDFlipFlop();
-  }
-  else if (task === "task4") {
-    unbindEvent();
-    connectJKFF();
-    refreshWorkingArea();
-    initTFlipFlop();
-  }
-  window.simulate = 1;
+  window.simulationStatus = 1;
   simButton.innerHTML = "Simulate";  
   updateInstructions();
   updateToolbar();
@@ -91,24 +85,24 @@ function changeTabs(e) {
 
 window.changeTabs = changeTabs;
 
-function updateInstructions() {
-  if (window.currentTab === "task1") {
-    document.getElementById("TaskTitle").innerHTML = "RS Flip-Flop";
-    document.getElementById("TaskDescription").innerHTML = 'Implement an RS Flip-Flop using logic gates.';
+// Instruction box
+const updateInstructions = () => {
+  const task = window.currentTab;
+  const instructionBox = document.getElementById("instruction-title");
+  let title = ""; 
+  if (task === "task1") {
+    title = `Instructions<br>Implement an RS Flip-Flop using logic gates`;
+  } else if (task === "task2") {
+    title = `Instructions<br>Implement a D Flip-Flop using RS Flip-Flop`;
+  } else if (task === "task3") {
+    title = `Instructions<br>Implement a JK Flip-Flop using logic gates`;
   }
-  if (window.currentTab === "task3") {
-    document.getElementById("TaskTitle").innerHTML = "JK Flip-Flop";
-    document.getElementById("TaskDescription").innerHTML = 'Implement a JK Flip-Flop using logic gates.';
+  else if (task === "task4") {
+    title = `Instructions<br>Implement a T Flip-Flop using JK Flip-Flop`;
   }
-  else if (window.currentTab === "task4") {
-    document.getElementById("TaskTitle").innerHTML = "T Flip-Flop";
-    document.getElementById("TaskDescription").innerHTML = 'Implement T flip-flops using RS Flip-Flop '
-  }
-  else if (window.currentTab === "task2") {
-    document.getElementById("TaskTitle").innerHTML = "D Flip-Flop";
-    document.getElementById("TaskDescription").innerHTML = 'Implement D flip-flops using RS Flip-Flop ';
-  }
+  instructionBox.innerHTML = title;
 }
+
 
 // Toolbar
 
@@ -116,27 +110,18 @@ function updateToolbar() {
   let elem = "";
   if (window.currentTab === "task1") {
     elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button clock" id="addclock">CLOCK</div>'
-  }
-  else if (window.currentTab === "task4") {
-    elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button jkflipflop" onclick="addJKFlipFlop(event)"></div>'
+    document.getElementById("addclock").addEventListener("click", toggleModal); // feature for adding clock
   }
   else if (window.currentTab === "task2") {
     elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button rsflipflop" onclick="addRSFlipFlop(event)"></div>'
   }
   else if (window.currentTab === "task3") {
-    elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button threeipnand" onclick="addGate(event)">3-NAND</div>'
+    elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button three-ip-nand" onclick="addGate(event)">3-NAND</div>'
+  }
+  else if (window.currentTab === "task4") {
+    elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button jkflipflop" onclick="addJKFlipFlop(event)"></div>'
   }
   document.getElementById("toolbar").innerHTML = elem;
-}
-
-// Clear observations
-function clearObservations() {
-
-  document.getElementById("table-body").innerHTML = "";
-  let head = ''
-  document.getElementById("table-head").innerHTML = head;
-  document.getElementById('result').innerHTML = "";
-
 }
 
 // Modal
@@ -163,33 +148,112 @@ window.addEventListener("click", windowOnClick);
 
 
 // Simulation
-
+window.simulationStatus = 1;
 const simButton = document.getElementById("simulate-button");
+const submitButton = document.getElementById("submit-button");
 function toggleSimulation() {
-  if (window.simulate === 0) {
-    window.simulate = 1;
+  if (window.simulationStatus === 0) {
+    window.simulationStatus = 1;
     simButton.innerHTML = "Simulate";
+    submitButton.disabled = false;
   }
   else {
-    window.simulate = 0;
+    window.simulationStatus = 0;
     simButton.innerHTML = "Stop";
-    if(!window.sim())
+    submitButton.disabled = true;
+    if(!window.simulate())
     {
-      window.simulate = 1;
+      window.simulationStatus = 1;
       simButton.innerHTML = "Simulate";
+      submitButton.disabled = false;
     }
   }
 }
+window.toggleSimulation = toggleSimulation;
 
-simButton.addEventListener("click", toggleSimulation);
+// Clear observations
+function clearObservations() {
+  document.getElementById("table-body").innerHTML = "";
+  let head = "";
+
+  if (window.currentTab === "task1") {
+    head = `<thead id="table-head">
+              <tr>
+                <th colspan="3">Inputs</th>
+                <th colspan="2">Expected Values</th>
+                <th colspan="2">Observed Values</th>
+              </tr>
+              <tr>
+                <th>R</th>
+                <th>S</th>
+                <th>Clk</th>
+                <th>Q</th>
+                <th>Q'</th>
+                <th>Q</th>
+                <th>Q'</th>
+              </tr>
+            </thead>`
+  } else if (window.currentTab === "task2") {
+    head = `<thead id="table-head">
+              <tr>
+                <th colspan="2">Inputs</th>
+                <th colspan="2">Expected Values</th>
+                <th colspan="2">Observed Values</th>
+              </tr>
+              <tr>
+                <th>D</th>
+                <th>Clk</th>
+                <th>Q</th>
+                <th>Q'</th>
+                <th>Q</th>
+                <th>Q'</th>
+              </tr>
+            </thead>` 
+  } else if (window.currentTab === "task3") {
+    head = `<thead id="table-head">
+              <tr>
+                <th colspan="3">Inputs</th>
+                <th colspan="2">Expected Values</th>
+                <th colspan="2">Observed Values</th>
+              </tr>
+              <tr>
+                <th>J</th>
+                <th>K</th>
+                <th>Clk</th>
+                <th>Q</th>
+                <th>Q'</th>
+                <th>Q</th>
+                <th>Q'</th>
+              </tr>
+            </thead>`
+  }
+  else if(window.currentTab === "task4"){
+    head = `<thead id="table-head">
+              <tr>
+                <th colspan="2">Inputs</th>
+                <th colspan="2">Expected Values</th>
+                <th colspan="2">Observed Values</th>
+              </tr>
+              <tr>
+                <th>T</th>
+                <th>Clk</th>
+                <th>Q</th>
+                <th>Q'</th>
+                <th>Q</th>
+                <th>Q'</th>
+              </tr>
+            </thead>`
+  }
+  else
+  {
+    console.debug("Error: Unknown tab");
+  }
+
+  document.getElementById("table-head").innerHTML = head;
+  document.getElementById("result").innerHTML = "";
+}
 
 
-
-// Instruction box
-const instructionBox = document.getElementsByClassName("instructions-box")[0];
-instructionBox.addEventListener("click", (e) => {
-  instructionBox.classList.toggle("expand");
-});
 
 // Making webpage responsive
 
