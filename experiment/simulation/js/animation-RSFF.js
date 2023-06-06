@@ -245,7 +245,7 @@ function outputSetter(){
 }
 
 function display() {
-    observ.innerHTML = "Simulation has finished. Press Restart to start again"
+    observ.innerHTML = "Simulation has finished. Please click on Reset and repeat the instructions given to start again."
 }
 
 function reboot() {
@@ -287,7 +287,7 @@ function simulationStatus() {
 function stopCircuit() {
     if (timeline.progress() !== 1) {
         timeline.pause();
-        observ.innerHTML = "Simulation has been stopped.";
+        observ.innerHTML = "Simulation has been Paused. Please click on the 'Start' button to Resume.";
         decide = false;
         status.innerHTML = "Start";
         speed.selectedIndex = 0;
@@ -305,7 +305,7 @@ function startCircuit() {
 
     if(textInput[0].textContent==="1" && textInput[2].textContent==="1")
     {
-        observ.innerHTML = "Invaid State, Set and Reset both cannot be 1";
+        observ.innerHTML = "Invalid State, Set and Reset both cannot be 1";
         return;
     }
 
