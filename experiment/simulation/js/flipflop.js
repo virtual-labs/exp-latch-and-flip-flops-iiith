@@ -306,7 +306,7 @@ export class JKFlipFlop {
 
         const k = getOutputJK(this.k[0], this.k[1]);
         const j = getOutputJK(this.j[0], this.j[1]);
-        const clk = getOutputRS(this.clk[0], this.clk[1]);
+        const clk = getOutputJK(this.clk[0], this.clk[1]);
 
         if (!clk) {
             return;
