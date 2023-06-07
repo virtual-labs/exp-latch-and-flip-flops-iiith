@@ -177,82 +177,83 @@ window.toggleSimulation = toggleSimulation;
 // Clear observations
 function clearObservations() {
   document.getElementById("table-body").innerHTML = "";
+  document.getElementById("table-head").innerHTML = "";
   let head = "";
 
-  if (window.currentTab === "task1") {
-    head = `<thead id="table-head">
-              <tr>
-                <th colspan="3">Inputs</th>
-                <th colspan="2">Expected Values</th>
-                <th colspan="2">Observed Values</th>
-              </tr>
-              <tr>
-                <th>R</th>
-                <th>S</th>
-                <th>Clk</th>
-                <th>Q</th>
-                <th>Q'</th>
-                <th>Q</th>
-                <th>Q'</th>
-              </tr>
-            </thead>`
-  } else if (window.currentTab === "task2") {
-    head = `<thead id="table-head">
-              <tr>
-                <th colspan="2">Inputs</th>
-                <th colspan="2">Expected Values</th>
-                <th colspan="2">Observed Values</th>
-              </tr>
-              <tr>
-                <th>D</th>
-                <th>Clk</th>
-                <th>Q</th>
-                <th>Q'</th>
-                <th>Q</th>
-                <th>Q'</th>
-              </tr>
-            </thead>` 
-  } else if (window.currentTab === "task3") {
-    head = `<thead id="table-head">
-              <tr>
-                <th colspan="3">Inputs</th>
-                <th colspan="2">Expected Values</th>
-                <th colspan="2">Observed Values</th>
-              </tr>
-              <tr>
-                <th>J</th>
-                <th>K</th>
-                <th>Clk</th>
-                <th>Q</th>
-                <th>Q'</th>
-                <th>Q</th>
-                <th>Q'</th>
-              </tr>
-            </thead>`
-  }
-  else if(window.currentTab === "task4"){
-    head = `<thead id="table-head">
-              <tr>
-                <th colspan="2">Inputs</th>
-                <th colspan="2">Expected Values</th>
-                <th colspan="2">Observed Values</th>
-              </tr>
-              <tr>
-                <th>T</th>
-                <th>Clk</th>
-                <th>Q</th>
-                <th>Q'</th>
-                <th>Q</th>
-                <th>Q'</th>
-              </tr>
-            </thead>`
-  }
-  else
-  {
-    console.debug("Error: Unknown tab");
-  }
+  // if (window.currentTab === "task1") {
+  //   head = `<thead id="table-head">
+  //             <tr>
+  //               <th colspan="3">Inputs</th>
+  //               <th colspan="2">Expected Values</th>
+  //               <th colspan="2">Observed Values</th>
+  //             </tr>
+  //             <tr>
+  //               <th>R</th>
+  //               <th>S</th>
+  //               <th>Clk</th>
+  //               <th>Q</th>
+  //               <th>Q'</th>
+  //               <th>Q</th>
+  //               <th>Q'</th>
+  //             </tr>
+  //           </thead>`
+  // } else if (window.currentTab === "task2") {
+  //   head = `<thead id="table-head">
+  //             <tr>
+  //               <th colspan="2">Inputs</th>
+  //               <th colspan="2">Expected Values</th>
+  //               <th colspan="2">Observed Values</th>
+  //             </tr>
+  //             <tr>
+  //               <th>D</th>
+  //               <th>Clk</th>
+  //               <th>Q</th>
+  //               <th>Q'</th>
+  //               <th>Q</th>
+  //               <th>Q'</th>
+  //             </tr>
+  //           </thead>` 
+  // } else if (window.currentTab === "task3") {
+    // head = `<thead id="table-head">
+    //           <tr>
+    //             <th colspan="3">Inputs</th>
+    //             <th colspan="2">Expected Values</th>
+    //             <th colspan="2">Observed Values</th>
+    //           </tr>
+    //           <tr>
+    //             <th>J</th>
+    //             <th>K</th>
+    //             <th>Clk</th>
+    //             <th>Q</th>
+    //             <th>Q'</th>
+    //             <th>Q</th>
+    //             <th>Q'</th>
+    //           </tr>
+    //         </thead>`
+  // }
+  // else if(window.currentTab === "task4"){
+    // head = `<thead id="table-head">
+    //           <tr>
+    //             <th colspan="2">Inputs</th>
+    //             <th colspan="2">Expected Values</th>
+    //             <th colspan="2">Observed Values</th>
+    //           </tr>
+    //           <tr>
+    //             <th>T</th>
+    //             <th>Clk</th>
+    //             <th>Q</th>
+    //             <th>Q'</th>
+    //             <th>Q</th>
+    //             <th>Q'</th>
+    //           </tr>
+    //         </thead>`
+  // }
+  // else
+  // {
+  //   console.debug("Error: Unknown tab");
+  // }
 
-  document.getElementById("table-head").innerHTML = head;
+  // document.getElementById("table-head").innerHTML = head;
   document.getElementById("result").innerHTML = "";
 }
 

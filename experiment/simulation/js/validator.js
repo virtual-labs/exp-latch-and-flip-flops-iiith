@@ -37,7 +37,23 @@ export function testRSFF(inputR, inputS, inputClk, outputQ, outputQbar)  // This
     let clk = gates_list[inputClk];
     let circuitIsCorrect = true;
     let dataTable = ""
-
+    let head = `<thead id="table-head">
+    <tr>
+      <th colspan="3">Inputs</th>
+      <th colspan="2">Expected Values</th>
+      <th colspan="2">Observed Values</th>
+    </tr>
+    <tr>
+      <th>R</th>
+      <th>S</th>
+      <th>Clk</th>
+      <th>Q</th>
+      <th>Q'</th>
+      <th>Q</th>
+      <th>Q'</th>
+    </tr>
+  </thead>`
+  document.getElementById("table-head").innerHTML = head;
 
     let q = gates_list[outputQ];
     let qbar = gates_list[outputQbar];
@@ -102,7 +118,23 @@ export function testJKFF(inputJ, inputK, inputClk, outputQ, outputQbar)  // This
     let clk = gates_list[inputClk];
     let circuitIsCorrect = true;
     let dataTable = "";
-
+    let head = `<thead id="table-head">
+              <tr>
+                <th colspan="3">Inputs</th>
+                <th colspan="2">Expected Values</th>
+                <th colspan="2">Observed Values</th>
+              </tr>
+              <tr>
+                <th>J</th>
+                <th>K</th>
+                <th>Clk</th>
+                <th>Q</th>
+                <th>Q'</th>
+                <th>Q</th>
+                <th>Q'</th>
+              </tr>
+            </thead>`
+            document.getElementById("table-head").innerHTML = head;
 
     let q = gates_list[outputQ];
     let qbar = gates_list[outputQbar];
@@ -168,7 +200,23 @@ export function testDFF(inputD, inputClk, outputQ, outputQbar)  // This function
     let clk = gates_list[inputClk];
     let circuitIsCorrect = true;
     let dataTable = "";
-
+    let    head = `<thead id="table-head">
+    <tr>
+      <th colspan="2">Inputs</th>
+      <th colspan="2">Expected Values</th>
+      <th colspan="2">Observed Values</th>
+    </tr>
+    <tr>
+      <th>D</th>
+      <th>Clk</th>
+      <th>Q</th>
+      <th>Q'</th>
+      <th>Q</th>
+      <th>Q'</th>
+    </tr>
+  </thead>` 
+  document.getElementById("table-head").innerHTML = head;
+  
 
     let q = gates_list[outputQ];
     let qbar = gates_list[outputQbar];
@@ -232,7 +280,22 @@ export function testTFF(inputT, inputClk, outputQ, outputQbar)  // This function
     let clk = gates_list[inputClk];
     let circuitIsCorrect = true;
     let dataTable = "";
-
+    let head = `<thead id="table-head">
+              <tr>
+                <th colspan="2">Inputs</th>
+                <th colspan="2">Expected Values</th>
+                <th colspan="2">Observed Values</th>
+              </tr>
+              <tr>
+                <th>T</th>
+                <th>Clk</th>
+                <th>Q</th>
+                <th>Q'</th>
+                <th>Q</th>
+                <th>Q'</th>
+              </tr>
+            </thead>`
+            document.getElementById("table-head").innerHTML = head;
 
     let q = gates_list[outputQ];
     let qbar = gates_list[outputQbar];
