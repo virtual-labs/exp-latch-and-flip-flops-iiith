@@ -52,6 +52,9 @@ export const connectGate = function () {
             return false;
         } else if (start_uuid === "output" && end_uuid === "output") {
             return false;
+        } else if ((end_uuid==="input" && toEndpoint.connections.length > 0) || (start_uuid==="input" && fromEndpoint.connections.length>1)) {
+            // If it already has a connection, do not establish a new connection
+            return false;
         } else {
             jsPlumbInstance.connect({ uuids: [fromEndpoint.uuid, toEndpoint.uuid], paintStyle: { stroke: wireColours[num_wires], strokeWidth: 4 } });
             num_wires++;
@@ -85,6 +88,9 @@ export const connectRSFF = function () {
         if (start_uuid === "input" && end_uuid === "input") {
             return false;
         } else if (start_uuid === "output" && end_uuid === "output") {
+            return false;
+        } else if ((end_uuid==="input" && toEndpoint.connections.length > 0) || (start_uuid==="input" && fromEndpoint.connections.length>1)) {
+            // If it already has a connection, do not establish a new connection
             return false;
         } else {
             jsPlumbInstance.connect({ uuids: [fromEndpoint.uuid, toEndpoint.uuid], paintStyle: { stroke: wireColours[num_wires], strokeWidth: 4 } });
@@ -354,6 +360,9 @@ export const connectJKFF = function () {
         if (start_uuid === "input" && end_uuid === "input") {
             return false;
         } else if (start_uuid === "output" && end_uuid === "output") {
+            return false;
+        } else if ((end_uuid==="input" && toEndpoint.connections.length > 0) || (start_uuid==="input" && fromEndpoint.connections.length>1)) {
+            // If it already has a connection, do not establish a new connection
             return false;
         } else {
             jsPlumbInstance.connect({ uuids: [fromEndpoint.uuid, toEndpoint.uuid], paintStyle: { stroke: wireColours[num_wires], strokeWidth: 4 } });
