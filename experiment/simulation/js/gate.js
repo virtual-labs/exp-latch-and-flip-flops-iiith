@@ -573,6 +573,28 @@ export function testSimulation(gates,flipFlops) {
 export function submitCircuit() {
     clearResult();
     document.getElementById("table-body").innerHTML = "";
+
+    // Refresh the input bit values to default 1 and output bit values to default empty black circles after submitting
+    for (let gateId in gates) {
+        const gate = gates[gateId];
+        if (gate.isInput && gate.type!=="Clock") {
+            gate.setOutput(true);
+            let element = document.getElementById(gate.id);
+            element.className = "high";
+            element.childNodes[0].innerHTML = "1";
+        }
+        if(gate.isOutput) {
+            gate.setOutput(null);
+            let element = document.getElementById(gate.id);
+            element.className = "output";
+            element.childNodes[0].innerHTML = "";
+        }
+        if(gate.type === "Clock"){
+            gate.isOn = false;
+            gate.updateOutput();
+        }
+    }
+
     if (window.currentTab === "task1") {
         if(!checkConnections())
         return;
