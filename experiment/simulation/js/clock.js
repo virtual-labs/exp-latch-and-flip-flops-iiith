@@ -16,6 +16,7 @@ export class Clock {
         this.isInput = true;
         this.inputPoints = [];
         this.inputs = [];
+        this.outputs= [];
         this.outputPoints = [];
         this.isConnected = false;
         this.type = "Clock";
@@ -31,6 +32,19 @@ export class Clock {
 
     updateComponent() {
         this.component = `<div class="low" id=${this.id}><a>0</a><p>${this.name}</p></div>`
+    }
+
+    addOutput(gate) {
+        this.outputs.push(gate);
+    }
+
+    removeOutput(gate) {
+        // Find and remove all occurrences of gate
+      for (let i = this.outputs.length - 1; i >= 0; i--) {
+        if (this.outputs[i] === gate) {
+          this.outputs.splice(i, 1);
+            }
+        }
     }
 
 
