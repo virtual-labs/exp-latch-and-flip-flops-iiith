@@ -53,6 +53,10 @@
             },
             "correctAnswer": "d",
             "explanations": {
+                "a" :"",
+                "b" :"",
+                "c" :"",
+                "d" :"The 'True' memory refers to the fact that the JK flip-flop can retain its state indefinitely until a specific input combination is applied"
                
             },
             "difficulty": "Intermediate"
@@ -68,6 +72,10 @@
             "correctAnswer": "b",
             "explanations": {
                 
+                "a" :"",
+                "b" :"A flip-flop is a bistable device because it has two stable states and can remain in either state until it is explicitly changed by an input signal.",
+                "c" :"",
+                "d" :""
             },
             "difficulty": "advanced"
         }

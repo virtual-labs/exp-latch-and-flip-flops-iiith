@@ -6,10 +6,10 @@
 
 ## Circuit Connections - 
 
-* Drag the first NAND gate and connect its input points to the R and Clk input bits.
-* Drag the second NAND gate and connect its input points to the S and Clk input bits.
-* Drag the third NAND gate and connect its one of its input points to the output of the first NAND gate.
-* Drag the fourth NAND gate and connect its one of its input points to the output of the second NAND gate.
+* Drag the first NAND gate and connect its input points to the S and Clk input bits.
+* Drag the second NAND gate and connect its input points to the R and Clk input bits.
+* Drag the third NAND gate and connect one of its input points to the output of the first NAND gate.
+* Drag the fourth NAND gate and connect one of its input points to the output of the second NAND gate.
 * Drag the output of the third NAND gate and connect it to the Q output bit. Also connect it to the input point of the fourth NAND gate.
 * Drag the output of the fourth NAND gate and connect it to the Q' output bit. Also connect it to the input point of the third NAND gate.
 * Set the Values of the R and S to 1 and 0 respectively. Remember both R and S cannot be 1 at the same time.
@@ -54,8 +54,8 @@
 
 * Drag the first 3-input NAND gate and connect its input points to the J and Clk input bits.
 * Drag the second 3-input NAND gate and connect its input points to the K and Clk input bits.
-* Drag the first 2-input NAND gate and connect its one of its input points to the output of the first 3-input NAND gate.
-* Drag the second 2-input NAND gate and connect its one of its input points to the output of the second 3-input NAND gate.
+* Drag the first 2-input NAND gate and connect one of its input points to the output of the first 3-input NAND gate.
+* Drag the second 2-input NAND gate and connect one of its input points to the output of the second 3-input NAND gate.
 * Drag the output of the first 2-input NAND gate and connect it to the input point of the second 2-input NAND gate.
 * Drag the output of the second 2-input NAND gate and connect it to the input point of the first 2-input NAND gate.
 * Drag the NOT gate and connect it to the Clk input bit.
@@ -63,14 +63,14 @@
 * Drag the fourth 2-input NAND gate and connect its input points to the output of the second 2-input NAND gate and the NOT gate.
 * Drag the fifth 2-input NAND gate and connect one of its input points to the output of the third 2-input NAND gate. Also connect its output to the Q output bit.
 * Drag the sixth 2-input NAND gate and connect one of its input points to the output of the fourth 2-input NAND gate. Also connect its output to the Q' output bit.
-* Connect the output of the fifth 2-input NAND gate to the input point of the sixth 2-input NAND gate and also the input point of the first 3-input NAND gate.
-* Connect the output of the sixth 2-input NAND gate to the input point of the fifth 2-input NAND gate and also the input point of the second 3-input NAND gate.
-* Set the Values of the J and K as you wish.
+* Connect the output of the fifth 2-input NAND gate to the input point of the sixth 2-input NAND gate and also the input point of the second 3-input NAND gate.
+* Connect the output of the sixth 2-input NAND gate to the input point of the fifth 2-input NAND gate and also the input point of the first 3-input NAND gate.
+* Set the values of J and K as you wish.
 * Set the Clk to 1, simulate the circuit and observe the output with varying clock values.
 
 ## Observations - 
 
-* When Clk is 0, the output bits Q and Q' remain unchanged. If Clk is 1, the output bits Q and Q' are 1,0 and 0,1 when the J and K bits are 0,1 and 1,0 respectively. When Clk is 1 and both J and K bits are 1, the output bits Q and Q' are flipped.
+* When Clk is 0, the output bits Q and Q' remain unchanged. If Clk is 1, the output bits Q and Q' are 1,0 and 0,1 when the J and K bits are 1,0 and 0,1 respectively. When Clk is 1 and both J and K bits are 1, the output bits Q and Q' are flipped.
 * If the circuit has been made as described above, a "Success" message will be displayed upon clicking "Submit".
 
 # T Flip Flop

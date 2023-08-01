@@ -1,7 +1,7 @@
 import { registerGate, jsPlumbInstance } from "./main.js";
 import { setPosition } from "./layout.js";
 import { testRSFF, computeAnd, computeNand, computeNor, computeOr, computeXnor, computeXor, testJKFF, testDFF, testTFF } from "./validator.js";
-import { checkConnectionsRS, checkConnectionsJK, simulateFFJK, simulateFFRS, testSimulateFFJK, testSimulateFFRS } from "./flipflop.js";
+import { flipFlops, checkConnectionsRS, checkConnectionsJK, simulateFFJK, simulateFFRS, testSimulateFFJK, testSimulateFFRS } from "./flipflop.js";
 
 'use strict';
 
@@ -21,6 +21,7 @@ export class Gate {
         this.inputPoints = [];
         this.outputPoints = [];
         this.inputs = []; // List of input gates
+        this.outputs=[];
         this.output = null; // Output value
         this.isInput = false;
         this.isOutput = false;
@@ -32,19 +33,22 @@ export class Gate {
     addInput(gate, pos) {
         this.inputs.push([gate, pos]);
     }
+    addOutput(gate) {
+        this.outputs.push(gate);
+    }
     removeInput(gate) {
-        let index = -1;
-        let i = 0;
-        for (let input in this.inputs) {
-            if (this.inputs[input][0] === gate) {
-                index = i;
-                break;
+        for (let i = this.inputs.length - 1; i >= 0; i--) {
+            if (this.inputs[i][0] === gate) {
+              this.inputs.splice(i, 1);
             }
-            i++;
         }
-
-        if (index > -1) {
-            this.inputs.splice(index, 1);
+    }
+    removeOutput(gate) {
+        // Find and remove all occurrences of gate
+      for (let i = this.outputs.length - 1; i >= 0; i--) {
+        if (this.outputs[i] === gate) {
+          this.outputs.splice(i, 1);
+            }
         }
     }
     updatePosition(id) {
@@ -234,6 +238,8 @@ window.setInput = setInput;
 export function clearResult() {
     const result = document.getElementById("result");
     result.innerHTML = "";
+    document.getElementById("table-body").innerHTML = "";
+    document.getElementById("table-head").innerHTML="";
 }
 
 export function printErrors(message,objectId) {
@@ -255,7 +261,7 @@ export function checkConnections() {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
-        else if (!gate.isConnected && !gate.isOutput) {
+        else if (gate.type!=="Clock" && (!gate.isConnected || gate.outputs.length==0) && !gate.isOutput) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
@@ -571,17 +577,46 @@ export function testSimulation(gates,flipFlops) {
 export function submitCircuit() {
     clearResult();
     document.getElementById("table-body").innerHTML = "";
+
     if (window.currentTab === "task1") {
+        if(!checkConnections())
+        return;
         testRSFF("Input-1", "Input-0", "Clock-0", "Output-2", "Output-3");
     }
     else if (window.currentTab === "task2") {
+        if(!checkConnectionsRS() || !checkConnections())
+        return;
         testDFF("Input-0", "Clock-0", "Output-1", "Output-2");
     }
     else if (window.currentTab === "task3") {
+        if(!checkConnections())
+        return;
         testJKFF("Input-0", "Input-1", "Clock-0", "Output-2", "Output-3");
     }
     else if (window.currentTab === "task4") {
+        if(!checkConnectionsJK() || !checkConnections())
+        return;
         testTFF("Input-0", "Clock-0", "Output-1", "Output-2");
+    }
+    // Refresh the input bit values to default 1 and output bit values to default empty black circles after submitting
+    for (let gateId in gates) {
+        const gate = gates[gateId];
+        if (gate.isInput && gate.type!=="Clock") {
+            gate.setOutput(true);
+            let element = document.getElementById(gate.id);
+            element.className = "high";
+            element.childNodes[0].innerHTML = "1";
+        }
+        if(gate.isOutput) {
+            gate.setOutput(null);
+            let element = document.getElementById(gate.id);
+            element.className = "output";
+            element.childNodes[0].innerHTML = "";
+        }
+        if(gate.type === "Clock"){
+            gate.isOn = false;
+            gate.updateOutput();
+        }
     }
 }
 window.submitCircuit = submitCircuit;
@@ -605,6 +640,47 @@ export function deleteElement(gateid) {
         }
         if (found === 1) {
             gates[elem].removeInput(gate);
+        }
+        if(gates[elem].outputs.includes(gate)) {
+            gates[elem].removeOutput(gate);
+        }
+    }
+
+    for (let key in flipFlops) {
+        let ff=flipFlops[key];
+        if(ff.constructor.name === "JKFlipFlop"){
+            if(flipFlops[key].j[0] === gate) {
+                flipFlops[key].j = null;
+            }
+            if(flipFlops[key].k[0] === gate) {
+                flipFlops[key].k = null;
+            }
+            if(flipFlops[key].clk[0] === gate) {
+                flipFlops[key].clk = null;
+            }
+            if(flipFlops[key].qOutputs.includes(gate)) {
+                flipFlops[key].removeqOutput(gate);
+            }
+            if(flipFlops[key].qbarOutputs.includes(gate)) {
+                flipFlops[key].removeqbarOutput(gate);
+            }
+        }
+        else if(ff.constructor.name === "RSFlipFlop"){
+            if(flipFlops[key].r[0] === gate){
+                flipFlops[key].r = null;
+            }
+            if(flipFlops[key].s[0] === gate){
+                flipFlops[key].s = null;
+            }
+            if(flipFlops[key].clk[0] === gate){
+                flipFlops[key].clk = null;
+            }
+            if(flipFlops[key].qOutputs.includes(gate)) {
+                flipFlops[key].removeqOutput(gate);
+            }
+            if(flipFlops[key].qbarOutputs.includes(gate)) {
+                flipFlops[key].removeqbarOutput(gate);
+            }
         }
     }
     delete gates[gateid];

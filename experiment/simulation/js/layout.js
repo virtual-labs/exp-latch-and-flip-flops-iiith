@@ -99,6 +99,7 @@ const updateInstructions = () => {
   }
   else if (task === "task4") {
     title = `Instructions<br>Implement a T Flip-Flop using JK Flip-Flop`;
+    document.getElementById("QQ'_init_states").innerHTML = `<li>Initially, Q is in SET state (Q=1, Q'=0).</li>`
   }
   instructionBox.innerHTML = title;
 }
@@ -107,21 +108,24 @@ const updateInstructions = () => {
 // Toolbar
 
 function updateToolbar() {
+  const task = window.currentTab;
   let elem = "";
-  if (window.currentTab === "task1") {
+  if (task === "task1") {
     elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button clock" id="addclock">CLOCK</div>'
-    document.getElementById("addclock").addEventListener("click", toggleModal); // feature for adding clock
   }
-  else if (window.currentTab === "task2") {
+  else if (task === "task2") {
     elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button rsflipflop" onclick="addRSFlipFlop(event)"></div>'
   }
-  else if (window.currentTab === "task3") {
+  else if (task === "task3") {
     elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button three-ip-nand" onclick="addGate(event)">3-NAND</div>'
   }
-  else if (window.currentTab === "task4") {
+  else if (task === "task4") {
     elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button jkflipflop" onclick="addJKFlipFlop(event)"></div>'
   }
   document.getElementById("toolbar").innerHTML = elem;
+  if(task == "task1") {
+    document.getElementById("addclock").addEventListener("click", toggleModal); // feature for adding clock
+  }
 }
 
 // Modal
@@ -174,82 +178,7 @@ window.toggleSimulation = toggleSimulation;
 // Clear observations
 function clearObservations() {
   document.getElementById("table-body").innerHTML = "";
-  let head = "";
-
-  if (window.currentTab === "task1") {
-    head = `<thead id="table-head">
-              <tr>
-                <th colspan="3">Inputs</th>
-                <th colspan="2">Expected Values</th>
-                <th colspan="2">Observed Values</th>
-              </tr>
-              <tr>
-                <th>R</th>
-                <th>S</th>
-                <th>Clk</th>
-                <th>Q</th>
-                <th>Q'</th>
-                <th>Q</th>
-                <th>Q'</th>
-              </tr>
-            </thead>`
-  } else if (window.currentTab === "task2") {
-    head = `<thead id="table-head">
-              <tr>
-                <th colspan="2">Inputs</th>
-                <th colspan="2">Expected Values</th>
-                <th colspan="2">Observed Values</th>
-              </tr>
-              <tr>
-                <th>D</th>
-                <th>Clk</th>
-                <th>Q</th>
-                <th>Q'</th>
-                <th>Q</th>
-                <th>Q'</th>
-              </tr>
-            </thead>` 
-  } else if (window.currentTab === "task3") {
-    head = `<thead id="table-head">
-              <tr>
-                <th colspan="3">Inputs</th>
-                <th colspan="2">Expected Values</th>
-                <th colspan="2">Observed Values</th>
-              </tr>
-              <tr>
-                <th>J</th>
-                <th>K</th>
-                <th>Clk</th>
-                <th>Q</th>
-                <th>Q'</th>
-                <th>Q</th>
-                <th>Q'</th>
-              </tr>
-            </thead>`
-  }
-  else if(window.currentTab === "task4"){
-    head = `<thead id="table-head">
-              <tr>
-                <th colspan="2">Inputs</th>
-                <th colspan="2">Expected Values</th>
-                <th colspan="2">Observed Values</th>
-              </tr>
-              <tr>
-                <th>T</th>
-                <th>Clk</th>
-                <th>Q</th>
-                <th>Q'</th>
-                <th>Q</th>
-                <th>Q'</th>
-              </tr>
-            </thead>`
-  }
-  else
-  {
-    console.debug("Error: Unknown tab");
-  }
-
-  document.getElementById("table-head").innerHTML = head;
+  document.getElementById("table-head").innerHTML = "";
   document.getElementById("result").innerHTML = "";
 }
 
