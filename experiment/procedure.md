@@ -22,7 +22,9 @@
 
 # D Flip Flop
 
-## Components Required - 
+Try designing a D - Flip Flop using RS Flip Flops
+
+<!-- ## Components Required - 
 
 * 1 NOT gate
 * 1 RS Flip Flop
@@ -40,7 +42,7 @@
 ## Observations - 
 
 * When Clk is 0, the output bits Q and Q' remain unchanged. If Clk is 1, the output bits Q and Q' are 1,0 and 0,1 when the D bit is 1 and 0 respectively.
-* If the circuit has been made as described above, a "Success" message will be displayed upon clicking "Submit".
+* If the circuit has been made as described above, a "Success" message will be displayed upon clicking "Submit". -->
 
 # Master-Slave JK Flip Flop
 
@@ -75,7 +77,9 @@
 
 # T Flip Flop
 
-## Components Required - 
+Try to design a T flip FLop using a JK Flip flop.
+
+<!-- ## Components Required - 
 
 * 1 JK Flip Flop
 
@@ -90,4 +94,4 @@
 ## Observations - 
 
 * When Clk or T is 0, the output bits Q and Q' remain unchanged. If Clk and T both are 1, the output bits Q and Q' are toggled (flipped).
-* If the circuit has been made as described above, a "Success" message will be displayed upon clicking "Submit".
+* If the circuit has been made as described above, a "Success" message will be displayed upon clicking "Submit". -->
