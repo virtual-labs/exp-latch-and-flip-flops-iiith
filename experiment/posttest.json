@@ -46,7 +46,7 @@
             "answers": {
                 "a": "OR and AND",
                 "b": "NOT and AND",
-                "c": "NOT an OR",
+                "c": "NOT and OR",
                 "d": "NOT and OR"
             },
             "correctAnswer": "b",
