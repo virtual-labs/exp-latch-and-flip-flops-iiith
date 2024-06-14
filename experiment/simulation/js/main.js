@@ -2,14 +2,15 @@ import * as gatejs from "./gate.js";
 import { wireColours } from "./layout.js";
 import * as clockjs from "./clock.js";
 import * as flipflopjs from "./flipflop.js";
-
+import { deleteElement } from "./gate.js";
+import { deleteFF } from "./flipflop.js";
 'use strict';
 
 let num_wires = 0;
 
 document.getScroll = function () {
-    if (window.pageYOffset != undefined) {
-        return [pageXOffset, pageYOffset];
+    if (window.scrollY != undefined) {
+        return [scrollX, scrollY];
     } else {
         let sx, sy, d = document,
             r = d.documentElement,
@@ -25,7 +26,7 @@ export const jsPlumbInstance = jsPlumbBrowserUI.newInstance({
     maxConnections: -1,
     endpoint: {
         type: "Dot",
-        options: { radius: 7 },
+        options: { radius: 6},
     },
     dragOptions: {
         containment: "parentEnclosed",
@@ -1088,10 +1089,82 @@ export function refreshWorkingArea() {
     flipflopjs.clearFlipFlops();
 }
 
+refresh.addEventListener("click",function(){
+    jsPlumbInstance.reset();
+    window.numComponents = 0;
 
+    gatejs.clearGates();
+    if(window.currentTab=="task1") initRSFlipFlop();
+   else if(window.currentTab=="task2") initDFlipFlop();
+   else if(window.currentTab=="task3") initJKFlipFlop();
+   else if(window.currentTab=="task4") initTFlipFlop();
+    
+})
 
 
 window.currentTab = "task1";
+const menu = document.querySelector(".menu");
+const menuOption = document.querySelector(".menu-option");
+let menuVisible = false;
+
+console.log(menu);
+console.log(menuOption);
+console.log(menuVisible);
+
+const toggleMenu = (command) => {
+  menu.style.display = command === "show" ? "block" : "none";
+  menuVisible = command === "show";
+};
+console.log("toggle", toggleMenu);
+
+export const setPosition = ({ top, left }) => {
+  menu.style.left = `${left}px`;
+  menu.style.top = `${top}px`;
+  toggleMenu("show");
+};
+console.log("setPosition", setPosition);
+
+window.addEventListener("click", () => {
+  console.log("menu is ", menuVisible);
+  if (menuVisible) toggleMenu("hide");
+  window.selectedComponent = null;
+  window.componentType = null;
+});
+document.addEventListener('contextmenu', function(event) {
+  event.preventDefault(); // Prevent the default context menu from appearing
+  menu.style.display = "block";
+  menu.style.left = `${event.clientX}px`;
+  menu.style.top = `${event.clientY}px`;
+var elements = document.querySelectorAll(".jtk-connector.jtk-hover");
+menuOption.addEventListener("click", (e) => {
+  console.log("element deleted", elements);
+  if (e.target.innerHTML === "Delete") {
+    if (window.componentType === "gate") {
+      console.log("op1");
+      deleteElement(window.selectedComponent);
+    }
+    else if (window.componentType === "flipflop") {
+        deleteFF(window.selectedComponent);
+      }
+    else if (window.componentType === "fullAdder")
+      {
+        deleteFA(window.selectedComponent);
+      } else {
+      console.log("op2");
+      elements.forEach(function(element) {
+        element.parentNode.removeChild(element);
+      });
+    }
+  }
+  // window.selectedComponent = null;
+  // window.componentType = null;
+  toggleMenu("hide"); // Hide menu after selection
+});
+
+
+  toggleMenu("show");
+});
+
 connectGate();
 refreshWorkingArea();
 initRSFlipFlop();
