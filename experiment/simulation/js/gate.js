@@ -1,5 +1,5 @@
 import { registerGate, jsPlumbInstance } from "./main.js";
-import { setPosition } from "./layout.js";
+import { setPosition } from "./main.js";
 import { testRSFF, computeAnd, computeNand, computeNor, computeOr, computeXnor, computeXor, testJKFF, testDFF, testTFF } from "./validator.js";
 import { flipFlops, checkConnectionsRS, checkConnectionsJK, simulateFFJK, simulateFFRS, testSimulateFFJK, testSimulateFFRS } from "./flipflop.js";
 
