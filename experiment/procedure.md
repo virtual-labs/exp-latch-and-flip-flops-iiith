@@ -1,63 +1,37 @@
-### SR Latch (Basic)
+### RS Flip-Flop
 
 #### Circuit Diagram
 
 <img src="images/nor_latch.png" alt="SR Latch Circuit Diagram">
 
-_Figure 1: Basic SR Latch circuit diagram using two cross-coupled NOR gates. Reference: Theory section_
+_Figure 1: Basic RS Flip-Flop circuit diagram using two cross-coupled NOR gates. Reference: Theory section_
 
-#### Components Required
+#### Components Available in Simulation
 
-- 2 NOR gates
+- Pre-built RS Flip-Flop component
+- Input sources (S, R, CLK)
+- Output displays (Q, Q')
 
-#### Circuit Connections
+#### Simulation Instructions
 
-1. Drag the first NOR gate and connect one of its inputs to the S (Set) input bit.
-2. Drag the second NOR gate and connect one of its inputs to the R (Reset) input bit.
-3. Connect the output of the first NOR gate to the second input of the second NOR gate. This output represents Q.
-4. Connect the output of the second NOR gate to the second input of the first NOR gate. This output represents Q'.
-5. Connect the Q output to the Q output bit and Q' output to the Q' output bit.
-6. Set the values of S and R inputs (remember: S=1, R=1 is an invalid state).
-7. Click on "Simulate" and observe the latch behavior for different input combinations.
+1. **Select RS Flip-Flop tab** in the simulation interface.
+2. **Observe the pre-built RS Flip-Flop component** displayed in the working area.
+3. **Set input values** for S (Set) and R (Reset) using the input controls.
+4. **Toggle the clock signal** if available to observe synchronous behavior.
+5. **Observe the outputs** Q and Q' and verify they follow the RS flip-flop truth table.
+6. **Test different input combinations**:
+   - S=0, R=0: Hold state
+   - S=1, R=0: Set (Q=1)
+   - S=0, R=1: Reset (Q=0)
+   - S=1, R=1: Invalid state (avoid this)
+7. **Click "Simulate"** to run the simulation and observe the behavior.
 
-#### Observations
+#### Learning Objectives
 
-- When S=0, R=0: The latch holds its previous state (memory function).
-- When S=1, R=0: The latch sets (Q=1, Q'=0).
-- When S=0, R=1: The latch resets (Q=0, Q'=1).
-- When S=1, R=1: Invalid state (both outputs become 0, violating complementary relationship).
-- If the circuit has been made as described above, a "Success" message will be displayed upon clicking "Submit".
-
-### Gated SR Latch
-
-#### Circuit Diagram
-
-<img src="images/gated_sr_latch.png" alt="Gated SR Latch Circuit Diagram">
-
-_Figure 2: Gated SR Latch circuit diagram using NAND gates with enable signal. Reference: Theory section_
-
-#### Components Required
-
-- 4 NAND gates
-
-#### Circuit Connections
-
-1. Drag the first NAND gate and connect its input points to the S and CLK input bits.
-2. Drag the second NAND gate and connect its input points to the R and CLK input bits.
-3. Drag the third NAND gate and connect one of its input points to the output of the first NAND gate.
-4. Drag the fourth NAND gate and connect one of its input points to the output of the second NAND gate.
-5. Connect the output of the third NAND gate to the Q output bit and to the second input of the fourth NAND gate.
-6. Connect the output of the fourth NAND gate to the Q' output bit and to the second input of the third NAND gate.
-7. Set the values of S and R inputs (avoid S=1, R=1 simultaneously).
-8. Set CLK to control when the latch responds to inputs.
-9. Click on "Simulate" and observe the gated latch behavior.
-
-#### Observations
-
-- When CLK=0: The latch ignores S and R inputs and maintains its current state.
-- When CLK=1: The latch responds to S and R inputs following SR latch truth table.
-- The enable signal (CLK) provides timing control over when changes can occur.
-- If the circuit has been made as described above, a "Success" message will be displayed upon clicking "Submit".
+- Understand RS flip-flop operation through interactive simulation
+- Observe the relationship between inputs (S, R) and outputs (Q, Q')
+- Learn about the invalid state condition
+- Visualize the memory function of flip-flops
 
 ### D Flip-Flop
 
@@ -65,73 +39,72 @@ _Figure 2: Gated SR Latch circuit diagram using NAND gates with enable signal. R
 
 <img src="images/d_flipflop.png" alt="D Flip-Flop Circuit Diagram">
 
-_Figure 3: D Flip-Flop circuit diagram showing data input with clock control for synchronous operation. Reference: Theory section_
+_Figure 2: D Flip-Flop circuit diagram showing data input with clock control for synchronous operation. Reference: Theory section_
 
-#### Components Required
+#### Components Available in Simulation
 
-- 1 NOT gate
-- 1 Gated SR Latch (or equivalent NAND gates)
+- Pre-built D Flip-Flop component
+- Input sources (D, CLK)
+- Output displays (Q, Q')
 
-#### Circuit Connections
+#### Simulation Instructions
 
-1. Drag the NOT gate and connect its input to the D input bit.
-2. Drag the Gated SR Latch component.
-3. Connect the D input bit directly to the S input of the SR Latch.
-4. Connect the output of the NOT gate to the R input of the SR Latch.
-5. Connect the CLK input bit to the CLK input of the SR Latch.
-6. Connect the Q and Q' outputs of the SR Latch to the Q and Q' output bits respectively.
-7. Set the value of the D input bit as desired.
-8. Toggle the CLK input to observe edge-triggered behavior.
-9. Click on "Simulate" and observe the D flip-flop operation.
+1. **Select D Flip-Flop tab** in the simulation interface.
+2. **Observe the pre-built D Flip-Flop component** displayed in the working area.
+3. **Set the D input value** using the input control (0 or 1).
+4. **Apply clock pulses** using the clock control to trigger the flip-flop.
+5. **Observe the outputs** Q and Q' after each clock edge.
+6. **Verify the operation**:
+   - On positive clock edge: Q becomes equal to D
+   - Between clock edges: Q remains stable regardless of D changes
+7. **Test with different sequences**:
+   - Set D=1, apply clock → Q should become 1
+   - Set D=0, apply clock → Q should become 0
+   - Change D without clock → Q should remain unchanged
+8. **Click "Simulate"** to run the simulation animation.
 
-#### Observations
+#### Learning Objectives
 
-- When CLK transitions from 0 to 1 (positive edge): Q follows the D input value.
-- When CLK=0 or CLK=1 (stable): Output remains unchanged regardless of D input changes.
-- The D flip-flop eliminates the invalid state problem of SR flip-flops.
-- Data is transferred from input to output only on clock edges (synchronous operation).
-- If the circuit has been made as described above, a "Success" message will be displayed upon clicking "Submit".
+- Understand edge-triggered operation of D flip-flops
+- Observe data transfer from input to output on clock edges
+- Learn about synchronous digital system behavior
+- Visualize how D flip-flops eliminate invalid states
 
-### JK Flip-Flop (Master-Slave)
+### JK Flip-Flop
 
 #### Circuit Diagram
 
 <img src="images/master_slave.gif" alt="Master-Slave JK Flip-Flop Circuit Diagram">
 
-_Figure 4: Master-Slave JK Flip-Flop circuit diagram showing master and slave latches for race-condition elimination. Reference: Theory section_
+_Figure 3: Master-Slave JK Flip-Flop circuit diagram showing master and slave latches for race-condition elimination. Reference: Theory section_
 
-#### Components Required
+#### Components Available in Simulation
 
-- 2 3-input NAND gates
-- 6 2-input NAND gates
-- 1 NOT gate
+- Pre-built JK Flip-Flop component
+- Input sources (J, K, CLK)
+- Output displays (Q, Q')
 
-#### Circuit Connections
+#### Simulation Instructions
 
-**Master Stage:**
+1. **Select JK Flip-Flop tab** in the simulation interface.
+2. **Observe the pre-built JK Flip-Flop component** displayed in the working area.
+3. **Set input values** for J and K using the input controls.
+4. **Apply clock pulses** using the clock control to trigger the flip-flop.
+5. **Observe the outputs** Q and Q' after each clock edge.
+6. **Test all four operations**:
+   - **Hold**: J=0, K=0 → Q remains unchanged
+   - **Set**: J=1, K=0 → Q becomes 1
+   - **Reset**: J=0, K=1 → Q becomes 0
+   - **Toggle**: J=1, K=1 → Q changes to its complement
+7. **Verify edge-triggered behavior**: Changes occur only on clock transitions.
+8. **Click "Simulate"** to run the simulation animation.
 
-1. Drag the first 3-input NAND gate and connect its inputs to J, CLK, and Q' (feedback from slave).
-2. Drag the second 3-input NAND gate and connect its inputs to K, CLK, and Q (feedback from slave).
-3. Drag the first 2-input NAND gate and connect one input to the output of the first 3-input NAND gate.
-4. Drag the second 2-input NAND gate and connect one input to the output of the second 3-input NAND gate.
-5. Cross-couple the outputs: Connect output of first 2-input NAND to second input of second 2-input NAND, and vice versa.
+#### Learning Objectives
 
-**Clock Inverter:** 6. Drag the NOT gate and connect it to the CLK input bit to create inverted clock.
-
-**Slave Stage:** 7. Drag the third 2-input NAND gate and connect its inputs to the output of the first master NAND gate and the inverted clock. 8. Drag the fourth 2-input NAND gate and connect its inputs to the output of the second master NAND gate and the inverted clock. 9. Drag the fifth 2-input NAND gate and connect one input to the output of the third NAND gate. Connect its output to the Q output bit. 10. Drag the sixth 2-input NAND gate and connect one input to the output of the fourth NAND gate. Connect its output to the Q' output bit. 11. Cross-couple the slave outputs: Connect Q output to second input of sixth NAND gate and Q' output to second input of fifth NAND gate.
-
-**Feedback Connections:** 12. Connect the Q output to the third input of the second 3-input NAND gate (master). 13. Connect the Q' output to the third input of the first 3-input NAND gate (master). 14. Set values of J and K inputs as desired. 15. Toggle CLK and observe master-slave operation.
-
-#### Observations
-
-- During CLK=1 (positive): Master latch accepts J, K inputs; slave latch holds previous state.
-- During CLK=0 (negative): Master latch holds state; slave latch updates output based on master state.
-- When J=0, K=0: Hold current state (no change).
-- When J=1, K=0: Set operation (Q becomes 1).
-- When J=0, K=1: Reset operation (Q becomes 0).
-- When J=1, K=1: Toggle operation (Q changes to complement).
-- Race-around conditions are eliminated by master-slave configuration.
-- If the circuit has been made as described above, a "Success" message will be displayed upon clicking "Submit".
+- Understand the versatility of JK flip-flops (all four operations)
+- Observe how JK flip-flops eliminate the invalid state problem
+- Learn about toggle operation for counter applications
+- Visualize master-slave operation preventing race conditions
 
 ### T Flip-Flop
 
@@ -139,60 +112,57 @@ _Figure 4: Master-Slave JK Flip-Flop circuit diagram showing master and slave la
 
 <img src="images/t_flipflop.png" alt="T Flip-Flop Circuit Diagram">
 
-_Figure 5: T Flip-Flop circuit diagram implemented using JK Flip-Flop with J and K inputs tied together. Reference: Theory section_
+_Figure 4: T Flip-Flop circuit diagram implemented using JK Flip-Flop with J and K inputs tied together. Reference: Theory section_
 
-#### Components Required
+#### Components Available in Simulation
 
-- 1 JK Flip-Flop
+- Pre-built T Flip-Flop component
+- Input sources (T, CLK)
+- Output displays (Q, Q')
 
-#### Circuit Connections
+#### Simulation Instructions
 
-1. Drag the JK Flip-Flop component.
-2. Connect both J and K input points of the JK Flip-Flop to the T input bit.
-3. Connect the CLK input of the JK Flip-Flop to the CLK input bit.
-4. Connect the Q and Q' outputs of the JK Flip-Flop to the Q and Q' output bits respectively.
-5. Set the value of the T input bit as desired.
-6. Toggle the CLK input to observe toggle behavior.
-7. Click on "Simulate" and observe the T flip-flop operation.
+1. **Select T Flip-Flop tab** in the simulation interface.
+2. **Observe the pre-built T Flip-Flop component** displayed in the working area.
+3. **Set the T input value** using the input control (0 or 1).
+4. **Apply clock pulses** using the clock control to trigger the flip-flop.
+5. **Observe the outputs** Q and Q' after each clock edge.
+6. **Test both operations**:
+   - **Hold**: T=0 → Q remains unchanged after clock edge
+   - **Toggle**: T=1 → Q changes to its complement after clock edge
+7. **Observe frequency division**: When T=1, output frequency is half the clock frequency.
+8. **Click "Simulate"** to run the simulation animation.
 
-#### Observations
+#### Learning Objectives
 
-- When T=0: The flip-flop holds its current state regardless of clock transitions.
-- When T=1: The flip-flop toggles (changes to complement) on each positive clock edge.
-- Toggle behavior makes T flip-flop ideal for frequency division (output frequency = input frequency ÷ 2).
-- Useful in counter circuits and clock generation applications.
-- The T flip-flop effectively converts the JK flip-flop's J=K=1 condition into a simple toggle input.
-- If the circuit has been made as described above, a "Success" message will be displayed upon clicking "Submit".
+- Understand toggle operation and its applications
+- Observe frequency division property (output = clock ÷ 2)
+- Learn how T flip-flops are used in counters
+- Visualize the relationship between T flip-flops and JK flip-flops
 
-### Advanced Exercise: 4-bit Binary Counter
+### General Simulation Tips
 
-#### Circuit Diagram
+#### Navigation
 
-<img src="images/4bit_counter.png" alt="4-bit Binary Counter Circuit Diagram">
+- **Tab Selection**: Click on the tabs (RS Flip-Flop, D Flip-Flop, JK Flip-Flop, T Flip-Flop) to switch between different flip-flop demonstrations.
+- **Input Controls**: Use the provided input controls to set values for inputs like S, R, D, J, K, T.
+- **Clock Control**: Use the clock control to apply clock pulses and observe edge-triggered behavior.
 
-_Figure 6: 4-bit Binary Counter using T Flip-Flops connected in ripple configuration. Reference: Theory section_
+#### Simulation Features
 
-#### Components Required
+- **Visual Animation**: Each simulation provides visual animations showing the flip-flop operation.
+- **Real-time Output**: Observe how outputs change in response to input changes and clock edges.
+- **Interactive Learning**: Experiment with different input combinations to understand flip-flop behavior.
 
-- 4 T Flip-Flops
-- 1 Clock source
+#### Learning Approach
 
-#### Circuit Connections
+1. **Start with RS Flip-Flop**: Understand basic latch operation and memory function.
+2. **Progress to D Flip-Flop**: Learn about edge-triggered operation and data storage.
+3. **Explore JK Flip-Flop**: Understand the versatile four-operation capability.
+4. **Finish with T Flip-Flop**: Learn about toggle operation and frequency division.
 
-1. Connect the first T Flip-Flop with T input permanently set to 1 (always toggle).
-2. Connect the CLK input to the first T Flip-Flop's clock input.
-3. Connect the Q output of the first T Flip-Flop to the clock input of the second T Flip-Flop.
-4. Connect the Q output of the second T Flip-Flop to the clock input of the third T Flip-Flop.
-5. Connect the Q output of the third T Flip-Flop to the clock input of the fourth T Flip-Flop.
-6. Set all T inputs of the flip-flops to 1.
-7. Connect the Q outputs to represent the 4-bit binary count (Q₀, Q₁, Q₂, Q₃).
-8. Apply clock pulses and observe the counting sequence.
+#### Troubleshooting
 
-#### Observations
-
-- The counter counts from 0000 to 1111 (0 to 15 in decimal) and then resets to 0000.
-- Each T flip-flop toggles when its clock input transitions from 1 to 0.
-- The least significant bit (Q₀) toggles on every clock pulse.
-- Higher-order bits toggle at progressively lower frequencies (frequency division).
-- This demonstrates practical application of T flip-flops in digital counting systems.
-- If the circuit has been made as described above, a "Success" message will be displayed upon clicking "Submit".
+- **No Animation**: Ensure you've clicked the "Simulate" button after setting inputs.
+- **Unexpected Output**: Verify input settings and check if you're applying clock edges correctly.
+- **Interface Issues**: Try refreshing the page if the simulation interface becomes unresponsive.
