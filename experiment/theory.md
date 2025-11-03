@@ -197,7 +197,7 @@ $$Q(n+1) = J \cdot \overline{Q(n)} + \overline{K} \cdot Q(n)$$
 
 ### Master-Slave JK Flip-Flop
 
-<img src="images/master_slave.gif" alt="Master-Slave JK Flip-Flop Circuit Diagram">
+<img src="images/master_slave.png" alt="Master-Slave JK Flip-Flop Circuit Diagram">
 
 _Figure 5: Master-Slave JK Flip-Flop circuit diagram showing the two-stage latch configuration to eliminate race conditions. Reference: Advanced flip-flop implementation_
 
@@ -226,7 +226,7 @@ In the master-slave configuration shown:
 
 #### JK Timing Diagram
 
-<img src="images/JK_flipflop_timing.gif" alt="JK Flip-Flop Timing Diagram">
+<img src="images/jktiming.png" alt="JK Flip-Flop Timing Diagram">
 
 _Figure 5a: JK Flip-Flop timing diagram showing the relationship between clock, inputs (J, K), and output (Q) over time. Reference: Timing analysis_
 
