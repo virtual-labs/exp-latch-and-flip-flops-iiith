@@ -74,7 +74,7 @@ _Figure 2: D Flip-Flop circuit diagram showing data input with clock control for
 
 #### Circuit Diagram
 
-<img src="images/master_slave.gif" alt="Master-Slave JK Flip-Flop Circuit Diagram">
+<img src="images/master_slave.png" alt="Master-Slave JK Flip-Flop Circuit Diagram">
 
 _Figure 3: Master-Slave JK Flip-Flop circuit diagram showing master and slave latches for race-condition elimination. Reference: Theory section_
 
