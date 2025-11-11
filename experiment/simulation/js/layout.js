@@ -1,41 +1,32 @@
-import { deleteElement } from "./gate.js";
-import { connectGate, connectRSFF, connectJKFF, unbindEvent, initRSFlipFlop, initDFlipFlop, initJKFlipFlop, refreshWorkingArea, initTFlipFlop } from "./main.js";
-import { deleteFF } from "./flipflop.js";
+import {
+  connectGate,
+  connectRSFF,
+  connectJKFF,
+  unbindEvent,
+  initRSFlipFlop,
+  initDFlipFlop,
+  initJKFlipFlop,
+  refreshWorkingArea,
+  initTFlipFlop,
+} from "./main.js";
 
-'use strict';
+("use strict");
 
 // Wires
-export const wireColours = ["#ff0000", "#00ff00", "#0000ff", "#bf6be3", "#ff00ff", "#00ffff", "#ff8000", "#00ff80", "#80ff00", "#ff0080", "#8080ff", "#c0c0c0"];
-
-// Contextmenu
-const menu = document.querySelector(".menu");
-const menuOption = document.querySelector(".menu-option");
-
-export const setPosition = ({ top, left }) => {
-  menu.style.left = `${left}px`;
-  menu.style.top = `${top}px`;
-  menu.style.display = "block";
-};
-
-window.addEventListener("click", e => {
-  menu.style.display = "none";
-  window.selectedComponent = null;
-  window.componentType = null;
-});
-
-menuOption.addEventListener("click", e => {
-  if (e.target.innerHTML === "Delete") {
-    if (window.componentType === "gate") {
-      deleteElement(window.selectedComponent);
-    }
-    else if (window.componentType === "flipflop") {
-      deleteFF(window.selectedComponent);
-    }
-  }
-  window.selectedComponent = null;
-  window.componentType = null;
-});
-
+export const wireColours = [
+  "#ff0000",
+  "#00ff00",
+  "#0000ff",
+  "#bf6be3",
+  "#ff00ff",
+  "#00ffff",
+  "#ff8000",
+  "#00ff80",
+  "#80ff00",
+  "#ff0080",
+  "#8080ff",
+  "#c0c0c0",
+];
 // Tabs
 
 function changeTabs(e) {
@@ -45,10 +36,16 @@ function changeTabs(e) {
   }
 
   if (window.currentTab != null) {
-    document.getElementById(window.currentTab).classList.remove("is-active");
+    const currentTabElement = document.getElementById(window.currentTab);
+    if (currentTabElement) {
+      currentTabElement.classList.remove("is-active");
+    }
   }
   window.currentTab = task;
-  document.getElementById(task).classList.add("is-active");
+  const taskElement = document.getElementById(task);
+  if (taskElement) {
+    taskElement.classList.add("is-active");
+  }
   unbindEvent();
   // Half adder
   switch (task) {
@@ -76,7 +73,10 @@ function changeTabs(e) {
       console.debug("Error, invalid tab");
   }
   window.simulationStatus = 1;
-  simButton.innerHTML = "Simulate";  
+  const simButton = document.getElementById("simulate-button");
+  if (simButton) {
+    simButton.innerHTML = "Simulate";
+  }
   updateInstructions();
   updateToolbar();
   clearObservations();
@@ -89,21 +89,27 @@ window.changeTabs = changeTabs;
 const updateInstructions = () => {
   const task = window.currentTab;
   const instructionBox = document.getElementById("instruction-title");
-  let title = ""; 
+  if (!instructionBox) {
+    console.warn("instruction-title element not found");
+    return;
+  }
+
+  let title = "";
   if (task === "task1") {
     title = `Instructions<br>Implement an RS Flip-Flop using logic gates`;
   } else if (task === "task2") {
     title = `Instructions<br>Implement a D Flip-Flop using RS Flip-Flop`;
   } else if (task === "task3") {
     title = `Instructions<br>Implement a JK Flip-Flop using logic gates`;
-  }
-  else if (task === "task4") {
+  } else if (task === "task4") {
     title = `Instructions<br>Implement a T Flip-Flop using JK Flip-Flop`;
-    document.getElementById("QQ'_init_states").innerHTML = `<li>Initially, Q is in SET state (Q=1, Q'=0).</li>`
+    const qqStatesElement = document.getElementById("QQ'_init_states");
+    if (qqStatesElement) {
+      qqStatesElement.innerHTML = `<li>Initially, Q is in SET state (Q=1, Q'=0).</li>`;
+    }
   }
   instructionBox.innerHTML = title;
-}
-
+};
 
 // Toolbar
 
@@ -111,45 +117,60 @@ function updateToolbar() {
   const task = window.currentTab;
   let elem = "";
   if (task === "task1") {
-    elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button clock" id="addclock">CLOCK</div>'
+    elem =
+      '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button clock" id="addclock">CLOCK</div>';
+  } else if (task === "task2") {
+    elem =
+      '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button rsflipflop" onclick="addRSFlipFlop(event)"></div>';
+  } else if (task === "task3") {
+    elem =
+      '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button three-ip-nand" onclick="addGate(event)">3-NAND</div>';
+  } else if (task === "task4") {
+    elem =
+      '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button jkflipflop" onclick="addJKFlipFlop(event)"></div>';
   }
-  else if (task === "task2") {
-    elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button rsflipflop" onclick="addRSFlipFlop(event)"></div>'
+  const toolbar = document.getElementById("toolbar");
+  if (toolbar) {
+    toolbar.innerHTML = elem;
   }
-  else if (task === "task3") {
-    elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button three-ip-nand" onclick="addGate(event)">3-NAND</div>'
-  }
-  else if (task === "task4") {
-    elem = '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button jkflipflop" onclick="addJKFlipFlop(event)"></div>'
-  }
-  document.getElementById("toolbar").innerHTML = elem;
-  if(task == "task1") {
-    document.getElementById("addclock").addEventListener("click", toggleModal); // feature for adding clock
+  if (task == "task1") {
+    const addclockButton = document.getElementById("addclock");
+    if (addclockButton) {
+      addclockButton.addEventListener("click", toggleModal); // feature for adding clock
+    }
   }
 }
 
 // Modal
 
 const modal = document.querySelector(".modal");
-const trigger = document.getElementById("addclock")
+const trigger = document.getElementById("addclock");
 const closeButton = document.querySelector(".close-button");
 
 export function toggleModal() {
-  modal.classList.toggle("show-modal");
-  document.getElementById('frequency-input').value = ""
-  document.getElementById('dutycycle-input').value = ""
+  if (modal) {
+    modal.classList.toggle("show-modal");
+  }
+  const frequencyInput = document.getElementById("frequency-input");
+  const dutycycleInput = document.getElementById("dutycycle-input");
+
+  if (frequencyInput) frequencyInput.value = "";
+  if (dutycycleInput) dutycycleInput.value = "";
 }
 
 function windowOnClick(event) {
-  if (event.target === modal) {
+  if (modal && event.target === modal) {
     toggleModal();
   }
 }
 
-trigger.addEventListener("click", toggleModal);
-closeButton.addEventListener("click", toggleModal);
+if (trigger) {
+  trigger.addEventListener("click", toggleModal);
+}
+if (closeButton) {
+  closeButton.addEventListener("click", toggleModal);
+}
 window.addEventListener("click", windowOnClick);
-
 
 // Simulation
 window.simulationStatus = 1;
@@ -158,18 +179,28 @@ const submitButton = document.getElementById("submit-button");
 function toggleSimulation() {
   if (window.simulationStatus === 0) {
     window.simulationStatus = 1;
-    simButton.innerHTML = "Simulate";
-    submitButton.disabled = false;
-  }
-  else {
-    window.simulationStatus = 0;
-    simButton.innerHTML = "Stop";
-    submitButton.disabled = true;
-    if(!window.simulate())
-    {
-      window.simulationStatus = 1;
+    if (simButton) {
       simButton.innerHTML = "Simulate";
+    }
+    if (submitButton) {
       submitButton.disabled = false;
+    }
+  } else {
+    window.simulationStatus = 0;
+    if (simButton) {
+      simButton.innerHTML = "Stop";
+    }
+    if (submitButton) {
+      submitButton.disabled = true;
+    }
+    if (!window.simulate()) {
+      window.simulationStatus = 1;
+      if (simButton) {
+        simButton.innerHTML = "Simulate";
+      }
+      if (submitButton) {
+        submitButton.disabled = false;
+      }
     }
   }
 }
@@ -177,12 +208,14 @@ window.toggleSimulation = toggleSimulation;
 
 // Clear observations
 function clearObservations() {
-  document.getElementById("table-body").innerHTML = "";
-  document.getElementById("table-head").innerHTML = "";
-  document.getElementById("result").innerHTML = "";
+  const tableBody = document.getElementById("table-body");
+  const tableHead = document.getElementById("table-head");
+  const result = document.getElementById("result");
+
+  if (tableBody) tableBody.innerHTML = "";
+  if (tableHead) tableHead.innerHTML = "";
+  if (result) result.innerHTML = "";
 }
-
-
 
 // Making webpage responsive
 
@@ -211,5 +244,3 @@ function resize() {
 }
 
 resize();
-
-

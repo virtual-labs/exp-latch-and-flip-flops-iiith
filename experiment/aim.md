@@ -1,3 +1,18 @@
-<img src="images/jk.gif">
+The aim of this experiment is to understand and implement different types of latches and flip-flops used in sequential digital circuits.
 
-In electronics, a flip-flop or latch is a circuit that has two stable states and can be used to store state information. The circuit can be made to change state by signals applied to one or more control inputs and will have one or two outputs. Flip-flops and latches are a fundamental building block of digital electronics systems used in computers, communications, and many other types of systems. Flip-flops and latches are used as data storage elements. Such data storage can be used for storage of state, and such a circuit is described as sequential logic. When used in a finite-state machine, the output and next state depend not only on its current input, but also on its current state (and hence, previous inputs.) It can also be used for counting of pulses, and for synchronizing variably-timed input signals to some reference timing signal. Flip-flops can be either simple (transparent or opaque) or clocked (synchronous or edge-triggered); the simple ones are commonly called latches. The word latch is mainly used for storage elements, while clocked devices are described as flip-flops. 
+### What you will learn:
+
+Through this interactive experiment, you will:
+
+- **Understand the fundamentals** of sequential logic circuits and memory elements
+- **Design and analyze** basic latches including SR, D, and JK latches
+- **Construct flip-flop circuits** with clock-controlled operations for synchronous systems
+- **Build different flip-flop types** such as D, JK, T, and master-slave configurations
+- **Explore timing characteristics** including setup time, hold time, and propagation delays
+- **Investigate real-world applications** of flip-flops in registers, counters, and memory systems
+
+### Why are latches and flip-flops important?
+
+Latches and flip-flops are fundamental building blocks of sequential digital systems. They serve as the basic memory elements that enable computers to store and process information over time. These circuits are essential components not only in memory units and registers, but also throughout processors for state storage, synchronization, and control operations. Understanding latches and flip-flops will give you insight into how digital systems maintain state and coordinate operations across clock cycles.
+
+<img src="images/jk.gif">

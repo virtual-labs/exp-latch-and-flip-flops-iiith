@@ -1,1 +1,1 @@
-## JK Flip-Flop
+## Latch and Flip-Flops
