@@ -1,0 +1,141 @@
+{
+  "version": 2.0,
+  "questions": [
+    {
+      "question": "1. If S=0, R=1, CLK=X (don't care), then what is the output of an SR flip-flop:",
+      "answers": {
+        "a": "No change",
+        "b": "SET",
+        "c": "RESET",
+        "d": "TOGGLE"
+      },
+      "correctAnswer": "c",
+      "explanations": {
+        "a": "Incorrect. No change occurs when S=0 and R=0. Here R=1 forces a reset operation.",
+        "b": "Incorrect. SET occurs when S=1 and R=0. Here S=0, so no set operation.",
+        "c": "Correct. When S=0 and R=1, the SR flip-flop is reset regardless of clock state. The output Q becomes 0.",
+        "d": "Incorrect. TOGGLE operation is specific to JK flip-flops when J=K=1, not SR flip-flops."
+      },
+      "difficulty": "beginner"
+    },
+    {
+      "question": "2. In a D flip-flop, when the clock transitions from low to high and D=1, what happens to the output Q:",
+      "answers": {
+        "a": "Q remains unchanged",
+        "b": "Q becomes 0",
+        "c": "Q becomes 1",
+        "d": "Q toggles"
+      },
+      "correctAnswer": "c",
+      "explanations": {
+        "a": "Incorrect. In a D flip-flop, the output changes to match the D input on clock edge.",
+        "b": "Incorrect. If D=1, then Q becomes 1, not 0.",
+        "c": "Correct. In a D flip-flop, Q follows D on the clock edge. Since D=1, Q becomes 1.",
+        "d": "Incorrect. D flip-flop transfers data, it doesn't toggle like a T flip-flop."
+      },
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "3. What input is required to make a JK flip-flop toggle its output:",
+      "answers": {
+        "a": "J=1 and K=0",
+        "b": "J=0 and K=0",
+        "c": "J=0 and K=1",
+        "d": "J=1 and K=1"
+      },
+      "correctAnswer": "d",
+      "explanations": {
+        "a": "Incorrect. J=1 and K=0 causes the flip-flop to SET (Q becomes 1).",
+        "b": "Incorrect. J=0 and K=0 causes the flip-flop to HOLD its current state.",
+        "c": "Incorrect. J=0 and K=1 causes the flip-flop to RESET (Q becomes 0).",
+        "d": "Correct. When J=1 and K=1, the JK flip-flop toggles, changing Q to its complement value."
+      },
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "4. Which of the following is a key advantage of Master-Slave flip-flops over simple latches:",
+      "answers": {
+        "a": "Lower power consumption",
+        "b": "Elimination of race-around conditions",
+        "c": "Faster operation",
+        "d": "Simpler circuit design"
+      },
+      "correctAnswer": "b",
+      "explanations": {
+        "a": "Incorrect. Master-Slave configuration does not primarily reduce power consumption.",
+        "b": "Correct. Master-Slave flip-flops prevent race-around conditions by separating input sampling from output changes.",
+        "c": "Incorrect. Master-Slave design typically introduces additional delay, not speed improvement.",
+        "d": "Incorrect. Master-Slave configuration is more complex, requiring additional circuitry."
+      },
+      "difficulty": "advanced"
+    },
+    {
+      "question": "5. In a T flip-flop, if T=1 and the initial state Q=0, what will be the output after two clock pulses:",
+      "answers": {
+        "a": "Q=0",
+        "b": "Q=1",
+        "c": "Q=X (unknown)",
+        "d": "Q oscillates"
+      },
+      "correctAnswer": "a",
+      "explanations": {
+        "a": "Correct. Starting from Q=0: After 1st pulse Q=1 (toggle), after 2nd pulse Q=0 (toggle again).",
+        "b": "Incorrect. This would be the state after only one clock pulse.",
+        "c": "Incorrect. T flip-flop operation is deterministic, not unknown.",
+        "d": "Incorrect. The output has a definite state after each clock pulse, not continuous oscillation."
+      },
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "6. Which characteristic equation correctly represents a JK flip-flop:",
+      "answers": {
+        "a": "Q(n+1) = J ⊕ K",
+        "b": "Q(n+1) = J · Q'(n) + K' · Q(n)",
+        "c": "Q(n+1) = J + K",
+        "d": "Q(n+1) = J · K · Q(n)"
+      },
+      "correctAnswer": "b",
+      "explanations": {
+        "a": "Incorrect. This does not account for the current state Q(n) in the next state calculation.",
+        "b": "Correct. This equation captures all JK flip-flop operations: hold, set, reset, and toggle based on J, K, and current state.",
+        "c": "Incorrect. Simple OR operation doesn't represent flip-flop behavior correctly.",
+        "d": "Incorrect. This equation doesn't represent any standard flip-flop characteristic."
+      },
+      "difficulty": "advanced"
+    },
+    {
+      "question": "7. In a gated SR latch, what happens when the enable signal (EN) is low:",
+      "answers": {
+        "a": "The latch toggles continuously",
+        "b": "The latch follows S and R inputs",
+        "c": "The latch maintains its current state",
+        "d": "The latch resets to 0"
+      },
+      "correctAnswer": "c",
+      "explanations": {
+        "a": "Incorrect. Continuous toggling is not characteristic of SR latches.",
+        "b": "Incorrect. When EN is low, the latch is disabled and doesn't respond to S and R.",
+        "c": "Correct. When the enable signal is low, the gated SR latch is disabled and maintains its current output state.",
+        "d": "Incorrect. Low enable doesn't force a reset; it just disables the latch."
+      },
+      "difficulty": "beginner"
+    },
+    {
+      "question": "8. What is the setup time requirement in flip-flop operation:",
+      "answers": {
+        "a": "Time after clock edge when data must remain stable",
+        "b": "Time before clock edge when data must be stable",
+        "c": "Time between clock pulses",
+        "d": "Time for output to change after clock edge"
+      },
+      "correctAnswer": "b",
+      "explanations": {
+        "a": "Incorrect. This describes hold time, not setup time.",
+        "b": "Correct. Setup time is the minimum time that data inputs must be stable before the clock edge for reliable operation.",
+        "c": "Incorrect. This describes clock period, not setup time.",
+        "d": "Incorrect. This describes propagation delay, not setup time."
+      },
+      "difficulty": "advanced"
+    }
+  ]
+}

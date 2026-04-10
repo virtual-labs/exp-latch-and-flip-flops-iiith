@@ -1,0 +1,246 @@
+import {
+  connectGate,
+  connectRSFF,
+  connectJKFF,
+  unbindEvent,
+  initRSFlipFlop,
+  initDFlipFlop,
+  initJKFlipFlop,
+  refreshWorkingArea,
+  initTFlipFlop,
+} from "./main.js";
+
+("use strict");
+
+// Wires
+export const wireColours = [
+  "#ff0000",
+  "#00ff00",
+  "#0000ff",
+  "#bf6be3",
+  "#ff00ff",
+  "#00ffff",
+  "#ff8000",
+  "#00ff80",
+  "#80ff00",
+  "#ff0080",
+  "#8080ff",
+  "#c0c0c0",
+];
+// Tabs
+
+function changeTabs(e) {
+  const task = e.target.parentNode.id;
+  if (window.currentTab === task) {
+    return;
+  }
+
+  if (window.currentTab != null) {
+    const currentTabElement = document.getElementById(window.currentTab);
+    if (currentTabElement) {
+      currentTabElement.classList.remove("is-active");
+    }
+  }
+  window.currentTab = task;
+  const taskElement = document.getElementById(task);
+  if (taskElement) {
+    taskElement.classList.add("is-active");
+  }
+  unbindEvent();
+  // Half adder
+  switch (task) {
+    case "task1":
+      connectGate();
+      refreshWorkingArea();
+      initRSFlipFlop();
+      break;
+    case "task2":
+      connectRSFF();
+      refreshWorkingArea();
+      initDFlipFlop();
+      break;
+    case "task3":
+      connectGate();
+      refreshWorkingArea();
+      initJKFlipFlop();
+      break;
+    case "task4":
+      connectJKFF();
+      refreshWorkingArea();
+      initTFlipFlop();
+      break;
+    default:
+      console.debug("Error, invalid tab");
+  }
+  window.simulationStatus = 1;
+  const simButton = document.getElementById("simulate-button");
+  if (simButton) {
+    simButton.innerHTML = "Simulate";
+  }
+  updateInstructions();
+  updateToolbar();
+  clearObservations();
+  resize();
+}
+
+window.changeTabs = changeTabs;
+
+// Instruction box
+const updateInstructions = () => {
+  const task = window.currentTab;
+  const instructionBox = document.getElementById("instruction-title");
+  if (!instructionBox) {
+    console.warn("instruction-title element not found");
+    return;
+  }
+
+  let title = "";
+  if (task === "task1") {
+    title = `Instructions<br>Implement an RS Flip-Flop using logic gates`;
+  } else if (task === "task2") {
+    title = `Instructions<br>Implement a D Flip-Flop using RS Flip-Flop`;
+  } else if (task === "task3") {
+    title = `Instructions<br>Implement a JK Flip-Flop using logic gates`;
+  } else if (task === "task4") {
+    title = `Instructions<br>Implement a T Flip-Flop using JK Flip-Flop`;
+    const qqStatesElement = document.getElementById("QQ'_init_states");
+    if (qqStatesElement) {
+      qqStatesElement.innerHTML = `<li>Initially, Q is in SET state (Q=1, Q'=0).</li>`;
+    }
+  }
+  instructionBox.innerHTML = title;
+};
+
+// Toolbar
+
+function updateToolbar() {
+  const task = window.currentTab;
+  let elem = "";
+  if (task === "task1") {
+    elem =
+      '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button clock" id="addclock">CLOCK</div>';
+  } else if (task === "task2") {
+    elem =
+      '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button rsflipflop" onclick="addRSFlipFlop(event)"></div>';
+  } else if (task === "task3") {
+    elem =
+      '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button three-ip-nand" onclick="addGate(event)">3-NAND</div>';
+  } else if (task === "task4") {
+    elem =
+      '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button jkflipflop" onclick="addJKFlipFlop(event)"></div>';
+  }
+  const toolbar = document.getElementById("toolbar");
+  if (toolbar) {
+    toolbar.innerHTML = elem;
+  }
+  if (task == "task1") {
+    const addclockButton = document.getElementById("addclock");
+    if (addclockButton) {
+      addclockButton.addEventListener("click", toggleModal); // feature for adding clock
+    }
+  }
+}
+
+// Modal
+
+const modal = document.querySelector(".modal");
+const trigger = document.getElementById("addclock");
+const closeButton = document.querySelector(".close-button");
+
+export function toggleModal() {
+  if (modal) {
+    modal.classList.toggle("show-modal");
+  }
+  const frequencyInput = document.getElementById("frequency-input");
+  const dutycycleInput = document.getElementById("dutycycle-input");
+
+  if (frequencyInput) frequencyInput.value = "";
+  if (dutycycleInput) dutycycleInput.value = "";
+}
+
+function windowOnClick(event) {
+  if (modal && event.target === modal) {
+    toggleModal();
+  }
+}
+
+if (trigger) {
+  trigger.addEventListener("click", toggleModal);
+}
+if (closeButton) {
+  closeButton.addEventListener("click", toggleModal);
+}
+window.addEventListener("click", windowOnClick);
+
+// Simulation
+window.simulationStatus = 1;
+const simButton = document.getElementById("simulate-button");
+const submitButton = document.getElementById("submit-button");
+function toggleSimulation() {
+  if (window.simulationStatus === 0) {
+    window.simulationStatus = 1;
+    if (simButton) {
+      simButton.innerHTML = "Simulate";
+    }
+    if (submitButton) {
+      submitButton.disabled = false;
+    }
+  } else {
+    window.simulationStatus = 0;
+    if (simButton) {
+      simButton.innerHTML = "Stop";
+    }
+    if (submitButton) {
+      submitButton.disabled = true;
+    }
+    if (!window.simulate()) {
+      window.simulationStatus = 1;
+      if (simButton) {
+        simButton.innerHTML = "Simulate";
+      }
+      if (submitButton) {
+        submitButton.disabled = false;
+      }
+    }
+  }
+}
+window.toggleSimulation = toggleSimulation;
+
+// Clear observations
+function clearObservations() {
+  const tableBody = document.getElementById("table-body");
+  const tableHead = document.getElementById("table-head");
+  const result = document.getElementById("result");
+
+  if (tableBody) tableBody.innerHTML = "";
+  if (tableHead) tableHead.innerHTML = "";
+  if (result) result.innerHTML = "";
+}
+
+// Making webpage responsive
+
+// Dimensions of working area
+const circuitBoard = document.getElementById("circuit-board");
+// Distance of working area from top
+const circuitBoardTop = circuitBoard.offsetTop;
+// Full height of window
+const windowHeight = window.innerHeight;
+const width = window.innerWidth;
+if (width < 1024) {
+  circuitBoard.style.height = 600 + "px";
+} else {
+  circuitBoard.style.height = windowHeight - circuitBoardTop - 20 + "px";
+}
+
+function resize() {
+  const circuitBoard = document.getElementById("circuit-board");
+  const sidePanels = document.getElementsByClassName("v-datalist-container");
+
+  if (width >= 1024) {
+    for (let i = 0; i < sidePanels.length; i++) {
+      sidePanels[i].style.height = circuitBoard.style.height;
+    }
+  }
+}
+
+resize();

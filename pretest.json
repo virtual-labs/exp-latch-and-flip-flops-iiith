@@ -1,0 +1,141 @@
+{
+  "version": 2.0,
+  "questions": [
+    {
+      "question": "1. The output of a sequential circuit depends upon:",
+      "answers": {
+        "a": "Present input only",
+        "b": "Past input only",
+        "c": "Present input and present state",
+        "d": "None of these"
+      },
+      "correctAnswer": "c",
+      "explanations": {
+        "a": "Incorrect. Sequential circuits require memory of previous states, not just current input.",
+        "b": "Incorrect. Past input alone is insufficient; current input is also needed.",
+        "c": "Correct. Sequential circuits combine current input with stored state information to determine output. This is what distinguishes them from combinational circuits.",
+        "d": "Incorrect. Option c correctly describes sequential circuit behavior."
+      },
+      "difficulty": "beginner"
+    },
+    {
+      "question": "2. What is the difference between edge triggering and level triggering in flip-flops:",
+      "answers": {
+        "a": "Edge triggering responds to voltage levels, level triggering responds to transitions",
+        "b": "Edge triggering responds to clock transitions, level triggering responds to voltage levels",
+        "c": "Both are identical in operation",
+        "d": "Edge triggering is faster than level triggering"
+      },
+      "correctAnswer": "b",
+      "explanations": {
+        "a": "Incorrect. This reverses the actual definitions of edge and level triggering.",
+        "b": "Correct. Edge-triggered devices respond to clock signal transitions (rising/falling edges), while level-triggered devices respond to high or low voltage levels.",
+        "c": "Incorrect. They operate on fundamentally different principles.",
+        "d": "Incorrect. Speed is not the primary distinguishing characteristic."
+      },
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "3. In a NAND-based SR latch, how many NAND gates are typically used:",
+      "answers": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      },
+      "correctAnswer": "b",
+      "explanations": {
+        "a": "Incorrect. A single NAND gate cannot provide the cross-coupled feedback needed for latching.",
+        "b": "Correct. A basic NAND-based SR latch uses 2 cross-coupled NAND gates to create the bistable memory element.",
+        "c": "Incorrect. More gates than necessary for a basic SR latch.",
+        "d": "Incorrect. This might be confused with a gated SR latch or flip-flop which uses additional gates."
+      },
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "4. What happens when both J and K inputs of a JK flip-flop are logic 1:",
+      "answers": {
+        "a": "Output remains unchanged",
+        "b": "Output becomes 0",
+        "c": "Output becomes 1",
+        "d": "Output toggles to its complement"
+      },
+      "correctAnswer": "d",
+      "explanations": {
+        "a": "Incorrect. This occurs when both J and K are 0 (hold condition).",
+        "b": "Incorrect. This occurs when J=0 and K=1 (reset condition).",
+        "c": "Incorrect. This occurs when J=1 and K=0 (set condition).",
+        "d": "Correct. When J=K=1, the JK flip-flop toggles, meaning the output changes to its complement state. This is the unique feature that eliminates the invalid state of SR flip-flops."
+      },
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "5. A flip-flop is classified as a _________ device:",
+      "answers": {
+        "a": "Monostable",
+        "b": "Bistable",
+        "c": "Astable",
+        "d": "Unstable"
+      },
+      "correctAnswer": "b",
+      "explanations": {
+        "a": "Incorrect. Monostable devices have one stable state and return to it after being triggered.",
+        "b": "Correct. A flip-flop is a bistable device because it has two stable states (0 and 1) and can remain in either state indefinitely until explicitly changed by an input signal.",
+        "c": "Incorrect. Astable devices continuously oscillate between states without external triggering.",
+        "d": "Incorrect. Flip-flops are specifically designed to be stable in either of their two states."
+      },
+      "difficulty": "beginner"
+    },
+    {
+      "question": "6. What is the main advantage of Master-Slave flip-flops over simple latches:",
+      "answers": {
+        "a": "Lower power consumption",
+        "b": "Elimination of race-around conditions",
+        "c": "Faster switching speed",
+        "d": "Simpler circuit design"
+      },
+      "correctAnswer": "b",
+      "explanations": {
+        "a": "Incorrect. Power consumption is not the primary advantage of Master-Slave configuration.",
+        "b": "Correct. Master-Slave flip-flops prevent race-around conditions by isolating input changes from output changes through two-stage operation.",
+        "c": "Incorrect. Master-Slave configuration typically introduces additional delay, not speed improvement.",
+        "d": "Incorrect. Master-Slave design is actually more complex, requiring additional circuitry."
+      },
+      "difficulty": "advanced"
+    },
+    {
+      "question": "7. In a D flip-flop, what does the 'D' typically stand for:",
+      "answers": {
+        "a": "Double",
+        "b": "Data or Delay",
+        "c": "Direct",
+        "d": "Dynamic"
+      },
+      "correctAnswer": "b",
+      "explanations": {
+        "a": "Incorrect. 'D' does not refer to double in flip-flop terminology.",
+        "b": "Correct. 'D' stands for Data (indicating it stores the data input) or Delay (as it delays the input by one clock cycle).",
+        "c": "Incorrect. While sometimes called 'direct', this is not the standard terminology.",
+        "d": "Incorrect. 'Dynamic' is not the standard meaning of 'D' in D flip-flops."
+      },
+      "difficulty": "beginner"
+    },
+    {
+      "question": "8. Which flip-flop is most commonly used for frequency division applications:",
+      "answers": {
+        "a": "SR flip-flop",
+        "b": "D flip-flop",
+        "c": "JK flip-flop",
+        "d": "T flip-flop"
+      },
+      "correctAnswer": "d",
+      "explanations": {
+        "a": "Incorrect. SR flip-flops are not optimal for frequency division due to their set/reset nature.",
+        "b": "Incorrect. D flip-flops are better suited for data storage and transfer applications.",
+        "c": "Incorrect. While JK flip-flops can toggle, T flip-flops are specifically designed for this purpose.",
+        "d": "Correct. T (Toggle) flip-flops are specifically designed for toggling operations, making them ideal for frequency division and counter circuits."
+      },
+      "difficulty": "advanced"
+    }
+  ]
+}
