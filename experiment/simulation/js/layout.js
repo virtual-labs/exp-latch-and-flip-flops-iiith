@@ -9,6 +9,7 @@ import {
   refreshWorkingArea,
   initTFlipFlop,
 } from "./main.js";
+import { stopSimulation } from "./gate.js";
 
 ("use strict");
 
@@ -72,11 +73,7 @@ function changeTabs(e) {
     default:
       console.debug("Error, invalid tab");
   }
-  window.simulationStatus = 1;
-  const simButton = document.getElementById("simulate-button");
-  if (simButton) {
-    simButton.innerHTML = "Simulate";
-  }
+  stopSimulation();
   updateInstructions();
   updateToolbar();
   clearObservations();
@@ -100,13 +97,9 @@ const updateInstructions = () => {
   } else if (task === "task2") {
     title = `Instructions<br>Implement a D Flip-Flop using RS Flip-Flop`;
   } else if (task === "task3") {
-    title = `Instructions<br>Implement a JK Flip-Flop using logic gates`;
+    title = `Instructions<br>Implement a master-slave JK Flip-Flop using logic gates (every test applies a clock pulse: Clk = 1 and then Clk = 0)`;
   } else if (task === "task4") {
     title = `Instructions<br>Implement a T Flip-Flop using JK Flip-Flop`;
-    const qqStatesElement = document.getElementById("QQ'_init_states");
-    if (qqStatesElement) {
-      qqStatesElement.innerHTML = `<li>Initially, Q is in SET state (Q=1, Q'=0).</li>`;
-    }
   }
   instructionBox.innerHTML = title;
 };
