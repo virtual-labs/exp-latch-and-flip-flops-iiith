@@ -507,13 +507,13 @@ export function deleteFF(id) {
     for (let key in flipFlops) {
         if(ff.constructor.name === "JKFlipFlop"){
             if(flipFlops[key].j[0] === ff) {
-                flipFlops[key].j = null;
+                flipFlops[key].j = [];
             }
             if(flipFlops[key].k[0] === ff) {
-                flipFlops[key].k = null;
+                flipFlops[key].k = [];
             }
             if(flipFlops[key].clk[0] === ff) {
-                flipFlops[key].clk = null;
+                flipFlops[key].clk = [];
             }
             if(flipFlops[key].qOutputs.includes(ff)) {
                 flipFlops[key].removeqOutput(ff);
@@ -524,13 +524,13 @@ export function deleteFF(id) {
         }
         else if(ff.constructor.name === "RSFlipFlop"){
             if(flipFlops[key].r[0] === ff){
-                flipFlops[key].r = null;
+                flipFlops[key].r = [];
             }
             if(flipFlops[key].s[0] === ff){
-                flipFlops[key].s = null;
+                flipFlops[key].s = [];
             }
             if(flipFlops[key].clk[0] === ff){
-                flipFlops[key].clk = null;
+                flipFlops[key].clk = [];
             }
             if(flipFlops[key].qOutputs.includes(ff)) {
                 flipFlops[key].removeqOutput(ff);

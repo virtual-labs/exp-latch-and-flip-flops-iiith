@@ -11,6 +11,7 @@ import {
   testJKFF,
   testDFF,
   testTFF,
+  presetLatchState,
 } from "./validator.js";
 import {
   flipFlops,
@@ -86,7 +87,7 @@ export class Gate {
 
     switch (this.type) {
       case "Input":
-        component = `<div class="high" id="${this.id}"><a ondblclick="setInput(event)">1</a><p> ${this.name}  </p></div>`;
+        component = `<div class="high" id="${this.id}" title="Click to toggle between 0 and 1"><a onclick="setInput(event)">1</a><p> ${this.name}  </p></div>`;
         this.output = true;
         this.isInput = true;
         break;
@@ -316,17 +317,33 @@ export function getResult(gate) {
   return;
 }
 
+// Position of the last mouse/touch press, used to tell a click apart from the end of a drag
+let pressPosition = { x: 0, y: 0 };
+document.addEventListener(
+  "pointerdown",
+  function (event) {
+    pressPosition = { x: event.clientX, y: event.clientY };
+  },
+  true
+);
+
+// Set the Input values of the input bits on click
 function setInput(event) {
+  // ignore the click that ends a drag of the input bit
+  if (
+    Math.hypot(event.clientX - pressPosition.x, event.clientY - pressPosition.y) > 5
+  ) {
+    return;
+  }
   let parentElement = event.target.parentElement;
   let element = event.target;
-  let type = parentElement.className.split(" ")[0];
   let gate = gates[parentElement.id];
-  if (type === "high") {
+  if (parentElement.classList.contains("high")) {
     // change class high to low
     parentElement.classList.replace("high", "low");
     element.innerHTML = "0";
     gate.setOutput(false);
-  } else if (type === "low") {
+  } else if (parentElement.classList.contains("low")) {
     parentElement.classList.replace("low", "high");
     element.innerHTML = "1";
     gate.setOutput(true);
@@ -351,7 +368,7 @@ export function printErrors(message, objectId) {
     result.innerHTML += message;
     result.className = "failure-message";
   }
-  if (objectId !== null) {
+  if (objectId) {
     objectId.classList.add("highlight");
     setTimeout(function () {
       objectId.classList.remove("highlight");
@@ -378,6 +395,26 @@ export function checkConnections() {
   return true;
 }
 
+// Stops the clock of a running simulation and brings the Simulate and Submit buttons back to their normal state
+export function stopSimulation() {
+  window.simulationStatus = 1;
+  const simulateButton = document.getElementById("simulate-button");
+  if (simulateButton) {
+    simulateButton.innerHTML = "Simulate";
+  }
+  const submitButton = document.getElementById("submit-button");
+  if (submitButton) {
+    submitButton.disabled = false;
+  }
+}
+
+// The circuits built from gates start in the state Q = 1, Q' = 0
+function presetCircuitState() {
+  if (window.currentTab === "task1" || window.currentTab === "task3") {
+    presetLatchState(gates["Output-2"], gates["Output-3"], false);
+  }
+}
+
 export function simulate() {
   clearResult();
   window.simulationStatus = 0;
@@ -394,6 +431,10 @@ export function simulate() {
       return false;
     }
   }
+
+  // every new simulation gets its own number, so that the loops of an earlier one stop by themselves
+  window.simulationGeneration = (window.simulationGeneration || 0) + 1;
+  presetCircuitState();
 
   let circuitHasClock = false;
 
@@ -691,6 +732,7 @@ export function testSimulation(gates, flipFlops) {
 
 // function to submit the desired circuit and get the final success or failure message
 export function submitCircuit() {
+  stopSimulation();
   clearResult();
   const tableBody = document.getElementById("table-body");
   if (tableBody) tableBody.innerHTML = "";
@@ -757,13 +799,13 @@ export function deleteElement(gateid) {
     let ff = flipFlops[key];
     if (ff.constructor.name === "JKFlipFlop") {
       if (flipFlops[key].j[0] === gate) {
-        flipFlops[key].j = null;
+        flipFlops[key].j = [];
       }
       if (flipFlops[key].k[0] === gate) {
-        flipFlops[key].k = null;
+        flipFlops[key].k = [];
       }
       if (flipFlops[key].clk[0] === gate) {
-        flipFlops[key].clk = null;
+        flipFlops[key].clk = [];
       }
       if (flipFlops[key].qOutputs.includes(gate)) {
         flipFlops[key].removeqOutput(gate);
@@ -773,13 +815,13 @@ export function deleteElement(gateid) {
       }
     } else if (ff.constructor.name === "RSFlipFlop") {
       if (flipFlops[key].r[0] === gate) {
-        flipFlops[key].r = null;
+        flipFlops[key].r = [];
       }
       if (flipFlops[key].s[0] === gate) {
-        flipFlops[key].s = null;
+        flipFlops[key].s = [];
       }
       if (flipFlops[key].clk[0] === gate) {
-        flipFlops[key].clk = null;
+        flipFlops[key].clk = [];
       }
       if (flipFlops[key].qOutputs.includes(gate)) {
         flipFlops[key].removeqOutput(gate);

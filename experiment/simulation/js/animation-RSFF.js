@@ -142,50 +142,31 @@ function allDisappear() {
     }
 }
 
-function appendSet() {
-    if (textInput[0].textContent !== "0" && timeline.progress() === 0) {
-        changeto0(16,24,0,0);
-        observ.innerHTML = "Set bit is equal to 0";
-    }
-    else if (textInput[0].textContent !== "1" && timeline.progress() === 0) {
-        changeto1(16,24,0,0);
-        observ.innerHTML = "Set bit is equal to 1";
-    }
-    else
-    {
-        observ.innerHTML = "Cannot change the set bit once the simulation has started";
-    }
+// colours the dots of every input as per the value of that input
+function inputDotColours() {
     setter(textInput[0].textContent,dots[0]);
-}
-function appendClock() {
-    if (textInput[1].textContent !== "0" && timeline.progress() === 0) {
-        changeto0(16,364,1,1);
-    }
-    else if (textInput[1].textContent !== "1" && timeline.progress() === 0) {
-        changeto1(16,364,1,1);
-        observ.innerHTML = "Clock is turned ON";
-    }
-    else
-    {
-        observ.innerHTML = "Cannot change the clock bit once the simulation has started";
-    }
     setter(textInput[1].textContent,dots[1]);
     setter(textInput[1].textContent,dots[2]);
+    setter(textInput[2].textContent,dots[3]);
+}
+
+// sets the inputs to their starting values: Set = 0, Clock = 1, Reset = 0
+function initInputs() {
+    textIOInit();
+    appendSet();
+    appendClock();
+    appendClock();
+    appendReset();
+}
+
+function appendSet() {
+    toggleInput(0,16,24);
+}
+function appendClock() {
+    toggleInput(1,16,364);
 }
 function appendReset() {
-    if (textInput[2].textContent !== "0" && timeline.progress() === 0) {
-        changeto0(16,704,2,2);
-        observ.innerHTML = "Reset bit is equal to 0";
-    }
-    else if (textInput[2].textContent !== "1" && timeline.progress() === 0) {
-        changeto1(16,704,2,2);
-        observ.innerHTML = "Reset bit is equal to 1";
-    }
-    else
-    {
-        observ.innerHTML = "Cannot change the reset bit once the simulation has started";
-    }
-    setter(textInput[2].textContent,dots[3]);
+    toggleInput(2,16,704);
 }
 
 function changeto1(coordinateX,coordinateY,object,textObject) {
@@ -219,46 +200,100 @@ function stage1() {
     objectDisappear(dots[3]);   
 }
 
+// the flip-flop keeps its state between the runs; it starts in the SET state (Q = 1, Q' = 0), like the Practice tasks
+let stateQ = "1";
+let stateQbar = "0";
+// state before the run that is going on (or has just finished)
+let previousQ = "1";
+let previousQbar = "0";
+
+// shows the stored state on the output bits Q and Q'
+function showState() {
+    textOutput[0].textContent = stateQ;
+    textOutput[1].textContent = stateQbar;
+    setter(stateQ,objects[3]);
+    setter(stateQbar,objects[4]);
+    outputVisible();
+}
+
+// returns true if the inputs can be changed; a finished simulation is rewound so that new inputs can be tried
+function inputsEditable() {
+    if (timeline.progress() === 1) {
+        rewind();
+    }
+    if (timeline.progress() !== 0) {
+        observ.innerHTML = "Inputs cannot be changed while the simulation is running. Please click on Reset to change them.";
+        return false;
+    }
+    return true;
+}
+
+// toggles the value of an input bit between 0 and 1
+function toggleInput(index,coordinateX,coordinateY) {
+    if (!inputsEditable()) {
+        return;
+    }
+    if (textInput[index].textContent !== "0") {
+        changeto0(coordinateX,coordinateY,index,index);
+    }
+    else {
+        changeto1(coordinateX,coordinateY,index,index);
+    }
+    inputDotColours();
+}
+
 function outputSetter(){
-    if(textInput[1].textContent === "1" )
+    // the stored state changes only while the clock is 1
+    if(textInput[1].textContent === "1")
     {
         if(textInput[0].textContent === "1" && textInput[2].textContent === "0")
         {
-            textOutput[0].textContent = "1";
-            textOutput[1].textContent = "0";
+            stateQ = "1";
+            stateQbar = "0";
         }
         else if(textInput[0].textContent === "0" && textInput[2].textContent === "1")
         {
-            textOutput[0].textContent = "0";
-            textOutput[1].textContent = "1";
+            stateQ = "0";
+            stateQbar = "1";
         }
-        else
-        {
-            console.debug("error! Invalid state");
-        }
-        
+        // Set = Reset = 0: the state is held
     }
-    setter(textOutput[0].textContent,objects[3]);
-    setter(textOutput[1].textContent,objects[4]);
+    showState();
     objectDisappear(dots[0]);
     objectDisappear(dots[2]);
 }
 
 function display() {
-    observ.innerHTML = "Simulation has finished. Please click on Reset and repeat the instructions given to start again."
-}
-
-function reboot() {
-    for(const text of textInput){
-        text.textContent = 2;
+    decide = false;
+    status.innerHTML = "Start";
+    const s = textInput[0].textContent;
+    const r = textInput[2].textContent;
+    let operation = "Hold: Q and Q' keep their values";
+    if (s === "1" && r === "0") {
+        operation = "Set: Q becomes 1";
     }
+    else if (s === "0" && r === "1") {
+        operation = "Reset: Q becomes 0";
+    }
+    observ.innerHTML = `Simulation has finished.<br>S = ${s}, R = ${r}, Clock = 1: ${operation}.<br>Q was ${previousQ} and is now ${stateQ}, Q' was ${previousQbar} and is now ${stateQbar}.<br>Change the inputs and click on Start to apply another clock pulse.`;
 }
 
 function setSpeed(speed) {
+    timeline.timeScale(parseInt(speed));
     if (circuitStarted) {
-        timeline.timeScale(parseInt(speed));
         observ.innerHTML = `${speed}x speed`;
     }
+}
+
+// takes the timeline back to the beginning while keeping the selected input values and the stored state
+function rewind() {
+    timeline.seek(0);
+    timeline.pause();
+    inputDotDisappear();
+    inputDotColours();
+    showState();
+    decide = false;
+    status.innerHTML = "Start";
 }
 
 function restartCircuit() {
@@ -268,12 +303,15 @@ function restartCircuit() {
     timeline.seek(0);
     timeline.pause();
     allDisappear();
-    reboot();
-    clearObservation();
+    stateQ = "1";
+    stateQbar = "0";
+    initInputs();
+    showState();
     decide = false;
     status.innerHTML = "Start";
-    observ.innerHTML = "Successfully restored";
+    observ.innerHTML = "Successfully restored. Initially the circuit is in the SET state, i.e. Q = 1 and Q' = 0.";
     speed.selectedIndex = 0;
+    timeline.timeScale(1);
 }
 
 function simulationStatus() {
@@ -290,47 +328,33 @@ function stopCircuit() {
         observ.innerHTML = "Simulation has been Paused. Please click on the 'Start' button to Resume.";
         decide = false;
         status.innerHTML = "Start";
-        speed.selectedIndex = 0;
-    }
-    else {
-        observ.innerHTML = "Please Restart the simulation";
     }
 }
 function startCircuit() {
-    if(textInput[1].textContent==="0")
-    {
-        observ.innerHTML = "Please set the Clock as 1";
-        return;
+    if (timeline.progress() === 1) {
+        rewind();
     }
-
-    if(textInput[0].textContent==="1" && textInput[2].textContent==="1")
-    {
-        observ.innerHTML = "Invalid State, Set and Reset both cannot be 1";
-        return;
-    }
-
-
-    for(const text of textInput){
-        if (text.textContent === "2") {
-            observ.innerHTML = "Please set the input values";
+    if (timeline.progress() === 0) {
+        if (textInput[1].textContent === "0") {
+            observ.innerHTML = "Please set the Clock as 1: the flip-flop changes its state only when the clock is applied.";
             return;
         }
+        if (textInput[0].textContent === "1" && textInput[2].textContent === "1") {
+            observ.innerHTML = "Invalid State, Set and Reset both cannot be 1";
+            return;
+        }
+        previousQ = stateQ;
+        previousQbar = stateQbar;
     }
     if (timeline.progress() !== 1) {
         circuitStarted = true;
         timeline.play();
-        timeline.timeScale(1);
+        timeline.timeScale(parseInt(speed.value));
         observ.innerHTML = "Simulation has started.";
         decide = true;
         status.innerHTML = "Pause";
-        speed.selectedIndex = 0;
-    }
-    else {
-        observ.innerHTML = "Please Restart the simulation";
     }
 }
-
-
 
 // all the execution begin here
 let timeline = gsap.timeline({ repeat: 0, repeatDelay: 0 });
@@ -346,7 +370,6 @@ timeline.add(inputDotVisible, 0);
 timeline.add(stage1,10);
 timeline.add(outputSetter,18);
 timeline.add(outputVisible,18);
-timeline.eventCallback("onComplete", outputVisible);
 timeline.eventCallback("onComplete", display);
 
 timeline.to(dots[0], {
@@ -450,3 +473,5 @@ timeline.to(dots[2], {
 
 timeline.pause();
 inputDotDisappear();
+initInputs();
+showState();
