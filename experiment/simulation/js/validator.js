@@ -27,6 +27,24 @@ export function computeNor(a, b) {
 
 
 
+// Puts a circuit built from gates into the state Q = 1, Q' = 0, which is the state in which every task starts.
+// The output bits are not enough: the gates that drive them hold the state of the latch, so they are set as well.
+// With force = false only the gates that have no value yet are set (used when a simulation is started).
+export function presetLatchState(q, qbar, force) {
+    const apply = (outputBit, value) => {
+        if (!outputBit || !outputBit.inputs || outputBit.inputs.length === 0) {
+            return;
+        }
+        const source = outputBit.inputs[0][0];
+        // flip-flop blocks are initialised by their own code
+        if (source && source.constructor.name === "Gate" && !source.isInput && (force || source.output === null)) {
+            source.setOutput(value);
+        }
+    };
+    apply(q, true);
+    apply(qbar, false);
+}
+
 // RS Flip FLop Tester
 export function testRSFF(inputR, inputS, inputClk, outputQ, outputQbar)  // This function takes 4 ids of the respective Gates
 {
@@ -67,6 +85,7 @@ export function testRSFF(inputR, inputS, inputClk, outputQ, outputQbar)  // This
     q.setOutput(true);
     qbar.setOutput(false);
     
+    presetLatchState(q, qbar, true);
     // each list element consists of 5 values, R,S,Clk,Q,Qbar
     const evaluator = [[0, 0, 0, 1, 0], [0, 1, 0, 1, 0], [1, 0, 0, 1, 0], [1, 1, 0, 1, 0], [1, 0, 1, 0, 1], [0, 0, 1, 0, 1], [0, 1, 1, 1, 0]]
     let incorrectConnections = false;
@@ -147,18 +166,25 @@ export function testJKFF(inputJ, inputK, inputClk, outputQ, outputQbar)  // This
     }
     q.setOutput(true);
     qbar.setOutput(false);
-    // each list element consists of 5 values, j,k,Clk,Q,Qbar
-    const evaluator = [[0, 0, 0, 1, 0], [0, 1, 0, 1, 0], [1, 0, 0, 1, 0], [1, 1, 0, 1, 0], [0, 1, 1, 0, 1], [0, 0, 1, 0, 1], [1, 0, 1, 1, 0], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0]]
+    presetLatchState(q, qbar, true);
+    // each list element consists of j, k, the clock, Q and Q'.
+    // The clock is either 0 (it stays low) or "1->0": a clock pulse, i.e. the clock goes high and then low again.
+    // In a master-slave JK flip-flop the master latch takes over J and K while the clock is high and the slave latch
+    // changes the output when the clock falls, so Q is read after the whole pulse.
+    const evaluator = [[0, 0, 0, 1, 0], [0, 1, 0, 1, 0], [1, 0, 0, 1, 0], [1, 1, 0, 1, 0], [0, 1, "1&rarr;0", 0, 1], [0, 0, "1&rarr;0", 0, 1], [1, 0, "1&rarr;0", 1, 0], [1, 1, "1&rarr;0", 0, 1], [1, 1, "1&rarr;0", 1, 0]]
 
     let incorrectConnections = false;
     evaluator.every((element, index) => {
         j.setOutput(element[0] === 1);
         k.setOutput(element[1] === 1);
-        clk.setOutput(element[2] === 1);
-        if(!testSimulation(gates_list))
-        {
-            incorrectConnections=true;
-            return false;
+        const clockLevels = element[2] === 0 ? [false] : [true, false];
+        for (const level of clockLevels) {
+            clk.setOutput(level);
+            if(!testSimulation(gates_list))
+            {
+                incorrectConnections=true;
+                return false;
+            }
         }
         // check if output is correct
         let className = "success-table";

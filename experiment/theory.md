@@ -15,11 +15,11 @@ An SR latch is a basic memory element that can store one bit of information. It 
 
 #### Logic Equations
 
-For NOR-based SR Latch:
+For NOR-based SR Latch (see the figure: R and Q' feed the gate whose output is Q, S and Q feed the gate whose output is Q'):
 
-$$Q = S + \overline{R} \cdot Q$$
+$$Q = \overline{R + Q'}$$
 
-$$Q' = R + \overline{S} \cdot Q'$$
+$$Q' = \overline{S + Q}$$
 
 Where:
 
@@ -27,6 +27,8 @@ Where:
 - $Q'$ is the complement of $Q$
 - $S$ is the Set input
 - $R$ is the Reset input
+
+When S = R = 1, both equations give 0, so Q = Q' = 0, which is the invalid state of the table below.
 
 #### Truth Table
 
@@ -156,7 +158,7 @@ Where:
 
 <img src="images/jk.gif" alt="JK Flip-Flop Circuit Diagram">
 
-_Figure 4: JK Flip-Flop circuit diagram showing the internal structure with master-slave configuration. Reference: Circuit implementation_
+_Figure 4: Symbol of a JK Flip-Flop. The small circle at the clock input means that the flip-flop is triggered by the falling (negative) edge of the clock. The internal structure is shown in Figure 5. Reference: Circuit implementation_
 
 The JK flip-flop is an improved version of the SR flip-flop that eliminates the invalid state problem. It has two data inputs J and K, along with a clock input for synchronous operation. The JK flip-flop can perform all four basic operations: hold, set, reset, and toggle.
 
@@ -171,10 +173,12 @@ The JK flip-flop is an improved version of the SR flip-flop that eliminates the 
 
 | J   | K   | CLK | Q(n+1) | Operation |
 | --- | --- | --- | ------ | --------- |
-| 0   | 0   | ↑   | Q(n)   | Hold      |
-| 1   | 0   | ↑   | 1      | Set       |
-| 0   | 1   | ↑   | 0      | Reset     |
-| 1   | 1   | ↑   | Q'(n)  | Toggle    |
+| 0   | 0   | ↓   | Q(n)   | Hold      |
+| 1   | 0   | ↓   | 1      | Set       |
+| 0   | 1   | ↓   | 0      | Reset     |
+| 1   | 1   | ↓   | Q'(n)  | Toggle    |
+
+↓ is the active (falling) edge of the clock, as in the symbol of Figure 4. The same flip-flop with a rising-edge trigger would use ↑.
 
 #### Characteristic Equation
 
@@ -209,7 +213,7 @@ The Master-Slave JK flip-flop consists of two SR latches connected in series to 
 
 - Master latch accepts J and K inputs
 - Slave latch is disabled, maintaining previous output
-- Internal signals S_bar and R_bar are generated within the master section
+- M and M' are the outputs of the master latch, and they follow J and K (and the fed-back outputs Q and Q') while the clock is high
 
 **Negative Clock Edge**:
 
@@ -220,9 +224,12 @@ The Master-Slave JK flip-flop consists of two SR latches connected in series to 
 
 In the master-slave configuration shown:
 
-- **S_bar**: Internal set signal from master to slave (active low)
-- **R_bar**: Internal reset signal from master to slave (active low)
-- **Relationship**: $S_{bar} = \overline{J \cdot CLK \cdot \overline{Q}}$, $R_{bar} = \overline{K \cdot CLK \cdot Q}$
+- **M, M'**: Outputs of the master latch, passed to the slave latch
+- **Master inputs**: the master latch is set when J = 1, CLK = 1 and Q' = 1, and it is reset when K = 1, CLK = 1 and Q = 1
+- **Slave latch**: copies M and M' to Q and Q' while the clock is low (the clock input of the slave is the inverted clock)
+- **NAND implementation** (as in the Demo and in Practice task 3): the master latch is driven by the active-low signals $S' = \overline{J \cdot CLK \cdot \overline{Q}}$ and $R' = \overline{K \cdot CLK \cdot Q}$
+
+Because Q and Q' are fed back to the master only, they cannot change while the clock is high. This is why J = K = 1 toggles the output once per clock pulse, and not repeatedly, as it does in a single JK latch.
 
 #### JK Timing Diagram
 
@@ -264,9 +271,11 @@ The D flip-flop transfers the data input to the output on each clock edge. The o
 
 | D   | CLK     | Q(n+1) | Operation |
 | --- | ------- | ------ | --------- |
-| 0   | ↑       | 0      | Store 0   |
-| 1   | ↑       | 1      | Store 1   |
+| 0   | ↓       | 0      | Store 0   |
+| 1   | ↓       | 1      | Store 1   |
 | X   | No Edge | Q(n)   | Hold      |
+
+The D flip-flop of the figure is an SR flip-flop with D connected to S and the complement of D connected to R, so that S and R can never be 1 together. In Practice task 2 the RS flip-flop block responds while its clock input is 1, so Q follows D during the clock pulse.
 
 #### Characteristic Equation
 
@@ -305,8 +314,8 @@ A T flip-flop, or Toggle flip-flop, changes its output state on each clock pulse
 
 | T   | CLK | Q(n+1) | Operation |
 | --- | --- | ------ | --------- |
-| 0   | ↑   | Q(n)   | Hold      |
-| 1   | ↑   | Q'(n)  | Toggle    |
+| 0   | ↓   | Q(n)   | Hold      |
+| 1   | ↓   | Q'(n)  | Toggle    |
 
 #### Characteristic Equation
 
@@ -346,7 +355,7 @@ This configuration ensures that when $T = 1$, both $J = K = 1$, causing the togg
 #### Implementation Variations
 
 1. **Using JK Flip-Flop**: Connect J and K inputs together
-2. **Using D Flip-Flop**: Connect output $\overline{Q}$ back to D input through XOR gate with T
+2. **Using D Flip-Flop**: Connect output $Q$ back to the D input through an XOR gate with T, so that $D = T \oplus Q$ (when T = 1, D = Q' and the output toggles)
 3. **Direct Implementation**: Custom logic gates for toggle function
 
 ### Comparison of Flip-Flop Types
@@ -380,3 +389,10 @@ When setup/hold times are violated, flip-flops may enter metastable states:
 - **Cause**: Insufficient setup or hold time
 - **Effect**: Unpredictable output for extended period
 - **Mitigation**: Proper timing analysis and synchronizer circuits
+
+### Notes on the Simulation
+
+- Every task starts in the SET state, Q = 1 and Q' = 0.
+- In Practice tasks 1, 2 and 4 the circuit (a gated SR latch, and the RS and JK flip-flop blocks) changes its output while its clock input is 1 and holds its value while the clock is 0.
+- Task 3 asks for a master-slave JK flip-flop, which changes its output only when the clock falls. The check of this task therefore applies a complete clock pulse (the clock goes to 1 and then to 0) for every combination of J and K.
+- A single gated JK latch, without the master-slave arrangement, does not pass task 3: with J = K = 1 and the clock high, its output keeps changing (the race-around condition).

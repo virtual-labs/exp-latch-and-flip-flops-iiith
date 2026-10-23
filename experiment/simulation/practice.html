@@ -64,15 +64,29 @@
                   selecting the delete option.
                 </li>
                 <li>
-                  You can set the input bits, which are by default set to
-                  specific values, to any values of your choice for testing, by
-                  double-clicking on them.
+                  You can set the input bits, which are by default 1, to any
+                  values of your choice for testing, by clicking on them. Each
+                  click toggles the bit between 1 and 0.
                 </li>
                 <li>
-                  Click on the "Simulate" button after setting the input bits as
-                  per your choice. This will simulate the circuit you built for
-                  the input bits set, and will change the output bit values
-                  accordingly, for you to test your circuit.
+                  A single output point can drive several inputs: drag a new
+                  wire from an output point that is already connected to
+                  connect it to another component. A wire can be dragged from
+                  an output point to an input point, or the other way round.
+                  To delete a wire, right click on it and select the delete
+                  option.
+                </li>
+                <li id="init-state">
+                  Initially, Q is in the SET state (Q = 1, Q' = 0) in every
+                  task.
+                </li>
+                <li>
+                  Click on the "Simulate" button to start the clock Clk. The
+                  clock keeps running and the output bits follow the circuit
+                  while you change the input bits. The button then shows
+                  "Stop": click on it to stop the clock. Reset also stops it.
+                  The "Submit" button is available only when the clock is
+                  stopped.
                 </li>
                 <li>
                   Click on the "Submit" button to submit the circuit once you
@@ -133,8 +147,20 @@
             </div>
           </div>
           <div class="v-datalist-row">
-            <button class="v-button" onclick="simulate()">Simulate</button>
-            <button class="v-button" onclick="submitCircuit()">Submit</button>
+            <button
+              class="v-button"
+              id="simulate-button"
+              onclick="toggleSimulation()"
+            >
+              Simulate
+            </button>
+            <button
+              class="v-button"
+              id="submit-button"
+              onclick="submitCircuit()"
+            >
+              Submit
+            </button>
             <button id="refresh" class="v-button" style="margin-top: 15px">
               Reset
             </button>
@@ -162,7 +188,7 @@
                   class="input is-primary"
                   id="frequency-input"
                   type="text"
-                  placeholder=""
+                  placeholder="0.5 (0.1 to 5)"
                 />
               </div>
             </div>
@@ -175,7 +201,7 @@
                   class="input is-primary"
                   id="dutycycle-input"
                   type="text"
-                  placeholder=""
+                  placeholder="50 (1 to 99)"
                 />
               </div>
             </div>
